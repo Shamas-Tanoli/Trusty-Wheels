@@ -13,11 +13,8 @@ return new class extends Migration
     {
         Schema::create('service_vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('name');                         // vehicle name / owner name
-            $table->string('number_plate')->nullable();     // nbr plate
-            $table->string('make')->nullable();             // manufacturer (e.g., Toyota)
-            $table->string('model')->nullable();            // model (e.g., Corolla)
-            $table->string('color')->nullable();
+            $table->string('name');                         
+            $table->string('number_plate')->nullable();     
             $table->string('image')->nullable();
             $table->timestamps();
         });

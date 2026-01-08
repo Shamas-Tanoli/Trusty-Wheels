@@ -111,6 +111,13 @@
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "service.vehicle.show"
     }
+    ,
+     {
+      "url": "/dashboard/vehicle-check",
+      "name": "Vehicle Check",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "vehicle.check.show"
+    }
 
    
   ]

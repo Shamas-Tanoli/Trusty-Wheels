@@ -15,7 +15,6 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\ModelController;
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\TicketController;
-use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\BookingController;
@@ -25,6 +24,8 @@ use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceTimeController;
 use App\Http\Controllers\Admin\VehicleTypeController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\VehicleCheckController;
 use App\Http\Controllers\Admin\ServiceVehicleController;
 
 Route::get('/', [WebsitePage::class, 'home'])->name('home');
@@ -208,6 +209,18 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         
        
     });
+
+
+    Route::controller(VehicleCheckController::class)->prefix('vehicle-check')->group(function () {
+        Route::get('/', 'index')->name('vehicle.check.show');
+        Route::post('/store', 'store')->name('vehicle.check.store');
+        Route::get('/list', 'list')->name('vehicle.check.list');
+        Route::delete('/delete/{id}', 'destroys')->name('vehicle.check.destroy');
+        Route::post('/{id}/update', 'updatee')->name('vehicle.check.update');
+        
+       
+    });
+
 });
 
 

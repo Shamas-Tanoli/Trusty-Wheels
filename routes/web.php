@@ -202,6 +202,8 @@ Route::get('/notifications', [NotificationController::class, 'send'])->name('boo
 Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->group(function () {
         Route::get('/', 'index')->name('service.vehicle.show');
         Route::post('/store', 'store')->name('service.vehicle.store');
+        Route::get('/list', 'list')->name('service.vehicle.list');
+        Route::delete('/delete/{id}', 'destroys')->name('service.vehicle.destroy');
         
        
     });

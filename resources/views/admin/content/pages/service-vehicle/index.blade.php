@@ -38,13 +38,13 @@ $configData = Helper::appClasses();
 
 <div class="card">
     <div class="card-datatable table-responsive">
-        <table class="datatables-permissions table border-top">
+        <table class="datatables-vehicles table border-top">
             <thead>
                 <tr>
 
                     <th>Serial</th>
-                    <th>Service</th>
-                    <th>Timing</th>
+                    <th>Name</th>
+                    <th>Reg Number</th>
                     <th>Created Date</th>
                     <th>Actions</th>
                 </tr>

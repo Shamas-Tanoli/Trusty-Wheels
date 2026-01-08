@@ -3,13 +3,88 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Database\Eloquent\Model;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 use App\Models\ServiceVehicle;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Yajra\DataTables\Facades\DataTables;
 
 class ServiceVehicleController extends Model
 {
+
+    public function destroys($id)
+{
+    $vehicle = ServiceVehicle::find($id);
+
+    if (!$vehicle) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Vehicle not found!'
+        ], 404);
+    }
+
+    // Agar image exist karti hai to delete kar do
+    if ($vehicle->image && file_exists(public_path($vehicle->image))) {
+        unlink(public_path($vehicle->image));
+    }
+
+    $vehicle->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Vehicle deleted successfully!'
+    ]);
+}
+
+
+
+    public function list(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $query = ServiceVehicle::select('id', 'name', 'number_plate', 'image', 'created_at')
+                ->orderByDesc('created_at');
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+
+                ->addColumn('vehicle_name', function ($row) {
+                    $img = $row->image ? '<img src="' . asset($row->image) . '" alt="vehicle" style="width:40px; height:40px; object-fit:cover; border-radius:50%; margin-right:5px;">' : '';
+                    return $img . $row->name;
+                })
+
+                ->addColumn('number_plate', function ($row) {
+                    return $row->number_plate;
+                })
+
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at->format('d-m-Y h:i A');
+                })
+
+                ->addColumn('actions', function ($row) {
+                    return '
+                    <button class="edit-btn btn btn-icon btn-text-secondary rounded-pill"
+                        data-id="' . $row->id . '"
+                        data-name="' . $row->name . '"
+                        data-number_plate="' . $row->number_plate . '"
+                        data-image="' . ($row->image ? asset($row->image) : '') . '"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editVehicleModal">
+                        <i class="ti ti-edit ti-md"></i>
+                    </button>
+
+                    <button class="delete-confirm btn btn-icon btn-text-secondary rounded-pill"
+                        data-id="' . $row->id . '">
+                        <i class="ti ti-trash ti-md"></i>
+                    </button>';
+                })
+
+                ->rawColumns(['vehicle_name', 'actions'])
+                ->make(true);
+        }
+    }
+
+    
    public function store(Request $request)
     {
         // 1. Validation

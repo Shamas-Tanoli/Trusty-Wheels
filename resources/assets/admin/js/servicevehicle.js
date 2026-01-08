@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
             toastr.success(data.message, 'Success');
             $('#addPermissionModal').modal('hide');
-            $('.datatables-permissions').DataTable().ajax.reload(null, false);
+            $('.datatables-vehicles').DataTable().ajax.reload(null, false);
           } else {
             const errorList = Object.values(data.errors)
               .flat()
@@ -90,17 +90,17 @@ document.addEventListener('DOMContentLoaded', function (e) {
   })();
 
   // for datatable
-  (function () {
-  $('.datatables-permissions').DataTable({
+(function () {
+  $('.datatables-vehicles').DataTable({
     processing: true,
     serverSide: true,
-    ajax: '/dashboard/servicetime/list',
+    ajax: '/dashboard/service-vehicle/list',
     searchDelay: 1000,
 
     columns: [
       { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-      { data: 'service_name', name: 'service_name', orderable: false, searchable: true },
-      { data: 'service_time', name: 'service_time', orderable: false, searchable: true },
+      { data: 'vehicle_name', name: 'vehicle_name', orderable: false, searchable: true },
+      { data: 'number_plate', name: 'number_plate', orderable: false, searchable: true },
       { data: 'created_at', name: 'created_at', orderable: false, searchable: false },
       { data: 'actions', name: 'actions', orderable: false, searchable: false }
     ],
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     language: {
       sLengthMenu: 'Show _MENU_',
       search: '',
-      searchPlaceholder: 'Search Service Time',
+      searchPlaceholder: 'Search Vehicle',
       paginate: {
         next: '<i class="ti ti-chevron-right ti-sm"></i>',
         previous: '<i class="ti ti-chevron-left ti-sm"></i>'
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     buttons: [
       {
-        text: '<i class="ti ti-plus ti-xs me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add Service Time</span>',
+        text: '<i class="ti ti-plus ti-xs me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add Vehicle</span>',
         className: 'add-new btn btn-primary mb-6 mb-md-0',
         attr: {
           'data-bs-toggle': 'modal',
@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     ]
   });
 })();
+
 
 
   //  for delete
@@ -162,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         buttonsStyling: false
       }).then(function (result) {
         if (result.value) {
-          fetch(`/dashboard/servicetime/delete/${model_id}`, {
+          fetch(`/dashboard/service-vehicle/delete/${model_id}`, {
             method: 'DELETE',
             headers: {
               'X-CSRF-TOKEN': window.csrfToken,
@@ -174,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             })
             .then(data => {
               if (data.success) {
-                $('.datatables-permissions').DataTable().ajax.reload(null, false);
+                $('.datatables-vehicles').DataTable().ajax.reload(null, false);
                 toastr.success(data.message, 'Success');
               } else {
                 Swal.fire({
@@ -271,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
           if (data.success) {
             toastr.success(data.message, 'Success');
             $('#editPermissionModal').modal('hide');
-            $('.datatables-permissions').DataTable().ajax.reload(null, true);
+            $('.datatables-vehicles').DataTable().ajax.reload(null, true);
           } else {
             const errorList = Object.values(data.errors)
               .flat()

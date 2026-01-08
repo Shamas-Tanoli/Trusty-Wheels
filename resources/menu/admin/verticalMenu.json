@@ -104,6 +104,13 @@
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "booking.show"
     }
+    ,
+     {
+      "url": "/dashboard/service-vehicle",
+      "name": "Service Vehicle",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "service.vehicle.show"
+    }
 
    
   ]

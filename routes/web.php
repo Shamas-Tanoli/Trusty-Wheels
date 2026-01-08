@@ -25,18 +25,7 @@ use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceTimeController;
 use App\Http\Controllers\Admin\VehicleTypeController;
-
-
-
-
-
-
-
-
-
-
-
-
+use App\Http\Controllers\Admin\ServiceVehicleController;
 
 Route::get('/', [WebsitePage::class, 'home'])->name('home');
 Route::get('/vehicle', [WebsitePage::class, 'vehicle'])->name('vehicle');
@@ -208,6 +197,14 @@ Route::prefix('dashboard')->group(function () {
     });
 Route::get('/notifications', [NotificationController::class, 'send'])->name('booking.noti');
 
+
+
+Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->group(function () {
+        Route::get('/', 'index')->name('service.vehicle.show');
+        Route::post('/store', 'store')->name('service.vehicle.store');
+        
+       
+    });
 });
 
 

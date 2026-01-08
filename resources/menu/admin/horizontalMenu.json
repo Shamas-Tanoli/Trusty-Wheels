@@ -1,0 +1,64 @@
+{
+  "menu": [
+    {
+      "url": "/dashboard",
+      "name": "Home",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "dashboard",
+      "allowed_roles": ["admin","driver"]
+    },
+    {
+      "name": "Listings",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "Listings",
+     "allowed_roles": ["admin"],
+      "submenu": [
+        {
+          "name": "Vehicle",
+          "slug": "Listings.vehicle",
+          "submenu": [
+            {
+              "url": "dashboard/vehicle",
+              "name": "List Vehicle",
+              "slug": "Listings.vehicle.list"
+            },
+            {
+              "url": "dashboard/vehicle/add",
+              "name": "Add Vehicle",
+              "slug": "Listings.vehicle.add"
+            }
+          ]
+        },
+        {
+          "url": "dashboard/location",
+          "name": "Location",
+          "slug": "Listings.location"
+          
+        },
+        {
+          "url": "dashboard/make",
+          "name": "Make",
+          "slug": "Listings.make"
+        },
+        {
+          "url": "dashboard/model",
+          "name": "Model",
+          "slug": "Listings.model"
+        },
+        {
+          "url": "dashboard/amenity",
+          "name": "Amenity",
+          "slug": "Listings.amenity"
+        },
+        {
+          "url": "dashboard/vehicle-type",
+          "name": "Vehicle Type",
+          "slug": "Listings.vehicle.type"
+        }
+      ]
+    }
+   
+    
+   
+  ]
+}

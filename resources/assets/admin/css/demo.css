@@ -1,0 +1,38 @@
+.custom-toast-width {
+  width: 275px !important;
+}
+.custom-toast-zindex {
+  z-index: 3000 !important;
+}
+.custom-cross-position {
+  top: 18px !important;
+  right: 16px !important;
+}
+.dark-style .menu .app-brand.demo {
+  height: 64px;
+}
+.vehicle-list-featurepic{
+  width: 5.5rem !important;
+  height: 4.5rem !important;
+}
+.resize-none{
+  resize: none;
+}
+.custom-dropzone {
+  border-radius: 5px;
+  padding: 20px;
+  position: relative;
+}
+.dark-style .custom-dropzone {
+  border: 2px dashed #44485e;
+}
+.light-style .custom-dropzone {
+  border: 2px dashed #e6e6e8;
+}
+
+.dz-message-custom {
+  margin: 3rem 0 1rem !important;
+}
+.custom-dropzone .dz-message:before {
+  top: 1rem !important;
+}

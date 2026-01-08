@@ -1,0 +1,110 @@
+{
+  "menu": [
+    {
+      "url": "/dashboard", 
+      "name": "Home",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "dashboard"
+      
+    },
+    {
+      "name": "Listings",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "Listings",
+     
+      "submenu": [
+        {
+          "name": "Vehicle",
+          "slug": "Listings.vehicle",
+          "submenu": [
+            {
+              "url": "dashboard/vehicle",
+              "name": "List Vehicle",
+              "slug": "Listings.vehicle.list"
+            },
+            {
+              "url": "dashboard/vehicle/add",
+              "name": "Add Vehicle",
+              "slug": "Listings.vehicle.add"
+            }
+          ]
+        },
+        {
+          "url": "dashboard/location",
+          "name": "Location",
+          "slug": "Listings.location"
+          
+        },
+        {
+          "url": "dashboard/make",
+          "name": "Make",
+          "slug": "Listings.make"
+        },
+        {
+          "url": "dashboard/model",
+          "name": "Model",
+          "slug": "Listings.model"
+        },
+        {
+          "url": "dashboard/amenity",
+          "name": "Amenity",
+          "slug": "Listings.amenity"
+        },
+        {
+          "url": "dashboard/vehicle-type",
+          "name": "Vehicle Type",
+          "slug": "Listings.vehicle.type"
+        }
+      ]
+    },
+     {
+      "url": "/dashboard/cities",
+      "name": "Cities",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "cities.index"
+      
+    },
+    {
+      "url": "/dashboard/towns",
+      "name": "Towns",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "town.show"
+    }
+    ,
+    {
+      "url": "/dashboard/service",
+      "name": "Service",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "service.show"
+    }
+    ,
+    {
+      "url": "/dashboard/servicetime",
+      "name": "Service Time",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "servicetime.show"
+    }
+    ,
+    {
+      "url": "/dashboard/driver",
+      "name": "Driver",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "driver.listview"
+    },
+    {
+      "url": "/dashboard/plan",
+      "name": "Plans",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "plan.show"
+    }
+    ,
+    {
+      "url": "/dashboard/booking",
+      "name": "Booking",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "booking.show"
+    }
+
+   
+  ]
+}

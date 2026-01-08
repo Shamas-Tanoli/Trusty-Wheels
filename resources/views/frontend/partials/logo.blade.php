@@ -1,0 +1,1 @@
+<img src={{ asset("assets/frontend/img/logos.png") }} alt="sito logo">

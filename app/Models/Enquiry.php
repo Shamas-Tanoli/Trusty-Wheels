@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Enquiry extends Model
+{
+    protected $fillable = [
+        'vehicle_id',
+        'name',
+        'email',
+        'phone',
+        'address'
+    ];
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+}

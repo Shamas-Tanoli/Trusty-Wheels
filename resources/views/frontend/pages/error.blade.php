@@ -1,0 +1,24 @@
+@extends('frontend.layout')
+@section('content')
+@section('title', 'Error')
+
+
+
+ <!-- Notfound Area Start -->
+ <section class="gauto-notfound-area section_70">
+    <div class="container">
+       <div class="row">
+          <div class="col-md-12">
+             <div class="notfound-box">
+                <h2>4<span>0</span>4</h2>
+                <h3>Page Not Found</h3>
+                <p>The page you are looking for might have been removed had its name changed or temporarily unavailable.</p>
+                <a href="{{ route('home') }}" class="gauto-btn">back to home</a>
+             </div>
+          </div>
+       </div>
+    </div>
+ </section>
+ <!-- Notfound Area End -->
+
+@endsection

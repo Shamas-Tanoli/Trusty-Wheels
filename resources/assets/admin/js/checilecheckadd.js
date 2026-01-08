@@ -33,7 +33,7 @@ $(function () {
       language: {
         sLengthMenu: 'Show _MENU_',
         search: '',
-        searchPlaceholder: 'Search Amenity',
+        searchPlaceholder: 'Search ..',
         paginate: {
           next: '<i class="ti ti-chevron-right ti-sm"></i>',
           previous: '<i class="ti ti-chevron-left ti-sm"></i>'

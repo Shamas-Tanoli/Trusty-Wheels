@@ -4,7 +4,7 @@ $configData = Helper::appClasses();
 
 @extends('admin/layouts/layoutMaster')
 
-@section('title', 'Amenity')
+@section('title', 'Vehicle Check')
 
 @section('vendor-style')
 @vite(['resources/assets/admin/vendor/libs/datatables-bs5/datatables.bootstrap5.scss',

@@ -2,15 +2,69 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ServiceVehicle;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\Eloquent\Model;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class ServiceVehicleController extends Model
 {
+ public function updatee(Request $request, $id)
+{
+    $vehicle = ServiceVehicle::find($id);
+
+    if (!$vehicle) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Vehicle not found!'
+        ], 404);
+    }
+
+    // Validation
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'number_plate' => 'required|string|max:50|unique:service_vehicles,number_plate,' . $vehicle->id,
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    // Image upload
+    if ($request->hasFile('image')) {
+        if ($vehicle->image && file_exists(public_path($vehicle->image))) {
+            unlink(public_path($vehicle->image));
+        }
+
+        $folderPath = public_path('assets/img/servicevehicle');
+        if (!file_exists($folderPath)) {
+            mkdir($folderPath, 0755, true);
+        }
+
+        $image = $request->file('image');
+        $imageName = Str::slug($request->name) . '_' . time() . '.' . $image->getClientOriginalExtension();
+        $image->move($folderPath, $imageName);
+        $vehicle->image = 'assets/img/servicevehicle/' . $imageName;
+    }
+
+    // Update other fields
+    $vehicle->name = $request->name;
+    $vehicle->number_plate = $request->number_plate;
+    $vehicle->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Vehicle updated successfully!',
+        'data' => $vehicle
+    ]);
+}
+
+
+
 
     public function destroys($id)
 {

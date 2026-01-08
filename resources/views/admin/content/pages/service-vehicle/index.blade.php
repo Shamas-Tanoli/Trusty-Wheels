@@ -141,36 +141,41 @@ $configData = Helper::appClasses();
 <!-- Edit Permission Modal -->
 
 
-<div class="modal fade" id="editPermissionModal" aria-hidden="false" tabindex="-1">
+<div class="modal fade" id="editVehicleModal" aria-hidden="false" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-0">
             <div class="modal-body">
                 <button type="button" class="btn-close btn-pinned custom-cross-position" data-bs-dismiss="modal"
                     aria-label="Close"></button>
                 <div class="text-center mb-6">
-                    <h4 class="mb-2">Edit service Time </h4>
-
+                    <h4 class="mb-2">Edit Service Vehicle</h4>
                 </div>
 
-                <form id="editPermissionForm" class="row pt-2 justify-content-center" onsubmit="return false">
-
+                <form id="editVehicleForm" class="row pt-2 justify-content-center" onsubmit="return false">
                     <div class="col-10 mb-4">
-                        <label for="slectmake" class="form-label">Select service</label>
-                        <select name="service_id" id="slectmake" data-url="{{ route('select.service') }}"
-                            class="select2 form-select form-select-lg" data-allow-clear="true">
-                        </select>
+                        <label class="form-label" for="editName">Vehicle Name</label>
+                        <input type="text" id="editName" name="name" class="form-control" placeholder="Vehicle Name" />
                     </div>
 
                     <div class="col-10 mb-4">
-                        <label class="form-label" for="editname">Service Timing</label>
-                        <input type="text" id="editname" name="timing" class="form-control" placeholder="Service Timing"
-                            tabindex="-1" />
+                        <label class="form-label" for="editNumberPlate">Registration Number</label>
+                        <input type="text" id="editNumberPlate" name="number_plate" class="form-control" placeholder="Registration Number" />
                     </div>
+
+                    <div class="col-10 mb-4">
+                        <label class="form-label" for="editImage">Vehicle Image</label>
+                        <input type="file" id="editImage" name="image" class="form-control" accept="image/*" onchange="previewEditVehicleImage(event)" />
+                        <div class="mt-2 text-center" style="
+                    display: flex;
+                    justify-content: center;
+                ">
+                            <img id="editVehicleImagePreview" src="" alt="Image Preview" style="max-width:200px; display:none; border-radius:8px;">
+                        </div>
+                    </div>
+
                     <div class="col-12 text-center demo-vertical-spacing">
-
                         <button type="submit" class="btn btn-primary mt-1 mt-sm-0">Update</button>
                     </div>
-
                 </form>
             </div>
         </div>

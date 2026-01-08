@@ -204,6 +204,7 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         Route::post('/store', 'store')->name('service.vehicle.store');
         Route::get('/list', 'list')->name('service.vehicle.list');
         Route::delete('/delete/{id}', 'destroys')->name('service.vehicle.destroy');
+        Route::post('/{id}/update', 'updatee')->name('service.vehicle.update');
         
        
     });

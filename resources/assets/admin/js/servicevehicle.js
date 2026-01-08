@@ -206,111 +206,96 @@ document.addEventListener('DOMContentLoaded', function (e) {
   })();
 
   // for edit
-
-  (function () {
-    const select2Elements = $('.select2');
-    let model_id;
+(function () {
+    let vehicleId;
 
     document.addEventListener('click', function (event) {
-      let button = event.target.closest('.edit-btn');
+        let button = event.target.closest('.edit-btn');
 
-      if (button) {
-        model_id = button.getAttribute('data-id');
-        let name = button.getAttribute('data-name');
-        let make_id = button.getAttribute('data-make-id');
-        let makeName = button.getAttribute('data-make-name');
-        document.getElementById('editname').value = name;
-        var newOption = new Option(makeName, make_id, true, true);
-        $('#slectmake').append(newOption).trigger('change');
-      }
+        if (button) {
+            vehicleId = button.getAttribute('data-id');
+            let name = button.getAttribute('data-name');
+            let number_plate = button.getAttribute('data-number_plate');
+            let image = button.getAttribute('data-image');
+
+            document.getElementById('editName').value = name;
+            document.getElementById('editNumberPlate').value = number_plate;
+
+            const preview = document.getElementById('editVehicleImagePreview');
+            if (image) {
+                preview.src = image;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+        }
     });
 
-    const fv = FormValidation.formValidation(document.getElementById('editPermissionForm'), {
-      fields: {
-        service_id: {
-          validators: {
-            notEmpty: {
-              message: 'Please select a Service'
-            }
-          }
-        },
-        name: {
-          validators: {
-            notEmpty: {
-              message: 'Please enter Service Time'
-            },
-            stringLength: {
-              min: 2,
-              message: 'The Service Time must be more than 2 characters long'
-            }
-          }
+    // Image preview function
+    window.previewEditVehicleImage = function(event) {
+        const preview = document.getElementById('editVehicleImagePreview');
+        const file = event.target.files[0];
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
         }
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          rowSelector: '.col-10'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function (e) {
-      const formData = new FormData(document.getElementById('editPermissionForm'));
-      fetch(`/dashboard/servicetime/${model_id}/update`, {
-        method: 'post',
-        headers: {
-          'X-CSRF-TOKEN': window.csrfToken,
-          Accept: 'application/json'
-        },
-        body: formData
-      })
-        .then(response => {
-          return response.json();
+    }
+
+    const form = document.getElementById('editVehicleForm');
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch(`/dashboard/service-vehicle/${vehicleId}/update`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: formData
+        })
+        .then(async res => {
+            if (res.ok) return res.json();
+            
+            // Handle validation errors
+            if (res.status === 422) {
+                const errorData = await res.json();
+                throw errorData.errors;
+            }
+
+            // Other errors
+            throw { general: ['Something went wrong!'] };
         })
         .then(data => {
-          if (data.success) {
-            toastr.success(data.message, 'Success');
-            $('#editPermissionModal').modal('hide');
-            $('.datatables-vehicles').DataTable().ajax.reload(null, true);
-          } else {
-            const errorList = Object.values(data.errors)
-              .flat()
-              .map(
-                error =>
-                  `<li style="font-size: 14px;">
-                <i class="ti text-danger ti-alert-triangle ti-flashing-hover"></i> ${error}</li>`
-              )
-              .join('');
+            if (data.success) {
+                toastr.success(data.message, 'Success');
+                $('#editVehicleModal').modal('hide');
+                $('.datatables-vehicles').DataTable().ajax.reload(null, false);
+            }
+        })
+        .catch(errors => {
+            // Convert errors to list
+            let errorList = '';
+            if (errors) {
+                errorList = Object.values(errors)
+                    .flat()
+                    .map(error => `<li style="font-size:14px; margin-bottom:4px;"><i class="ti text-danger ti-alert-triangle ti-flashing-hover"></i> ${error}</li>`)
+                    .join('');
+            }
 
             Swal.fire({
-              title: 'Error!',
-              html: `<ul style="list-style: none; padding: 0; margin: 0;">${errorList}</ul>`,
-              icon: 'error',
-              customClass: { confirmButton: 'btn btn-primary waves-effect waves-light' },
-              buttonsStyling: false
+                title: 'Validation Error!',
+                html: `<ul style="list-style:none; padding:0; margin:0;">${errorList}</ul>`,
+                icon: 'error',
+                customClass: { confirmButton: 'btn btn-primary waves-effect waves-light' },
+                buttonsStyling: false
             });
-          }
-        })
-
-        .catch(error => {
-          Swal.fire({
-            title: 'Error!',
-            text: error.message,
-            icon: 'error',
-            customClass: {
-              confirmButton: 'btn btn-primary waves-effect waves-light'
-            },
-            buttonsStyling: false
-          });
         });
     });
+})();
 
-    select2Elements.each(function () {
-      $(this).on('change', function () {
-        // fv.updateFieldStatus($(this).attr('name'), 'NotValidated');
-        fv.revalidateField($(this).attr('name'));
-      });
-    });
-  })();
+
 });

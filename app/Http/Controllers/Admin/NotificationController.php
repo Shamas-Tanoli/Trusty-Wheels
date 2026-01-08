@@ -16,7 +16,7 @@ class NotificationController extends Controller
 
     public function send()
     {
-        $token = 'eIVKnQ6XRAGrqqd9-ajBwz:APA91bGQPbB8p_FD7j9yNUl5IPuNXeRqI3MD8ONiAmQmvVXYUAWO7yQaUAnurz1qA1Io5nkj5EyDlz1jdEu5_WryhyA1mi-4Vus_gEgXiG0Z0H8UOO-LOuQ';
+        $token = 'cIp7RtPQSem4J6oHhA-lWn:APA91bFr8gh2MFaHnrNvKVk1kISiSt5Yy_wmm-zd7jm5eiGCe3lilmp9YrOBpWHLD8ZUrGRgtpO_S0YofYY2yyijdv8L6e87W5jeL0EUtb88okgb6JERjbc';
 
         $response = $this->firebase->sendToToken(
             $token,

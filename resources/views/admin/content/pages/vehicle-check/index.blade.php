@@ -22,9 +22,9 @@ $configData = Helper::appClasses();
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/admin/js/amenity-table.js',
-'resources/assets/admin/js/amenity-add.js',
-'resources/assets/admin/js/amenity-edit.js'])
+@vite(['resources/assets/admin/js/checilecheckadd.js',
+'resources/assets/admin/js/vehiclecheckadd.js',
+'resources/assets/admin/js/vehiclecheckedit.js'])
 
 @endsection
 
@@ -57,18 +57,18 @@ $configData = Helper::appClasses();
             <div class="modal-body p-0">
                 <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="text-center mb-6">
-                    <h4 class="mb-2">Add New Amenity</h4>
+                    <h4 class="mb-2">Add New Check</h4>
                     {{-- <p>Permissions you may use and assign to your users.</p> --}}
                 </div>
                 <form id="addPermissionForm" class="row pt-2"  onsubmit="return false">
                     <div class="col-12 mb-4">
-                        <label class="form-label" for="modalPermissionName">Amenity Name</label>
+                        <label class="form-label" for="modalPermissionName">Check Name</label>
                         <input type="text" id="modalPermissionName" name="name" class="form-control"
-                            placeholder="Amenity Name" autofocus />
+                            placeholder="Check Name" autofocus />
                     </div>
 
                     <div class="col-12 text-center demo-vertical-spacing">
-                        <button type="submit" class=" btn btn-primary me-4">Create Amenity</button>
+                        <button type="submit" class=" btn btn-primary me-4">Create Check</button>
                         <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"
                             aria-label="Close">Discard</button>
                     </div>
@@ -90,14 +90,14 @@ $configData = Helper::appClasses();
         <div class="modal-body">
           <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="text-center mb-6">
-            <h4 class="mb-2">Edit Amenity</h4>
+            <h4 class="mb-2">Edit Check</h4>
             {{-- <p>Edit permission as per your requirements.</p> --}}
           </div>
           
           <form id="editPermissionForm" class="row pt-2" onsubmit="return false">
             <div class="col-sm-9">
-              <label class="form-label" for="editname">Amenity Name</label>
-              <input type="text" id="editname" name="name" class="form-control" placeholder="Amenity Name" tabindex="-1" />
+              <label class="form-label" for="editname">Check Name</label>
+              <input type="text" id="editname" name="name" class="form-control" placeholder="Check Name" tabindex="-1" />
             </div>
             <div class="col-sm-3 mb-4">
               <label class="form-label invisible d-none d-sm-inline-block">Button</label>

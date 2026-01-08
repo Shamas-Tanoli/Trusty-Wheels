@@ -19,27 +19,17 @@ class User extends Authenticatable
    * @var array<int, string>
    */
   protected $fillable = [
-<<<<<<< HEAD
 
 
-=======
-    
->>>>>>> c89e5fd69f98c4a0fe2bd596937799eccc33b28b
     'name',
     'email',
     'password',
     'role',
     'fcm_token'
   ];
-<<<<<<< HEAD
 /**
   
    * The attributes that s should be hidden for serialization.
-=======
-
-  /**
-   * The attributes that should be hidden for serialization.
->>>>>>> c89e5fd69f98c4a0fe2bd596937799eccc33b28b
    *
    * @var array<int, string>
    */

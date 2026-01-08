@@ -41,6 +41,7 @@ class ServiceVehicleController extends Model
         }
 
         $folderPath = public_path('assets/img/servicevehicle');
+        
         if (!file_exists($folderPath)) {
             mkdir($folderPath, 0755, true);
         }

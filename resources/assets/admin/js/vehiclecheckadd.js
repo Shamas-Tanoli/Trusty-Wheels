@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
           })
 
           .catch(error => {
+            console.log(error);
             Swal.fire({
               title: 'Error!',
               text: error.message,

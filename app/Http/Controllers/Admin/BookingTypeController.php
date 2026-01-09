@@ -2,36 +2,36 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\VehicleCheck;
+use App\Models\BookingType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
-class VehicleCheckController extends Controller
+class BookingTypeController extends Controller
 {
     public function index()
     {
 
-        return view('admin.content.pages.vehicle-check.index');
+        return view('admin.content.pages.booking-type.index');
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:vehicle_checks,name',
+            'name' => 'required|string|max:255|unique:bookint_types,name',
         ]);
 
-         VehicleCheck::create($validatedData);
+         BookingType::create($validatedData);
         return response()->json([
             'success' => true,
-            'message' => 'Vehicle Check added successfully',
+            'message' => 'Booking Type added successfully',
         ], 201);
     }
 
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $query = VehicleCheck::select(['id', 'name', 'created_at'])->orderByDesc('created_at');
+            $query = BookingType::select(['id', 'name', 'created_at'])->orderByDesc('created_at');
 
             return DataTables::of($query)
                 ->addIndexColumn()
@@ -60,25 +60,25 @@ class VehicleCheckController extends Controller
     public function update(Request $request,int $id)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:vehicle_checks,name',
+            'name' => 'required|string|max:255|unique:amenities,name',
         ]);
 
-        $location = VehicleCheck::findOrFail($id);
+        $location = BookingType::findOrFail($id);
         $location->update($validatedData);
         return response()->json([
             'success' => true,
-            'message' => 'Vehicle Check updated successfully'
+            'message' => 'Booking Type updated successfully'
         ], 200);
 
     }
 
     public function destroy(int $id)
     {
-        $location = VehicleCheck::findOrFail($id);
+        $location = BookingType::findOrFail($id);
         $location->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Vehicle Check deleted successfully.'
+            'message' => 'Booking Type deleted successfully.'
         ], 200);
     }
 }

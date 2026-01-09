@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\VehicleController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\BookingTypeController;
 use App\Http\Controllers\Admin\ServiceTimeController;
 use App\Http\Controllers\Admin\VehicleTypeController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -217,6 +218,15 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         Route::get('/list', 'list')->name('vehicle.check.list');
         Route::delete('/delete/{id}', 'destroy')->name('vehicle.check.destroy');
         Route::post('/{id}/update', 'update')->name('vehicle.check.update');
+        
+       
+    });
+    Route::controller(BookingTypeController::class)->prefix('booking-type')->group(function () {
+        Route::get('/', 'index')->name('booking.type.show');
+        Route::post('/store', 'store')->name('booking.type.store');
+        Route::get('/list', 'list')->name('booking.type.list');
+        Route::delete('/delete/{id}', 'destroy')->name('booking.type.destroy');
+        Route::post('/{id}/update', 'update')->name('booking.type.update');
         
        
     });

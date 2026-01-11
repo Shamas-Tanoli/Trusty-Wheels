@@ -118,6 +118,16 @@
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "vehicle.check.show"
     }
+<<<<<<< HEAD
+=======
+    ,
+     {
+      "url": "/dashboard/booking-type",
+      "name": "Booking Type",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "booking.type.show"
+    }
+>>>>>>> 314210e (first commit)
 
    
   ]

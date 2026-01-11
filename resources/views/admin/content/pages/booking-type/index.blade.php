@@ -22,9 +22,7 @@ $configData = Helper::appClasses();
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/admin/js/checilecheckadd.js',
-'resources/assets/admin/js/vehiclecheckadd.js',
-'resources/assets/admin/js/vehiclecheckedit.js'])
+@vite(['resources/assets/admin/js/bookingtypecrud.js'])
 
 @endsection
 
@@ -64,7 +62,7 @@ $configData = Helper::appClasses();
                     <div class="col-12 mb-4">
                         <label class="form-label" for="modalPermissionName"> Name</label>
                         <input type="text" id="modalPermissionName" name="name" class="form-control"
-                            placeholder="Check Name" autofocus />
+                            placeholder=" Name" autofocus />
                     </div>
 
                     <div class="col-12 text-center demo-vertical-spacing">

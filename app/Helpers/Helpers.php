@@ -11,7 +11,7 @@ class Helpers
   {
 
     $data = config('custom.custom');
-   
+    $data2 = config('custom.custom');
 
  
     // default data array

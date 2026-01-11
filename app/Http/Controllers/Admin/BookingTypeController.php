@@ -18,8 +18,10 @@ class BookingTypeController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:bookint_types,name',
+            'name' => 'required|string|max:255|unique:booking_types,name',
         ]);
+
+        
 
          BookingType::create($validatedData);
         return response()->json([
@@ -60,7 +62,7 @@ class BookingTypeController extends Controller
     public function update(Request $request,int $id)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:amenities,name',
+            'name' => 'required|string|max:255|unique:booking_types,name',
         ]);
 
         $location = BookingType::findOrFail($id);
@@ -75,6 +77,7 @@ class BookingTypeController extends Controller
     public function destroy(int $id)
     {
         $location = BookingType::findOrFail($id);
+        
         $location->delete();
         return response()->json([
             'success' => true,

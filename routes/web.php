@@ -227,11 +227,6 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         Route::get('/list', 'list')->name('booking.type.list');
         Route::delete('/delete/{id}', 'destroy')->name('booking.type.destroy');
         Route::post('/{id}/update', 'update')->name('booking.type.update');
-<<<<<<< HEAD
-        
-       
-=======
->>>>>>> 314210e (first commit)
     });
 
 });

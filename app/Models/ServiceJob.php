@@ -9,7 +9,7 @@ class ServiceJob extends Model
     protected $fillable = [
         'driver_id',
         'vehicle_id',
-        'job_status',
+        'status',
         'job_date',
     ];
 

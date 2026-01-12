@@ -102,7 +102,7 @@
                                     data-placeholder="Select Passenger">
                             </select>
                         </div>
-                        <div class="col-2 d-flex align-items-end">
+                        <div style="margin-bottom: 5px;" class="col-2 d-flex align-items-end">
                             <button type="button" class="btn btn-success add-passenger-btn">Add</button>
                         </div>
                     </div>

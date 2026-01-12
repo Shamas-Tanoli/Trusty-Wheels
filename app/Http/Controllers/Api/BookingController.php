@@ -80,7 +80,7 @@ class BookingController extends Controller
        
         $validatedData = $request->validate([
             // Booking fields
-            'plan_id' => 'required|exists:plans,id',
+            'booking_type_id' => 'required|exists:booking_types,id',
             'customer_id' => 'required|exists:customers,id',
             'service_time_id' => 'required|exists:service_times,id',
             'service_id' => 'required|exists:services,id',
@@ -106,7 +106,7 @@ class BookingController extends Controller
         try {
             // 1️⃣ Create Booking
             $booking = Booking::create([
-                'plan_id' => $validatedData['plan_id'],
+                'booking_type_id' => $validatedData['booking_type_id'],
                 'customer_id' => $validatedData['customer_id'],
                 'service_time_id' => $validatedData['service_time_id'],
                 'service_id' => $validatedData['service_id'],
@@ -127,6 +127,7 @@ class BookingController extends Controller
                     'dropoff_longitude' => $passenger['dropoff_longitude'],
                     'pickup_location' => $passenger['pickup_location'],
                     'dropoff_location' => $passenger['dropoff_location'],
+                    'plan_id' => $passenger['plan_id'],
                 ]);
             }
 

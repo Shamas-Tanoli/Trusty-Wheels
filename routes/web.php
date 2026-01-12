@@ -7,6 +7,7 @@ use App\Models\VehicleModel;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\pages\WebsitePage;
+use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\MakeController;
 use App\Http\Controllers\Admin\PlanController;
@@ -227,6 +228,11 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         Route::get('/list', 'list')->name('booking.type.list');
         Route::delete('/delete/{id}', 'destroy')->name('booking.type.destroy');
         Route::post('/{id}/update', 'update')->name('booking.type.update');
+    });
+
+    Route::controller(JobController::class)->prefix('job')->group(function () {
+        Route::get('/', 'index')->name('job.show');
+       
     });
 
 });

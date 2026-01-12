@@ -31,12 +31,12 @@
 @section('page-script')
 @vite([
 'resources/assets/admin/js/forms-selects.js',
-'resources/assets/admin/js/vehicle-add.js'
+'resources/assets/admin/js/jobadd.js'
 ])
 @endsection
 
 @section('content')
-<form id="vehicle-add-form">
+<form id="jobaddform">
     <div class="app-ecommerce">
 
 
@@ -48,7 +48,6 @@
 
             </div>
             <div class="d-flex align-content-center flex-wrap gap-4">
-                <button id="resetbtn" type="reset" class="btn btn-label-secondary waves-effect">Reset</button>
                 <button id="uploadButton" type="submit" class="btn btn-primary">Publish Job</button>
 
             </div>
@@ -57,76 +56,136 @@
 
         <div class="row">
 
-            <!-- First column-->
-            <div class="col-12 col-lg-12">
-                <!-- Product Information -->
-                <div class="card mb-6">
-                    <div class="card-header">
-                        <h5 class="card-tile mb-0"> Information</h5>
-                    </div>
-                    <div class="card-body">
-                       <div class="row">
-                        <div class="input mb-6 col-4  ecommerce-select2-dropdown">
-                            <label class="form-label mb-1" for="model_id">
-                                Driver  
-                            </label>
-                            <select name="vehicle_model_id" id="model_id" data-depend="make_id"
-                                data-url="{{ route('select.model') }}"
-                                data-depend-url="{{ route('select.make.model') }}" class="select2 form-select"
-                                data-placeholder="Select Model">
-                            </select>
-                        </div>
+    <div class="col-12 col-lg-12">
+        <div class="card mb-6">
+            <div class="card-header">
+                <h5 class="card-tile mb-0">Information</h5>
+            </div>
+            <div class="card-body">
 
-                        <div class="input mb-6 col-4  ecommerce-select2-dropdown">
-                            <label class="form-label mb-1" for="model_id">
-                                Vehicle  
-                            </label>
-                            <select name="vehicle_model_id" id="model_id" data-depend="make_id"
-                                data-url="{{ route('select.model') }}"
-                                data-depend-url="{{ route('select.make.model') }}" class="select2 form-select"
-                                data-placeholder="Select Model">
-                            </select>
-                        </div>
-
-                        <div class="input mb-6 col-4">
-                            <label class="form-label" for="ecommerce-product-name">Date</label>
-                            <input type="date" class="form-control" id="ecommerce-product-name"
-                                placeholder="Short Description" name="short_Description" aria-label="Vehicle title">
-                        </div>
-
+                <div class="row">
+                    <!-- Driver -->
+                    <div class="input mb-6 col-4 ecommerce-select2-dropdown">
+                        <label class="form-label mb-1" for="driver_id">Driver</label>
+                        <select name="driver_id" id="driver_id" data-depend="make_id"
+                                data-url="{{ route('select.driver') }}"
+                                class="select2 form-select"
+                                data-placeholder="Select Driver">
+                        </select>
                     </div>
 
-                       <div class="input mb-6 col-4  ecommerce-select2-dropdown">
-                            <label class="form-label mb-1" for="model_id">
-                                Passenger    
-                            </label>
-                            <select name="vehicle_model_id" id="passenger_id" data-depend="make_id"
-                                data-url="{{ route('select.model') }}"
-                                data-depend-url="{{ route('select.make.model') }}" class="select2 form-select"
-                                data-placeholder="Select Model">
-                            </select>
-                        </div>
+                    <!-- Vehicle -->
+                    <div class="input mb-6 col-4 ecommerce-select2-dropdown">
+                        <label class="form-label mb-1" for="vehicle_id">Vehicle</label>
+                        <select name="vehicle_id" id="vehicle_id"
+                                data-url="{{ route('select.servicevehicle') }}"
+                                class="select2 form-select"
+                                data-placeholder="Select Vehicle">
+                        </select>
+                    </div>
 
-
-                       
-
-                        
+                    <!-- Date -->
+                    <div class="input mb-6 col-4">
+                        <label class="form-label" for="ecommerce-product-name">Date</label>
+                        <input type="datetime-local" class="form-control" id="ecommerce-product-name"
+                               name="date" aria-label="date">
                     </div>
                 </div>
-                <!-- /Product Information -->
-                <!-- Media -->
-              
 
-
-                
+                <!-- Passenger Section -->
+                <div id="passengers-wrapper">
+                    <div class="row passenger-row mb-3">
+                        <div class="input  col-4 ecommerce-select2-dropdown">
+                            <label class="form-label mb-1">Passenger</label>
+                            <select name="passenger_ids[]" class="select2 form-select passenger-select"
+                                    data-url="{{ route('select.passenger') }}"
+                                    data-placeholder="Select Passenger">
+                            </select>
+                        </div>
+                        <div class="col-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-success add-passenger-btn">Add</button>
+                        </div>
+                    </div>
+                </div>
 
             </div>
-            <!-- /Second column -->
-
-            <!-- Second column -->
-           
-            <!-- /detail Card -->
         </div>
+    </div>
+</div>
+
+<!-- Include jQuery and Select2 if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialize first select2
+    $('.passenger-select').select2({
+        placeholder: "Select Passenger",
+        ajax: {
+            url: function () {
+                return $(this).data('url');
+            },
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) {
+                return {
+                    results: data.map(function(item) {
+                        return {id: item.id, text: item.name};
+                    })
+                };
+            },
+            cache: true
+        }
+    });
+
+    // Add passenger row
+    $(document).on('click', '.add-passenger-btn', function() {
+        var passengerRow = `
+            <div class="row passenger-row mb-3">
+                <div class="input  col-4 ecommerce-select2-dropdown">
+                    <label class="form-label mb-1">Passenger</label>
+                    <select name="passenger_ids[]" class="select2 form-select passenger-select"
+                            data-url="{{ route('select.passenger') }}"
+                            data-placeholder="Select Passenger">
+                    </select>
+                </div>
+                <div class="col-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger remove-passenger-btn">Remove</button>
+                </div>
+            </div>
+        `;
+        $('#passengers-wrapper').append(passengerRow);
+
+        // Initialize select2 for the new select
+        $('#passengers-wrapper .passenger-row:last .passenger-select').select2({
+            placeholder: "Select Passenger",
+            ajax: {
+                url: function () {
+                    return $(this).data('url');
+                },
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    return {
+                        results: data.map(function(item) {
+                            return {id: item.id, text: item.name};
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+    });
+
+    // Remove passenger row
+    $(document).on('click', '.remove-passenger-btn', function() {
+        $(this).closest('.passenger-row').remove();
+    });
+});
+</script>
+
         <!-- /Second column -->
     </div>
     </div>

@@ -11,4 +11,9 @@ class ServiceVehicle extends Model
         'number_plate',
         'image',
     ];
+
+    public function jobs()
+    {
+        return $this->hasMany(ServiceJob::class, 'vehicle_id');
+    }
 }

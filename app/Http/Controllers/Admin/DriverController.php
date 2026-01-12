@@ -455,4 +455,30 @@ class DriverController extends Controller
             ], 500);
         }
     }
+
+
+ public function getdriver(Request $request)
+{
+    return response()->json(
+        Driver::with('user')
+            ->select('id', 'user_id')
+            ->when(
+                $request->filled('search'),
+                fn($query) =>
+                $query->whereHas('user', function ($q) use ($request) {
+                    $q->where('name', 'like', "%{$request->search}%");
+                })
+            )
+            ->limit(20)
+            ->get()
+            ->map(function ($driver) {
+                return [
+                    'id' => $driver->id,              // driver table id
+                    'name' => $driver->user->name,    // user table name
+                ];
+            })
+    );
+}
+
+
 }

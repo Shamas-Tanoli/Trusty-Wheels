@@ -111,6 +111,7 @@ class BookingController extends Controller
             'passengers.*.dropoff_longitude' => 'required|numeric',
             'passengers.*.pickup_location' => 'required|string',
             'passengers.*.dropoff_location' => 'required|string',
+            'passengers.*.plan_id' => 'required|exists:plans,id',
         ]);
 
         DB::beginTransaction();

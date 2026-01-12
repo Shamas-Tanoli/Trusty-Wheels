@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\VehicleTypeController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\VehicleCheckController;
 use App\Http\Controllers\Admin\ServiceVehicleController;
+use App\Http\Controllers\Admin\BookingPassengerController;
 
 Route::get('/', [WebsitePage::class, 'home'])->name('home');
 Route::get('/vehicle', [WebsitePage::class, 'vehicle'])->name('vehicle');
@@ -233,6 +234,7 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
     Route::controller(JobController::class)->prefix('job')->group(function () {
         Route::get('/', 'list')->name('job.show');
         Route::get('/create', 'create')->name('job.create');
+        Route::post('/store', 'store')->name('job.store');
         
        
     });
@@ -250,12 +252,11 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
 
 
 
-
-
-
-
-
 // For Dropdown Select Options admin
+
+Route::get('/get-passenger', [BookingPassengerController::class, 'getpassenger'])->name('select.passenger');
+Route::get('/get-driver', [DriverController::class, 'getdriver'])->name('select.driver');
+Route::get('/get-servicevehicle', [ServiceVehicleController::class, 'getservicevehicle'])->name('select.servicevehicle');
 Route::get('/get-towns', [TownController::class, 'gettowns'])->name('select.towns');
 Route::get('/get-service-time', [ServiceTimeController::class, 'getServiceTimes'])->name('select.servicetime');
 Route::get('/get-service', [ServiceController::class, 'getservice'])->name('select.service');

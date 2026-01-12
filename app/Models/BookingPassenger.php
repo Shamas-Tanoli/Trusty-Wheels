@@ -20,6 +20,7 @@ class BookingPassenger extends Model
         'dropoff_longitude',
         'pickup_location',
         'dropoff_location',
+        'plan_id'
     ];
 
 

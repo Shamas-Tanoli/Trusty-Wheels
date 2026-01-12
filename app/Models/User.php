@@ -60,4 +60,9 @@ class User extends Authenticatable
   {
     return $this->hasOne(Customer::class);
   }
+
+  public function driverJobs()
+{
+    return $this->hasMany(ServiceJob::class, 'driver_id');
+}
 }

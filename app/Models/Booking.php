@@ -15,6 +15,7 @@ class Booking extends Model
         'service_id',
         'town_id',
         'status',
+        'booking_type_id'
     ];
 
      public function passengers()

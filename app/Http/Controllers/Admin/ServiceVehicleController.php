@@ -14,6 +14,7 @@ class ServiceVehicleController extends Model
 {
  public function updatee(Request $request, $id)
 {
+
     $vehicle = ServiceVehicle::find($id);
 
     if (!$vehicle) {
@@ -189,5 +190,19 @@ class ServiceVehicleController extends Model
     public function index()
     {
        return view('admin.content.pages.service-vehicle.index');
+    }
+
+    public function getservicevehicle(Request $request)
+    {
+            return response()->json(
+            ServiceVehicle::select('id', 'name')
+                ->when(
+                    $request->filled('search'),
+                    fn($query) =>
+                    $query->where('name', 'like', "%{$request->search}%")
+                )
+                ->limit(10)
+                ->get()
+        );
     }
 }

@@ -231,7 +231,9 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
     });
 
     Route::controller(JobController::class)->prefix('job')->group(function () {
-        Route::get('/', 'index')->name('job.show');
+        Route::get('/', 'list')->name('job.show');
+        Route::get('/create', 'create')->name('job.create');
+        
        
     });
 

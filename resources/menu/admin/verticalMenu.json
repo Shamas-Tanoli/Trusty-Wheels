@@ -125,6 +125,14 @@
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "booking.type.show"
     }
+        ,
+       
+        {
+          "url": "/dashboard/job",
+          "name": "Job",
+          "icon": "menu-icon tf-icons ti ti-smart-home",
+          "slug": "job.show"
+        }
 
    
   ]

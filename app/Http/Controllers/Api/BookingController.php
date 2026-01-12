@@ -17,12 +17,14 @@ class BookingController extends Controller
 
     public function bookingtype(){
         $bookingtype = DB::table('booking_types')->get();
-         return response()->json([
+
+        return response()->json([
             'success' => true,
             'booking_type' => $bookingtype,
             'messages' => 'booking types fetched successfully'
         ]);
     }
+    
 
     public function areaToAreaFromServiceTimePlan(Request $request)
 {

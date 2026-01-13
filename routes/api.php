@@ -17,21 +17,23 @@ Route::post('/customer/register', [AuthController::class, 'register']);
 Route::post('/customer/login', [AuthController::class, 'login']);
 
 
-  
+
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
-       Route::get('/plans', [PlanController::class, 'index']); 
+    Route::get('/plans', [PlanController::class, 'index']);
     Route::get('/services', [ServiceController::class, 'index']);
-    Route::get('/service/{id}/service-time', [ServiceController::class, 'serviceTimeByService']); 
-    Route::get('/service-time/{id}/plans', [ServiceController::class, 'plansByServiceTime']); 
-    
+    Route::get('/service/{id}/service-time', [ServiceController::class, 'serviceTimeByService']);
+    Route::get('/service-time/{id}/plans', [ServiceController::class, 'plansByServiceTime']);
+
     Route::get('/area/service/time/plan', [BookingController::class, 'allThing']);
     Route::get('/area', [BookingController::class, 'area']);
     Route::post('/plan/by-criteria', [BookingController::class, 'areaToAreaFromServiceTimePlan']);
-    Route::post('/bookingtype', [BookingController::class, 'bookingtype']);
-});                                                 
-Route::post('/customer/booking', [BookingController::class, 'store']); 
- 
+
+
+    Route::post('/customer/booking', [BookingController::class, 'store']);
+    Route::get('/bookingtype', [BookingController::class, 'bookingtype']);
+});
+
 
 
 
@@ -45,8 +47,4 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
 // Customer + Driver APIs
 Route::middleware(['auth:sanctum', 'role:customer,driver'])->group(function () {
     Route::post('/customer/logout', [AuthController::class, 'logout']);
-
-
 });
-
-

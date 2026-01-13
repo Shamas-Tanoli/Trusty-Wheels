@@ -2,20 +2,74 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Plan;
 use App\Models\Town;
 use App\Models\Booking;
 use App\Models\Service;
+use App\Models\ServiceTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\ServiceJobPassenger;
 use App\Http\Controllers\Controller;
-use App\Models\Plan;
-use App\Models\ServiceTime;
 
 
 class BookingController extends Controller
 {
 
-    public function bookingtype(){
+    public function passengerStatus(Request $request)
+{
+    // 1. Validate request
+    $validated = $request->validate([
+        'passenger_id' => 'required|exists:service_job_passengers,id',
+        'status'       => 'required|string',
+    ]);
+
+    // 2. Find passenger
+    $passenger = ServiceJobPassenger::find($validated['passenger_id']);
+
+    if (!$passenger) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Passenger not found',
+        ], 404);
+    }
+
+    // 3. Update status
+    $passenger->status = $validated['status'];
+    $passenger->save();
+
+    // 4. Return success response
+    return response()->json([
+        'success' => true,
+        'message' => 'Passenger status updated successfully',
+    ]);
+}
+
+    public function customerbooking(Request $request)
+    {
+        $customerId = $request->user()->id;
+
+        $bookings = Booking::where('customer_id', $customerId)
+            ->with([
+                'passengers.plan',
+                'passengers.plan.areaFrom',
+                'passengers.plan.areaTo',
+                'passengers.plan.serviceTime',
+                'service',
+                'serviceTime',
+                'town'
+            ])
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'bookings' => $bookings,
+            'message' => 'Customer bookings fetched successfully'
+        ]);
+    }
+
+    public function bookingtype()
+    {
         $bookingtype = DB::table('booking_types')->get();
 
         return response()->json([
@@ -24,58 +78,60 @@ class BookingController extends Controller
             'messages' => 'booking types fetched successfully'
         ]);
     }
-    
+
 
     public function areaToAreaFromServiceTimePlan(Request $request)
-{
-    // validation
-    $request->validate([
-        'area_to_id' => 'required|integer',
-        'area_from_id' => 'required|integer',
-        'service_time_id' => 'required|integer',
-    ]);
+    {
+        // validation
+        $request->validate([
+            'area_to_id' => 'required|integer',
+            'area_from_id' => 'required|integer',
+            'service_time_id' => 'required|integer',
+        ]);
 
-    $areaToId = $request->area_to_id;
-    $areaFromId = $request->area_from_id;
-    $serviceTimeId = $request->service_time_id;
+        $areaToId = $request->area_to_id;
+        $areaFromId = $request->area_from_id;
+        $serviceTimeId = $request->service_time_id;
 
-    $plans = Plan::where('area_to_id', $areaToId)
-        ->where('area_from_id', $areaFromId)
-        ->where('service_time_id', $serviceTimeId)
-        ->with(['areaFrom', 'areaTo', 'serviceTime'])
-        ->get();
+        $plans = Plan::where('area_to_id', $areaToId)
+            ->where('area_from_id', $areaFromId)
+            ->where('service_time_id', $serviceTimeId)
+            ->with(['areaFrom', 'areaTo', 'serviceTime'])
+            ->get();
 
-    if ($plans->isEmpty()) {
+        if ($plans->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'plans' => [],
+                'message' => 'Plan not found for the given criteria'
+            ], 404);
+        }
+
         return response()->json([
-            'success' => false,
-            'plans' => [],
-            'message' => 'Plan not found for the given criteria'
-        ], 404);
+            'success' => true,
+            'plans' => $plans,
+            'message' => 'Plans fetched successfully for the given criteria'
+        ]);
     }
 
-    return response()->json([
-        'success' => true,
-        'plans' => $plans,
-        'message' => 'Plans fetched successfully for the given criteria'
-    ]);
-}
 
-
-    public function area(){
-          $town = Town::with(['city'])->get();
-           return response()->json([
+    public function area()
+    {
+        $town = Town::with(['city'])->get();
+        return response()->json([
             'success' => true,
             'areas' => $town,
             'messages' => 'areas fetched successfully'
         ]);
     }
-    public function allThing(){
+    public function allThing()
+    {
         $town = Town::with(['city'])->get();
         $service = Service::with(['serviceTimes'])->get();
-        $serviceTime = ServiceTime::with(['service','plans'])->get();
-        $plan = Plan::with(['areaFrom','areaTo','serviceTime'])->get();
+        $serviceTime = ServiceTime::with(['service', 'plans'])->get();
+        $plan = Plan::with(['areaFrom', 'areaTo', 'serviceTime'])->get();
 
-       
+
         return response()->json([
             'success' => true,
             'town' => $town,
@@ -87,9 +143,9 @@ class BookingController extends Controller
     }
     public function store(Request $request)
     {
-      
 
-       
+
+
         $validatedData = $request->validate([
             // Booking fields
             'booking_type_id' => 'required|exists:booking_types,id',
@@ -151,7 +207,6 @@ class BookingController extends Controller
                 'message' => 'Booking and passengers created successfully',
                 'data' => $booking->load('passengers')
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
 

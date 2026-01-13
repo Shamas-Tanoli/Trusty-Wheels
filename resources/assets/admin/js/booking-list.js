@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 });
         // AJAX request
         $.ajax({
-            url: 'detail/' + bookingId,
+            url: 'booking/detail/' + bookingId,
             type: 'GET',
             success: function(res) {
               

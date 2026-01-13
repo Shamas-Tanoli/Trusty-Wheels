@@ -27,11 +27,12 @@ class Booking extends Model
     {
         return $this->belongsTo(Plan::class);
     }
-
-    public function customer()
+    public function user()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(User::class, 'customer_id');
     }
+
+   
 
     public function serviceTime()
     {

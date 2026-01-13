@@ -14,7 +14,7 @@ class BookingPassengerController extends Controller
     $search = $request->input('search');
 
     $passengers = BookingPassenger::select('id', 'name', 'customer_id', 'dropoff_location')
-        ->with('customer')
+        ->with('user')
         ->when($search, function ($query, $search) {
             $query->where('name', 'LIKE', '%' . $search . '%');
         })
@@ -23,7 +23,7 @@ class BookingPassengerController extends Controller
         ->map(function ($passenger) {
             return [
                 'id' => $passenger->id,
-                'name' => $passenger->name . ' -Customer- ' . $passenger->customer->name . ' -Location- ' . $passenger->dropoff_location,
+                'name' => $passenger->name . ' -Customer- ' . $passenger->user->customer->name . ' -Location- ' . $passenger->dropoff_location,
             ];
         });
 

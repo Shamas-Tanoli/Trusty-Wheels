@@ -60,9 +60,18 @@ class User extends Authenticatable
   {
     return $this->hasOne(Customer::class);
   }
+  public function user()
+  {
+    return $this->hasOne(User::class);
+  }
 
   public function driverJobs()
 {
     return $this->hasMany(ServiceJob::class, 'driver_id');
+}
+
+  public function booking()
+{
+    return $this->hasMany(Booking::class, 'customer_id');
 }
 }

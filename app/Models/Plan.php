@@ -49,4 +49,10 @@ class Plan extends Model
     {
         return $query->where('status', 'active');
     }
+
+     public function passengers()
+    {
+        return $this->hasMany(BookingPassenger::class);
+    }
+    
 }

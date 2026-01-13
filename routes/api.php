@@ -21,7 +21,7 @@ Route::post('/customer/login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/plans', [PlanController::class, 'index']);
-    
+
     Route::get('/service/{id}/service-time', [ServiceController::class, 'serviceTimeByService']);
     Route::get('/service-time/{id}/plans', [ServiceController::class, 'plansByServiceTime']);
 
@@ -29,13 +29,16 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/area', [BookingController::class, 'area']);
     Route::post('/plan/by-criteria', [BookingController::class, 'areaToAreaFromServiceTimePlan']);
 
-
+    Route::get('/services', [ServiceController::class, 'index']);
     Route::post('/customer/booking', [BookingController::class, 'store']);
     Route::get('/bookingtype', [BookingController::class, 'bookingtype']);
+    Route::get('/customer/bookings/all', [BookingController::class, 'customerbooking']);
+    Route::post('/passenger/status', [BookingController::class, 'passengerStatus']);
+
 });
 
 
-Route::get('/services', [ServiceController::class, 'index']);
+
 
 
 Route::post('/driver/login', [DriverAuthController::class, 'login']);

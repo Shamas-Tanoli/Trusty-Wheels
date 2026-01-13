@@ -29,11 +29,14 @@ class BookingPassenger extends Model
         return $this->belongsTo(Booking::class);
     }
 
-    /**
-     * Passenger belongs to customer
-     */
-    public function customer()
+
+ public function plan()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Plan::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'customer_id');
+    }
+   
 }

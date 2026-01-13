@@ -110,12 +110,12 @@ class BookingController extends Controller
     public function list(Request $request)
     {
         // Get all bookings with passengers and customer
-        $bookings = Booking::with(['passengers', 'customer', 'plan', 'service', 'serviceTime', 'town']);
+        $bookings = Booking::with(['passengers', 'user', 'plan', 'service', 'serviceTime', 'town']);
 
         return DataTables::of($bookings)
             ->addIndexColumn() // Serial Number
             ->addColumn('customer_name', function ($row) {
-                return $row->customer->name ?? 'N/A';
+                return $row->user->customer->name ?? 'N/A';
             })
             ->addColumn('plan_name', function ($row) {
                 return $row->plan->name ?? 'N/A';

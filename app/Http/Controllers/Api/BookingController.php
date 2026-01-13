@@ -93,7 +93,7 @@ class BookingController extends Controller
         $validatedData = $request->validate([
             // Booking fields
             'booking_type_id' => 'required|exists:booking_types,id',
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'required|exists:users,id',
             'service_time_id' => 'required|exists:service_times,id',
             'service_id' => 'required|exists:services,id',
             'town_id' => 'required|exists:towns,id',

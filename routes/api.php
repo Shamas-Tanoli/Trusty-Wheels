@@ -21,7 +21,7 @@ Route::post('/customer/login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/plans', [PlanController::class, 'index']);
-    Route::get('/services', [ServiceController::class, 'index']);
+    
     Route::get('/service/{id}/service-time', [ServiceController::class, 'serviceTimeByService']);
     Route::get('/service-time/{id}/plans', [ServiceController::class, 'plansByServiceTime']);
 
@@ -35,7 +35,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
 });
 
 
-
+Route::get('/services', [ServiceController::class, 'index']);
 
 
 Route::post('/driver/login', [DriverAuthController::class, 'login']);

@@ -30,6 +30,22 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\VehicleCheckController;
 use App\Http\Controllers\Admin\ServiceVehicleController;
 use App\Http\Controllers\Admin\BookingPassengerController;
+use Illuminate\Support\Facades\Artisan;
+
+
+Route::get('/run-migrations', function () {
+    try {
+        Artisan::call('migrate', [
+            '--force' => true // production me bhi run ho jaye
+        ]);
+        $output = Artisan::output();
+        return nl2br($output);
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
+
 
 Route::get('/', [WebsitePage::class, 'home'])->name('home');
 Route::get('/vehicle', [WebsitePage::class, 'vehicle'])->name('vehicle');

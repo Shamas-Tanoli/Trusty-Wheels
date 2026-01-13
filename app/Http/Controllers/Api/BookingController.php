@@ -20,12 +20,12 @@ class BookingController extends Controller
 {
     // 1. Validate request
     $validated = $request->validate([
-        'passenger_id' => 'required|exists:service_job_passengers,id',
+        'passenger_id' => 'required|exists:service_job_passengers,passenger_id',
         'status'       => 'required|string',
     ]);
 
     // 2. Find passenger
-    $passenger = ServiceJobPassenger::find($validated['passenger_id']);
+    $passenger = ServiceJobPassenger::where('passenger_id', $validated['passenger_id'])->first();
 
     if (!$passenger) {
         return response()->json([

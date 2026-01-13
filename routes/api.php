@@ -3,10 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\PlanController;
-use App\Http\Controllers\Api\DriverAuthController;
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\api\DriverJobController;
+use App\Http\Controllers\Api\DriverAuthController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -42,9 +43,15 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
 
 
 Route::post('/driver/login', [DriverAuthController::class, 'login']);
+
+
+ Route::get('driver/{driver}/jobs', [DriverJobController::class, 'getDriverJobs']);
 // Driver Only APIs
 Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::post('/driver/logout', [DriverAuthController::class, 'logout']);
+
+   
+
 });
 
 // Customer + Driver APIs

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\DriverJobController;
 use App\Http\Controllers\Api\DriverAuthController;
+use App\Http\Controllers\Api\ServiceJobPassangerController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -35,6 +36,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/bookingtype', [BookingController::class, 'bookingtype']);
     Route::get('/customer/bookings/all', [BookingController::class, 'customerbooking']);
     Route::post('/passenger/status', [BookingController::class, 'passengerStatus']);
+    Route::get('/customer/children', [ServiceJobPassangerController::class, 'getChildrenWithJobs']);
 
 });
 

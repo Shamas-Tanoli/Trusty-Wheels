@@ -78,7 +78,7 @@ class JobController extends Controller
                     'passenger'=> [
                         'id'   => $jobPassenger->passenger->id,
                         'name' => $jobPassenger->passenger->name,
-                    ],git 
+                    ]
                 ]
             );
         }

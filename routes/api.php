@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ServiceController;
-use App\Http\Controllers\api\DriverJobController;
+use App\Http\Controllers\Api\DriverJobController;
 use App\Http\Controllers\Api\DriverAuthController;
 
 Route::get('/user', function (Request $request) {

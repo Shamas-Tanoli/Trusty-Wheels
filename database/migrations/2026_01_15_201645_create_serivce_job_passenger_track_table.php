@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('pickup_trip_one',50);
             $table->string('dropoff_trip_one',50);
             $table->string('pickup_trip_two',50);
-            $table->string('dropoff_trip_two',50);
+            $table->string('dropoff_trip_two',50); 
             $table->timestamps();
         });
     }

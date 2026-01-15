@@ -80,7 +80,7 @@ class AuthController extends Controller
         'fcm_token' => 'nullable|string',
     ]);
 
-    $user = User::where('email', $request->email)->first();
+    $user = User::where('email', $request->email) ->where('role', 'customer')->first();
 
     if (! $user || ! Hash::check($request->password, $user->password)) {
         return response()->json([

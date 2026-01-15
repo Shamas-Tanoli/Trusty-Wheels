@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\DriverJobController;
 use App\Http\Controllers\Api\DriverAuthController;
+use App\Http\Controllers\Api\ServiceJobController;
 use App\Http\Controllers\Api\ServiceJobPassangerController;
 
 Route::get('/user', function (Request $request) {
@@ -54,6 +55,7 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
 
 Route::get('driver/{driver}/jobs', [DriverJobController::class, 'getDriverJobs']);
 Route::get('driver/{driver}/jobs/{job}', [DriverJobController::class, 'getDriverJobDetails']);
+Route::post('driver/service/jobs', [ServiceJobController::class, 'createJobTracking']);
 
 
 });

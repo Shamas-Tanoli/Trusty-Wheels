@@ -12,6 +12,7 @@ class BookingPassengerController extends Controller
     public function getpassenger(Request $request)
 {
     $search = $request->input('search');
+   
 
     $passengers = BookingPassenger::select('id', 'name', 'customer_id', 'dropoff_location')
         ->with('user')
@@ -23,9 +24,9 @@ class BookingPassengerController extends Controller
         ->map(function ($passenger) {
             return [
                 'id' => $passenger->id,
-                'name' => $passenger->name . ' -Customer- ' . $passenger->user->customer->name . ' -Location- ' . $passenger->dropoff_location,
+                'name' => $passenger->name . ' -Customer- ' . $passenger->user->name . ' -Location- ' . $passenger->dropoff_location,
             ];
-        });
+        }); 
 
     return response()->json($passengers);
 }

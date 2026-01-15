@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServiceJobTrack extends Model
 {
+
     use HasFactory;
+
+    protected $table = 'service_job_track';
 
     protected $fillable = [
         'service_job_id',

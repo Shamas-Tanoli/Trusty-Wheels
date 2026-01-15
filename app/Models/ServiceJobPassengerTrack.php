@@ -9,6 +9,8 @@ class ServiceJobPassengerTrack extends Model
 {
     use HasFactory;
 
+    protected $table = 'service_job_passenger_track';
+
     protected $fillable = [
         'service_job_track_id',
         'service_job_passengers_id',

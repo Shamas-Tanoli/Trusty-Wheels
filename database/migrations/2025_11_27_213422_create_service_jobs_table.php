@@ -40,7 +40,13 @@ return new class extends Migration
 
 // job schedule 
 //  job id 
-// status (aj ke din ki job complete hogai hai ya nahi)
+// status (aj ke din  ki job complete hogai hai ya nahi)
+
+
+// job schedule detail 
+// job id
+// vehicle id
+// driver id
 // trip 1 completed ya ni
 // trip 2 completed ya ni
 
@@ -49,10 +55,11 @@ return new class extends Migration
 // job schedule id
 // passenger id
 // status (bacha gye ya ni aj )
-// pickup morning
-// dropoff morning
-// pickup evening
-// dropoff evening
+// pickup trip one
+// dropoff trip one
+// pickup trip two
+// dropoff trip two
+
 
 
 

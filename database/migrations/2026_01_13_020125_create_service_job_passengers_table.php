@@ -12,20 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('service_job_passengers', function (Blueprint $table) {
-             $table->id();
-
-    $table->unsignedBigInteger('service_job_id');
-    $table->unsignedBigInteger('passenger_id');
-
-    // passenger status (present, absent, leave, etc.)
-    $table->string('status');
-
-    $table->timestamps();
-
-    // foreign keys
-    $table->foreign('service_job_id')->references('id')->on('service_jobs')->onDelete('cascade');
-    $table->foreign('passenger_id')->references('id')->on('booking_passengers')->onDelete('cascade');
-
+            $table->id();
+            $table->unsignedBigInteger('service_job_id');
+            $table->unsignedBigInteger('passenger_id');
+            $table->string('status');
+            $table->timestamps();
+            $table->foreign('service_job_id')->references('id')->on('service_jobs')->onDelete('cascade');
+            $table->foreign('passenger_id')->references('id')->on('booking_passengers')->onDelete('cascade');
         });
     }
 

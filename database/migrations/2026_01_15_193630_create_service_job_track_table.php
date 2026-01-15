@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('service_job_track', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_job_id')->constrained('service_jobs')->onDelete('cascade');
-            $table->string('status',50);  // onging or completed
-             $table->timestamps();
+            $table->string('status', 50);  // onging or completed
+            $table->timestamps();
         });
     }
 

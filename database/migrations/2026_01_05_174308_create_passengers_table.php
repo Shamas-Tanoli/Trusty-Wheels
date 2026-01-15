@@ -11,40 +11,39 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('booking_passengers', function (Blueprint $table) {
-           
-            $table->id();
-     $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
-            // Foreign Key
-            $table->foreignId('customer_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
-            $table->foreignId('booking_id')
-                  ->constrained('booking')
-                  ->cascadeOnDelete();
+        Schema::create('booking_passengers', function (Blueprint $table) {
 
-            // Passenger Info
+            $table->id();
+            $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
+            
+            $table->foreignId('customer_id')
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->foreignId('booking_id')
+                ->constrained('booking')
+                ->cascadeOnDelete();
+
+           
             $table->string('name');
 
-            // Pickup & Dropoff Time
-            $table->string('pickup_time',250);
-            $table->string('dropoff_time',250);
+          
+            $table->string('pickup_time', 250);
+            $table->string('dropoff_time', 250);
 
-            // Pickup Location (Latitude & Longitude)
+            
             $table->decimal('pickup_latitude', 10, 7);
             $table->decimal('pickup_longitude', 10, 7);
 
-            // Dropoff Location (Latitude & Longitude)
+            
             $table->decimal('dropoff_latitude', 10, 7);
             $table->decimal('dropoff_longitude', 10, 7);
 
-            // Human Readable Locations
+            
             $table->string('pickup_location');
             $table->string('dropoff_location');
 
             $table->timestamps();
         });
-      
     }
 
     /**

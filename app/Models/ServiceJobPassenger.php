@@ -21,4 +21,9 @@ class ServiceJobPassenger extends Model
     {
         return $this->belongsTo(BookingPassenger::class, 'passenger_id');
     }
+
+     public function passengerTrack()
+    {
+        return $this->hasMany(ServiceJobPassengerTrack::class, 'service_job_passengers_id');
+    }
 }

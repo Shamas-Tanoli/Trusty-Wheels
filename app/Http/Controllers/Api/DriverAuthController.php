@@ -18,7 +18,7 @@ class DriverAuthController extends Controller
         'fcm_token' => 'nullable|string'
     ]);
 
-    // Step 1: Check if user exists
+    
     $user = User::where('email', $request->email)
                 ->where('role', 'driver')
                 ->first();
@@ -29,7 +29,7 @@ class DriverAuthController extends Controller
         ], 401);
     }
 
-    // Step 2: Check if driver is active
+    
     $driver = Driver::where('verification_status', 'active')
                     ->where('user_id', $user->id)
                     ->first();
@@ -40,13 +40,13 @@ class DriverAuthController extends Controller
         ], 403);
     }
 
-    // Step 3: Save FCM token
+  
     if ($request->has('fcm_token')) {
         $user->fcm_token = $request->fcm_token;
         $user->save();
     }
 
-    // Step 4: Create token
+    
     $tokenName = $user->role . '_token';
     $token = $user->createToken($tokenName)->plainTextToken;
 

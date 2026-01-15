@@ -7,9 +7,56 @@ use Illuminate\Http\Request;
 
 class DriverJobController extends Controller
 {
+
+    public function getDriverJobDetails($userid, $jobId){
+
+        $driver = \App\Models\User::find($userid);
+        if (!$driver) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Driver not found'
+            ], 404);
+        }
+
+        $driverModel = \App\Models\Driver::where('user_id', $driver->id)->first();
+        if (!$driverModel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Driver profile not found'
+            ], 404);
+        }
+
+        
+        $job = \App\Models\ServiceJob::with([
+            'vehicle',
+            'passengers.passenger'
+        ])
+        ->where('id', $jobId)
+        ->where('driver_id', $driverModel->id)
+        ->first();
+
+        if (!$job) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Job not found for this driver'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'driver' => [
+                'id' => $driver->id,
+                'name' => $driver->name,
+                'email' => $driver->email,
+            ],
+            'job' => $job
+        ]);
+
+    }
+
     public function getDriverJobs($driverId)
 {
-    // Check if driver exists
+    
     $driver = \App\Models\User::find($driverId);
     if (!$driver) {
         return response()->json([
@@ -20,7 +67,7 @@ class DriverJobController extends Controller
 
     $driverid = \App\Models\Driver::where('user_id', $driverId)->first();
 
-    // Get all jobs for this driver with related details
+   
     $jobs = \App\Models\ServiceJob::with([
         'vehicle',
         'passengers.passenger'

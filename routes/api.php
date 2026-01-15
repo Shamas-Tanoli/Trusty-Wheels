@@ -47,12 +47,14 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
 Route::post('/driver/login', [DriverAuthController::class, 'login']);
 
 
- Route::get('driver/{driver}/jobs', [DriverJobController::class, 'getDriverJobs']);
+ 
 // Driver Only APIs
 Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::post('/driver/logout', [DriverAuthController::class, 'logout']);
 
-   
+Route::get('driver/{driver}/jobs', [DriverJobController::class, 'getDriverJobs']);
+Route::get('driver/{driver}/jobs/{job}', [DriverJobController::class, 'getDriverJobDetails']);
+
 
 });
 

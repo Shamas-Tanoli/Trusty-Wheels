@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('service_job_passenger_track', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_job_track_id')->constrained('service_job_track')->onDelete('cascade');
-            $table->foreignId('passenger_id')->constrained('passengers')->onDelete('cascade');
-            $table->string('status',50); 
+            $table->foreignId('service_job_passengers_id')->constrained('service_job_passengers')->onDelete('cascade');
+            $table->string('status',50);  // picked or not picked
             $table->string('pickup_trip_one',50);
             $table->string('dropoff_trip_one',50);
             $table->string('pickup_trip_two',50);

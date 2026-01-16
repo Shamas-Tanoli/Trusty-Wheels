@@ -54,7 +54,7 @@ class PlanController extends Controller
 
     public function store(Request $request)
     {
-        // Validation
+        
         $request->validate([
             'name'         => 'required|string|max:255',
             'price'        => 'required|numeric',
@@ -64,7 +64,7 @@ class PlanController extends Controller
 
         ]);
 
-        // Create Plan
+        
         Plan::create([
             'name'         => $request->name,
             'price'        => $request->price,

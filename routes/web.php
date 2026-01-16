@@ -5,7 +5,9 @@ use App\Models\Vehicle;
 use App\Models\Location;
 use App\Models\VehicleModel;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\pages\MiscError;
+
 use App\Http\Controllers\pages\WebsitePage;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\CityController;
@@ -30,7 +32,6 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\VehicleCheckController;
 use App\Http\Controllers\Admin\ServiceVehicleController;
 use App\Http\Controllers\Admin\BookingPassengerController;
-use Illuminate\Support\Facades\Artisan;
 
 
 Route::get('/run-migrations', function () {
@@ -247,12 +248,11 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         Route::post('/{id}/update', 'update')->name('booking.type.update');
     });
 
+   
     Route::controller(JobController::class)->prefix('job')->group(function () {
         Route::get('/', 'list')->name('job.show');
         Route::get('/create', 'create')->name('job.create');
-        Route::post('/store', 'store')->name('job.store');
-        
-       
+        Route::post('/store', 'store')->name('job.store');  
     });
 
 });

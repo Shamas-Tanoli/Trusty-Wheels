@@ -270,20 +270,20 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
 
 // For Dropdown Select Options admin
 
-Route::get('/get-passenger', [BookingPassengerController::class, 'getpassenger'])->name('select.passenger');
-Route::get('/get-driver', [DriverController::class, 'getdriver'])->name('select.driver');
-Route::get('/get-servicevehicle', [ServiceVehicleController::class, 'getservicevehicle'])->name('select.servicevehicle');
-Route::get('/get-towns', [TownController::class, 'gettowns'])->name('select.towns');
-Route::get('/get-service-time', [ServiceTimeController::class, 'getServiceTimes'])->name('select.servicetime');
-Route::get('/get-service', [ServiceController::class, 'getservice'])->name('select.service');
-Route::get('/get-cities', [CityController::class, 'getcities'])->name('select.cities');
-Route::get('/get-location', [LocationController::class, 'getLocation'])->name('select.location');
-Route::get('/get-vehicle-types', [VehicleTypeController::class, 'getVehicleTypes'])
-    ->name('select.vehicle.types');
-Route::get('/get-make', [MakeController::class, 'getMake'])->name('select.make');
-Route::get('/get-model', [ModelController::class, 'getModel'])->name('select.model');
-Route::get('/get-make-model', [ModelController::class, 'ModelByMake'])->name('select.make.model');
-Route::get('/get-vehicle', [VehicleController::class, 'slectVehicle'])->name('select.vehicle');
+// Route::get('/get-passenger', [BookingPassengerController::class, 'getpassenger'])->name('select.passenger');
+// Route::get('/get-driver', [DriverController::class, 'getdriver'])->name('select.driver');
+// Route::get('/get-servicevehicle', [ServiceVehicleController::class, 'getservicevehicle'])->name('select.servicevehicle');
+// Route::get('/get-towns', [TownController::class, 'gettowns'])->name('select.towns');
+// Route::get('/get-service-time', [ServiceTimeController::class, 'getServiceTimes'])->name('select.servicetime');
+// Route::get('/get-service', [ServiceController::class, 'getservice'])->name('select.service');
+// Route::get('/get-cities', [CityController::class, 'getcities'])->name('select.cities');
+// Route::get('/get-location', [LocationController::class, 'getLocation'])->name('select.location');
+// Route::get('/get-vehicle-types', [VehicleTypeController::class, 'getVehicleTypes'])
+//     ->name('select.vehicle.types');
+// Route::get('/get-make', [MakeController::class, 'getMake'])->name('select.make');
+// Route::get('/get-model', [ModelController::class, 'getModel'])->name('select.model');
+// Route::get('/get-make-model', [ModelController::class, 'ModelByMake'])->name('select.make.model');
+// Route::get('/get-vehicle', [VehicleController::class, 'slectVehicle'])->name('select.vehicle');
 
 
 

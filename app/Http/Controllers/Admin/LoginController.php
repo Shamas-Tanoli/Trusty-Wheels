@@ -12,11 +12,12 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+    
     public function index()
     {
-
         return view('admin.content.authentications.auth-login-basic');
     }
+
 
     public function login(Request $request)
     {
@@ -47,16 +48,14 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::user();
 
+        Auth::user();
         Session::flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('home')->with('success', 'Logged out successfully!');
     }
-
-
-
+    
     public function editProfile()
     {
         $user = Auth::user();

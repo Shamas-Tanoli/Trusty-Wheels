@@ -20,7 +20,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // Validate Input Fields
+       
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -35,10 +35,10 @@ class LoginController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Login Attempt with Remember Me
+        
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-            // Prevent Session Fixation Attacks
+           
             $request->session()->regenerate();
             return redirect()->intended('dashboard')->with('success', 'Login successful!');
         }
@@ -49,7 +49,6 @@ class LoginController extends Controller
     {
         Auth::user();
 
-        // Invalidate and regenerate session & CSRF token
         Session::flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -73,11 +72,11 @@ class LoginController extends Controller
 
     public function UpdateAdmindetail(Request $request)
     {
-        // Get current user
+       
         $userid = Auth::user()->id;
         $user = User::findOrFail($userid);
 
-        // Validation
+        
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
@@ -86,7 +85,6 @@ class LoginController extends Controller
             'confirmPassword' => 'nullable|same:newPassword',
         ]);
 
-        // Check if the current password is correct (only if a new password is provided)
         if ($request->newPassword && !Hash::check($request->currentPassword, $user->password)) {
             return response()->json([
                 'success' => false,
@@ -94,11 +92,11 @@ class LoginController extends Controller
             ]);
         }
 
-        // Update user details
+        
         $user->name = $request->name;
         $user->email = $request->email;
 
-        // If new password is provided, update it
+        
         if ($request->newPassword) {
             $user->password = Hash::make($request->newPassword);
         }

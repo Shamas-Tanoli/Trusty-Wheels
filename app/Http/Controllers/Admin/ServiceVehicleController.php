@@ -24,7 +24,6 @@ class ServiceVehicleController extends Model
         ], 404);
     }
 
-    // Validation
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
         'number_plate' => 'required|string|max:50|unique:service_vehicles,number_plate,' . $vehicle->id,
@@ -35,7 +34,7 @@ class ServiceVehicleController extends Model
         return response()->json(['errors' => $validator->errors()], 422);
     }
 
-    // Image upload
+    
     if ($request->hasFile('image')) {
         if ($vehicle->image && file_exists(public_path($vehicle->image))) {
             unlink(public_path($vehicle->image));
@@ -53,7 +52,7 @@ class ServiceVehicleController extends Model
         $vehicle->image = 'assets/img/servicevehicle/' . $imageName;
     }
 
-    // Update other fields
+ 
     $vehicle->name = $request->name;
     $vehicle->number_plate = $request->number_plate;
     $vehicle->save();
@@ -79,7 +78,7 @@ class ServiceVehicleController extends Model
         ], 404);
     }
 
-    // Agar image exist karti hai to delete kar do
+    
     if ($vehicle->image && file_exists(public_path($vehicle->image))) {
         unlink(public_path($vehicle->image));
     }
@@ -143,44 +142,42 @@ class ServiceVehicleController extends Model
     
    public function store(Request $request)
     {
-        // 1. Validation
+    
         $request->validate([
             'name' => 'required|string|max:255',
             'number_plate' => 'required|string|max:50|unique:service_vehicles,number_plate',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // 2. Image upload
+     
         $imagePath = null;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
 
-            // Folder path
+            
             $folderPath = public_path('assets/img/servicevehicle');
 
-            // Agar folder exist nahi karta to create karo
+            
             if (!File::exists($folderPath)) {
                 File::makeDirectory($folderPath, 0755, true);
             }
 
-            // Image name
+           
             $imageName = Str::slug($request->name) . '_' . time() . '.' . $image->getClientOriginalExtension();
 
-            // Move image
+            
             $image->move($folderPath, $imageName);
 
-            // Path database me save karne ke liye
+            
             $imagePath = 'assets/img/servicevehicle/' . $imageName;
         }
 
-        // 3. Create new Service Vehicle
         $vehicle = ServiceVehicle::create([
             'name' => $request->name,
             'number_plate' => $request->number_plate,
             'image' => $imagePath,
         ]);
 
-        // 4. Return response
         return response()->json([
            'success' => true,
             'message' => 'Service Vehicle added successfully.',

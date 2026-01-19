@@ -59,7 +59,10 @@ Route::post('driver/service/jobs', [ServiceJobController::class, 'createJobTrack
 
 // amaar on tour 
 Route::post('driver/service-job/passenger-tracks', [ServiceJobPassangerController::class, 'getServiceJobPassengerTracks']);
-
+ Route::post('service-job-passenger-track/pickup-trip-one', [ServiceJobPassangerController::class, 'updatePickupTripOne']);
+    Route::post('service-job-passenger-track/dropoff-trip-one', [ServiceJobPassangerController::class, 'updateDropoffTripOne']);
+    Route::post('service-job-passenger-track/pickup-trip-two', [ServiceJobPassangerController::class, 'updatePickupTripTwo']);
+    Route::post('service-job-passenger-track/dropoff-trip-two', [ServiceJobPassangerController::class, 'updateDropoffTripTwo']);
 
 
 });

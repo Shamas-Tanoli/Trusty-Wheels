@@ -38,7 +38,6 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/customer/bookings/all', [BookingController::class, 'customerbooking']);
     Route::post('/passenger/status', [BookingController::class, 'passengerStatus']);
     Route::get('/customer/children', [ServiceJobPassangerController::class, 'getChildrenWithJobs']);
-
 });
 
 
@@ -48,23 +47,21 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
 Route::post('/driver/login', [DriverAuthController::class, 'login']);
 
 
- 
+
 // Driver Only APIs
 Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::post('/driver/logout', [DriverAuthController::class, 'logout']);
 
-Route::get('driver/{driver}/jobs', [DriverJobController::class, 'getDriverJobs']);
-Route::get('driver/{driver}/jobs/{job}', [DriverJobController::class, 'getDriverJobDetails']);
-Route::post('driver/service/jobs', [ServiceJobController::class, 'createJobTracking']);
+    Route::get('driver/{driver}/jobs', [DriverJobController::class, 'getDriverJobs']);
+    Route::get('driver/{driver}/jobs/{job}', [DriverJobController::class, 'getDriverJobDetails']);
+    Route::post('driver/service/jobs', [ServiceJobController::class, 'createJobTracking']);
 
-// amaar on tour 
-Route::post('driver/service-job/passenger-tracks', [ServiceJobPassangerController::class, 'getServiceJobPassengerTracks']);
- Route::post('service-job-passenger-track/pickup-trip-one', [ServiceJobPassangerController::class, 'updatePickupTripOne']);
+    // amaar on tour 
+    Route::post('driver/service-job/passenger-tracks', [ServiceJobPassangerController::class, 'getServiceJobPassengerTracks']);
+    Route::post('service-job-passenger-track/pickup-trip-one', [ServiceJobPassangerController::class, 'updatePickupTripOne']);
     Route::post('service-job-passenger-track/dropoff-trip-one', [ServiceJobPassangerController::class, 'updateDropoffTripOne']);
     Route::post('service-job-passenger-track/pickup-trip-two', [ServiceJobPassangerController::class, 'updatePickupTripTwo']);
     Route::post('service-job-passenger-track/dropoff-trip-two', [ServiceJobPassangerController::class, 'updateDropoffTripTwo']);
-
-
 });
 
 // Customer + Driver APIs

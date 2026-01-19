@@ -4,12 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\ServiceJob;
 use Illuminate\Http\Request;
+use App\Services\FirebaseService;
 use App\Models\ServiceJobPassenger;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceJobPassengerTrack;
 
 class ServiceJobPassangerController extends Controller
 {
+     protected $firebase;
+
+    public function __construct(FirebaseService $firebase)
+    {
+        $this->firebase = $firebase;
+    }
+    
     public function getChildrenWithJobs(Request $request)
     {
         $customer = $request->user();
@@ -57,7 +65,7 @@ class ServiceJobPassangerController extends Controller
         ]);
 
         $serviceJob = ServiceJob::with([
-          
+
             'driver:id,name',
             'vehicle:id,number_plate',
             'jobTrack',
@@ -65,7 +73,7 @@ class ServiceJobPassangerController extends Controller
             'passengerTracks.passenger.passenger.user'
         ])->findOrFail($request->service_job_id);
 
-       
+
 
         return response()->json([
             'status' => true,
@@ -111,28 +119,67 @@ class ServiceJobPassangerController extends Controller
     {
         $request->validate([
             'track_id' => 'required|exists:service_job_passenger_track,id',
-               'status' => 'required|in:picked',
+            'status'   => 'required|in:picked',
         ]);
 
-        $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
-        $track->pickup_trip_one = $request->status;
-        $track->save();
+        
+        $currentTrack = ServiceJobPassengerTrack::with([
+            'jobTrack.job.driver',
+            'jobTrack.job.vehicle',
+        ])->findOrFail($request->track_id);
+
+        
+        $currentTrack->pickup_trip_one = $request->status;
+        $currentTrack->save();
+
+        $nextPassengerTrack = ServiceJobPassengerTrack::with(
+            'passenger.passenger.user'
+        )
+            ->where('service_job_track_id', $currentTrack->service_job_track_id)
+            ->where('id', '>', $currentTrack->id) 
+            ->orderBy('id')
+            ->first();
+
+        
+        if ($nextPassengerTrack) {
+
+            $user = $nextPassengerTrack->passenger->passenger->user ?? null;
+            $token = $user->fcm_token ?? null;
+
+            if ($token) {
+                $serviceJob = $currentTrack->jobTrack->job;
+
+                $this->firebase->sendToToken(
+                    $token,
+                    'Dear Customer',
+                    "Driver is heading to your pickup location. Please be ready.",
+                    [
+                        'service_job_id' => $serviceJob->id,
+                        'status' => 'next_pickup',
+                        'driver' => $serviceJob->driver->name ?? null,
+                        'vehicle' => $serviceJob->vehicle->registration_no ?? null,
+                    ]
+                );
+            }
+        }
 
         return response()->json([
             'status' => true,
             'data' => [
-                'track_id' => $track->id,
-                'pickup_trip_one' => $track->pickup_trip_one,
+                'track_id' => $currentTrack->id,
+                'pickup_trip_one' => $currentTrack->pickup_trip_one,
+                'next_passenger_notified' => $nextPassengerTrack ? true : false,
             ],
             'message' => 'Pickup status updated successfully.',
         ]);
     }
 
-     public function updateDropoffTripOne(Request $request)
+
+    public function updateDropoffTripOne(Request $request)
     {
         $request->validate([
             'track_id' => 'required|exists:service_job_passenger_track,id',
-               'status' => 'required|in:picked',
+            'status' => 'required|in:picked',
         ]);
 
         $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
@@ -153,7 +200,7 @@ class ServiceJobPassangerController extends Controller
     {
         $request->validate([
             'track_id' => 'required|exists:service_job_passenger_track,id',
-              'status' => 'required|in:picked',
+            'status' => 'required|in:picked',
         ]);
 
         $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
@@ -188,7 +235,5 @@ class ServiceJobPassangerController extends Controller
             ],
             'message' => 'Dropoff status updated successfully.',
         ]);
-       
     }
-    
 }

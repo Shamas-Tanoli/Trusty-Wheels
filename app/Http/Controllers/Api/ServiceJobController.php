@@ -59,7 +59,8 @@ class ServiceJobController extends Controller
                 'driver_id' => $serviceJob->driver_id,
                 'vehicle_id' => $serviceJob->vehicle_id,
                 'trip_one_status' => 'ongoing',
-                'trip_two_status' => 'pending',
+                // 'trip_two_status' => 'pending',
+                
             ]);
 
 

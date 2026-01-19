@@ -13,6 +13,20 @@ use App\Models\ServiceJobPassengerTrack;
 
 class ServiceJobController extends Controller
 {
+
+    public function startjob(Request $request, $id)
+    {
+        $driver = $request->user();
+
+
+
+
+        return response()->json([
+            'status' => true,
+            'driver' => $driver,
+            'message' => 'Job Started Successfully',
+        ]);
+    }
    public function createJobTracking(Request $request)
 {
     $request->validate([

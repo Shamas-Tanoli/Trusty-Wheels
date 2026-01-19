@@ -111,7 +111,7 @@ class ServiceJobPassangerController extends Controller
     {
         $request->validate([
             'track_id' => 'required|exists:service_job_passenger_track,id',
-            'status' => 'required|in:pending,ongoing,completed',
+               'status' => 'required|in:picked',
         ]);
 
         $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
@@ -132,7 +132,7 @@ class ServiceJobPassangerController extends Controller
     {
         $request->validate([
             'track_id' => 'required|exists:service_job_passenger_track,id',
-            'status' => 'required|in:pending,ongoing,completed',
+               'status' => 'required|in:picked',
         ]);
 
         $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
@@ -153,7 +153,7 @@ class ServiceJobPassangerController extends Controller
     {
         $request->validate([
             'track_id' => 'required|exists:service_job_passenger_track,id',
-            'status' => 'required|in:pending,ongoing,completed',
+              'status' => 'required|in:picked',
         ]);
 
         $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
@@ -173,7 +173,7 @@ class ServiceJobPassangerController extends Controller
     {
         $request->validate([
             'track_id' => 'required|exists:service_job_passenger_track,id',
-            'status' => 'required|in:pending,ongoing,completed',
+            'status' => 'required|in:picked',
         ]);
 
         $track = ServiceJobPassengerTrack::findOrFail($request->track_id);

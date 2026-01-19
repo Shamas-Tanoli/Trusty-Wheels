@@ -40,7 +40,7 @@ class JobController extends Controller
             'job_date'   => $validatedData['date'],
         ]);
 
-        // 2️⃣ Attach Passengers
+      
         foreach ($validatedData['passenger_ids'] as $pid) {
             ServiceJobPassenger::create([
                 'service_job_id' => $job->id,
@@ -49,17 +49,15 @@ class JobController extends Controller
             ]);
         }
 
-        // 3️⃣ Load relations
+      
         $job->load([
             'driver',
             'vehicle',
             'passengers.passenger.user'
         ]);
 
-        // ===============================
-        // 🔔 DRIVER NOTIFICATION
-        // ===============================
-        $driverUser = $job->driver; // User model
+     
+        $driverUser = $job->driver;
         $driverToken = $driverUser?->fcm_token;
 
         if ($driverToken) {
@@ -75,9 +73,7 @@ class JobController extends Controller
             );
         }
 
-        // ===============================
-        // 🔔 PASSENGERS NOTIFICATION
-        // ===============================
+      
         foreach ($job->passengers as $jobPassenger) {
 
             $user  = $jobPassenger->passenger->user ?? null;

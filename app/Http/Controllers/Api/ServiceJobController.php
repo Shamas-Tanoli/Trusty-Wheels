@@ -68,7 +68,7 @@ class ServiceJobController extends Controller
                 ServiceJobPassengerTrack::create([
                     'service_job_track_id' => $jobTrack->id,
                     'service_job_passengers_id' => $passenger->id,
-                    'status' => 'pending',
+                    'status' => $passenger->status,
                     'pickup_trip_one' => 'pending',
                     'dropoff_trip_one' => 'pending',
                     'pickup_trip_two' => 'pending',
@@ -104,8 +104,8 @@ class ServiceJobController extends Controller
 
             $this->firebase->sendToToken(
                 $token,
-                'Route Started',
-                "Dear Passenger,\nYour driver has started the route for today. Please be ready at your pickup point.\n\nThank you for choosing our service.",
+                'Dear Passenger',
+                "Your driver has started the route for today. Please be ready at your pickup point.\n\nThank you for choosing our service.",
                 [
                     'service_job_id' => $serviceJob->id,
                     'status'   => 'ongoing',

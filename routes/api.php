@@ -58,6 +58,7 @@ Route::get('driver/{driver}/jobs/{job}', [DriverJobController::class, 'getDriver
 Route::post('driver/service/jobs', [ServiceJobController::class, 'createJobTracking']);
 
 // amaar on tour 
+Route::post('driver/service-job/passenger-tracks', [ServiceJobPassangerController::class, 'getServiceJobPassengerTracks']);
 
 
 

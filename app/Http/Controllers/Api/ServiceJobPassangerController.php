@@ -56,17 +56,11 @@ class ServiceJobPassangerController extends Controller
         ]);
 
         $serviceJob = ServiceJob::with([
-            // Job basic info
+          
             'driver:id,name',
             'vehicle:id,number_plate',
-
-            // Job Track
             'jobTrack',
-
-            // Trip Track
             'tripTrack',
-
-            // Passenger Tracks with deep relations
             'passengerTracks.passenger.passenger.user'
         ])->findOrFail($request->service_job_id);
 

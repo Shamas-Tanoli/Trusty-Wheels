@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('promo_codes', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique();
+            $table->enum('type',['percentage','fixed']);
+            $table->decimal('value',8,2);
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->integer('usage_limit')->nullable()->comment('Number of times the promo code can be used');
+            $table->integer('used_count')->default(0)->comment('Number of times the promo code has been used');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

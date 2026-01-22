@@ -25,3 +25,21 @@ return new class extends Migration
         //
     }
 };
+
+
+
+// subscriptions customer table 
+// customer id 
+// amount = total of all passengers
+// discount = total discount applied
+// paid_amount = amount - discount
+// /booking  id
+// start _date
+// end_date
+// payment_method = cash/card/wallet
+// status = pending/paid/partial
+// payment_for_month = YYYY-MM-01
+
+// har month ki phli date ko -
+
+

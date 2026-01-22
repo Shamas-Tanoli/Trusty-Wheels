@@ -18,7 +18,7 @@ return new class extends Migration
 
             // ✅ new foreign keys add
             $table->foreignId('area_from_id')
-                  ->after('price')
+                   ->after('price')
                   ->constrained('towns')
                   ->cascadeOnDelete();
 

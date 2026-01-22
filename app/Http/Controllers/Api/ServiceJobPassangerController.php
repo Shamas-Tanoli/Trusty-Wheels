@@ -65,7 +65,6 @@ class ServiceJobPassangerController extends Controller
         ]);
 
         $serviceJob = ServiceJob::with([
-
             'driver:id,name',
             'vehicle:id,number_plate',
             'jobTrack',

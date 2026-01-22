@@ -132,7 +132,13 @@
           "name": "Job",
           "icon": "menu-icon tf-icons ti ti-smart-home",
           "slug": "job.show"
-        }
+        },
+         {
+      "url": "/dashboard/promo-code",
+      "name": "Promo Code",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "promo.show"
+    }
 
    
   ]

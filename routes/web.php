@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\VehicleController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PromoCodeController;
 use App\Http\Controllers\Admin\BookingTypeController;
 use App\Http\Controllers\Admin\ServiceTimeController;
 use App\Http\Controllers\Admin\VehicleTypeController;
@@ -257,10 +258,8 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
 
 
 
-     Route::controller(JobController::class)->prefix('promo')->group(function () {
-        Route::get('/', 'list')->name('promo.show');
-        Route::get('/create', 'create')->name('promo.create');
-        Route::post('/store', 'store')->name('promo.store');  
+     Route::controller(PromoCodeController::class)->prefix('promo-code')->group(function () {
+        Route::get('/', 'create')->name('promo.show'); 
     });
 
 });

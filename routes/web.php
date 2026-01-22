@@ -255,6 +255,14 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         Route::post('/store', 'store')->name('job.store');  
     });
 
+
+
+     Route::controller(JobController::class)->prefix('promo')->group(function () {
+        Route::get('/', 'list')->name('promo.show');
+        Route::get('/create', 'create')->name('promo.create');
+        Route::post('/store', 'store')->name('promo.store');  
+    });
+
 });
 
 

@@ -27,7 +27,7 @@ class User extends Authenticatable
     'role',
     'fcm_token'
   ];
-/**
+  /**
   
    * The attributes that s should be hidden for serialization.
    *
@@ -37,7 +37,7 @@ class User extends Authenticatable
     'password',
     'remember_token',
   ];
-  
+
 
   /**
    * Get the attributes that should be cast.
@@ -66,12 +66,23 @@ class User extends Authenticatable
   }
 
   public function driverJobs()
-{
+  {
     return $this->hasMany(ServiceJob::class, 'driver_id');
-}
+  }
 
   public function booking()
-{
+  {
     return $this->hasMany(Booking::class, 'customer_id');
-}
+  }
+
+
+  public function promoCodes()
+  {
+    return $this->belongsToMany(
+      PromoCode::class,
+      'promo_codes_user',
+      'user_id',
+      'promo_code_id'
+    )->withTimestamps();
+  }
 }

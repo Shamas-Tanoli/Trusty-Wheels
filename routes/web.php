@@ -258,8 +258,9 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
 
 
 
-     Route::controller(PromoCodeController::class)->prefix('promo-code')->group(function () {
+    Route::controller(PromoCodeController::class)->prefix('promo-code')->group(function () {
         Route::get('/', 'create')->name('promo.show'); 
+        Route::post('/store', 'store')->name('promo.store'); 
     });
 
 });

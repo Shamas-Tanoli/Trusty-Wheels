@@ -119,7 +119,7 @@ $configData = Helper::appClasses();
 
                  <div class="modal-body row g-3">
 
-
+                    <input type="hidden" name="id">
 
                     <div class="col-12 ">
                         <label for="" class="form-label">Code Type </label>
@@ -140,7 +140,7 @@ $configData = Helper::appClasses();
 
                     <div class="col-12 ">
                         <label for="select2Basicaa" class="form-label">Person</label>
-                        <input name="usage_limit" type="number" class="form-control" placeholder="10 Person">
+                        <input name="person" type="number" class="form-control" placeholder="10 Person">
                     </div>
 
                     <div class="col-12 ">

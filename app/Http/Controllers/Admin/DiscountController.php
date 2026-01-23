@@ -7,5 +7,8 @@ use Illuminate\Http\Request;
 
 class DiscountController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('admin.content.pages.discount.index');
+    }
 }

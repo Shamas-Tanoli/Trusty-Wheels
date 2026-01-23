@@ -255,7 +255,7 @@ Route::prefix('dashboard')->group(function () {
 
     
     Route::controller(DiscountController::class)->prefix('discount')->group(function () {
-        Route::get('/', 'create')->name('discount.show');
+        Route::get('/', 'index')->name('discount.show');
         Route::post('/store', 'store')->name('discount.store');
         Route::get('/list', 'list')->name('discount.list');
         Route::delete('/{id}', 'destroy')->name('discount.destroy');

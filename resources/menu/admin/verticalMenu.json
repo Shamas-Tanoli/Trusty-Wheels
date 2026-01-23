@@ -138,7 +138,14 @@
       "name": "Promo Code",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "promo.show"
+    },
+     {
+      "url": "/dashboard/discount",
+      "name": "Discount",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "discount.show"
     }
+
 
    
   ]

@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\VehicleController;
+use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PromoCodeController;
@@ -250,6 +251,16 @@ Route::prefix('dashboard')->group(function () {
         Route::delete('/{id}', 'destroy')->name('promo.destroy');
         Route::get('/{id}/edit', 'edit')->name('promo.edit');
         Route::post('/update', 'update')->name('promo.update');
+    });
+
+    
+    Route::controller(DiscountController::class)->prefix('discount')->group(function () {
+        Route::get('/', 'create')->name('discount.show');
+        Route::post('/store', 'store')->name('discount.store');
+        Route::get('/list', 'list')->name('discount.list');
+        Route::delete('/{id}', 'destroy')->name('discount.destroy');
+        Route::get('/{id}/edit', 'edit')->name('discount.edit');
+        Route::post('/update', 'update')->name('discount.update');
     });
 });
 

@@ -16,6 +16,7 @@ class DiscountController extends Controller
         $promoCodes = Discount::query();
 
         return DataTables::of($promoCodes)
+        ->addIndexColumn()
             ->addColumn('status', function ($row) {
                 return $row->is_active
                     ? '<span class="badge bg-success">Active</span>'

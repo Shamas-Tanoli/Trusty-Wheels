@@ -41,7 +41,7 @@ $configData = Helper::appClasses();
             <thead>
                 <tr>
 
-                   
+                   <th>Serial</th>
                     <th>Type</th>
                     <th>Value</th>
                     <th>Person</th>

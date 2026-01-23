@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
       searchDelay: 1000,
       columns: [
            
-           
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false }, 
             { data: 'type', name: 'type',orderable: false, searchable: false  },
             { data: 'value', name: 'value',orderable: false, searchable: false  },
             { data: 'person', name: 'person',orderable: false, searchable: false  },

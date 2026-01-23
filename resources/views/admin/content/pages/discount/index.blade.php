@@ -41,13 +41,12 @@ $configData = Helper::appClasses();
             <thead>
                 <tr>
 
-                    <th>Code</th>
+                   
                     <th>Type</th>
                     <th>Value</th>
-                    <th>Usage</th>
+                    <th>Person</th>
                     <th>Status</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+                    
                     <th>Action</th>
                 </tr>
             </thead>

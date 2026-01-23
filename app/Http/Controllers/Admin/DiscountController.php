@@ -7,9 +7,32 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class DiscountController extends Controller
 {
+    public function list()
+    {
+        $promoCodes = Discount::query();
+
+        return DataTables::of($promoCodes)
+            ->addColumn('status', function ($row) {
+                return $row->is_active
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-danger">Inactive</span>';
+            })
+           
+            ->addColumn('action', function ($row) {
+                return '
+                <button class="btn btn-sm btn-primary edit-btn" data-id="' . $row->id . '">Edit</button>
+                <button class="btn btn-sm btn-danger delete-btn" data-id="' . $row->id . '">Delete</button>
+            ';
+            })
+            ->rawColumns(['status', 'action'])
+            ->make(true);
+    }
+
+
     public function index()
     {
         return view('admin.content.pages.discount.index');

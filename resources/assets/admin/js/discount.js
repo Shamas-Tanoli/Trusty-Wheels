@@ -123,17 +123,16 @@ document.addEventListener('DOMContentLoaded', function () {
     $('.datatables-promo').DataTable({
       processing: true,
       serverSide: true,
-      ajax: '/dashboard/promo-code/list',
+      ajax: '/dashboard/discount/list',
       searchDelay: 1000,
       columns: [
            
-            { data: 'code', name: 'code' ,orderable: false, searchable: false },
+           
             { data: 'type', name: 'type',orderable: false, searchable: false  },
             { data: 'value', name: 'value',orderable: false, searchable: false  },
-            { data: 'usage_limit', name: 'usage_limit',orderable: false, searchable: false  }, // Usage
+            { data: 'person', name: 'person',orderable: false, searchable: false  },
             { data: 'status', name: 'status', orderable: false, searchable: false },
-            { data: 'start_date', name: 'start_date',orderable: false, searchable: false  }, // Expiry
-            { data: 'end_date', name: 'end_date',orderable: false, searchable: false  }, // Expiry
+           
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ],
       dom:
@@ -146,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
         '<"col-md-6"p>' +
         '>',
       language: {
-        searchPlaceholder: 'Search Promo Code',
+        searchPlaceholder: 'Search DIscount',
         paginate: {
           next: '<i class="ti ti-chevron-right"></i>',
           previous: '<i class="ti ti-chevron-left"></i>'

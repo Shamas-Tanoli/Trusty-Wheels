@@ -102,7 +102,53 @@ class PromoCodeController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Promo code deleted successfully.']);
     }
 
-    public function update(Request $request){
-        dd($request->all());
+ public function update(Request $request)
+{
+    try {
+        $validatedData = $request->validate([
+            'id' => 'required|exists:promo_codes,id',
+            'code' => 'required|string|unique:promo_codes,code,' . $request->id,
+            'type' => 'required|in:percentage,fixed',
+            'value' => 'required|numeric|min:0',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'usage_limit' => 'nullable|integer|min:1',
+            'is_active' => 'required|in:active,inactive'
+        ]);
+
+        $promoCode = PromoCode::find($validatedData['id']);
+
+        if (!$promoCode) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Promo code not found'
+            ], 404);
+        }
+
+        $validatedData['is_active'] =
+            $validatedData['is_active'] === 'active' ? 1 : 0;
+
+        unset($validatedData['id']);
+
+        $promoCode->update($validatedData);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Promo Code Updated Successfully'
+        ], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'status' => 'validation_error',
+            'errors' => $e->errors()
+        ], 422);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'server_error',
+            'message' => 'Something went wrong. Please try again later.'
+        ], 500);
     }
+}
+
 }

@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             toastr.success(data.message, 'Success');
             $('#addPromoModal').modal('hide');
-            $('.datatables-permissions').DataTable().ajax.reload(null, false);
+            $('.datatables-promo').DataTable().ajax.reload(null, false);
           } else {
             const errorList = Object.values(data.errors)
               .flat()
@@ -260,11 +260,6 @@ $(document).on('click', '.edit-btn', function() {
 
   const fv = FormValidation.formValidation(form, {
     fields: {
-      id: {
-        validators: {
-          notEmpty: { message: 'Invalid promo ID' }
-        }
-      },
       code: {
         validators: {
           notEmpty: { message: 'Please enter promo code' },
@@ -320,48 +315,90 @@ $(document).on('click', '.edit-btn', function() {
 
     // Send to update route
     fetch('/dashboard/promo-code/update', {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': window.csrfToken,
-        Accept: 'application/json'
-      },
-      body: formData
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 'success') {
-          form.reset();
-          toastr.success(data.message, 'Success');
-          $('#editPromoModal').modal('hide');
-          $('.datatables-promo').DataTable().ajax.reload(null, false);
-        } else {
-          const errorList = Object.values(data.errors || {})
-            .flat()
-            .map(
-              error => `<li style="font-size: 14px;">
-                          <i class="ti text-danger ti-alert-triangle ti-flashing-hover"></i> ${error}</li>`
-            )
-            .join('');
+  method: 'POST',
+  headers: {
+    'X-CSRF-TOKEN': window.csrfToken,
+    'Accept': 'application/json'
+  },
+  body: formData
+})
+.then(async response => {
+  const data = await response.json();
+  return { status: response.status, body: data };
+})
+.then(({ status, body }) => {
 
-          Swal.fire({
-            title: 'Error!',
-            html: `<ul style="list-style: none; padding: 0; margin: 0;">${errorList}</ul>`,
-            icon: 'error',
-            customClass: { confirmButton: 'btn btn-primary waves-effect waves-light' },
-            buttonsStyling: false
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: error.message || 'Something went wrong. Please try again.',
-          icon: 'error',
-          customClass: { confirmButton: 'btn btn-primary waves-effect waves-light' },
-          buttonsStyling: false
-        });
-      });
+  // ✅ SUCCESS
+  if (status === 200 && body.status === 'success') {
+    form.reset();
+    toastr.success(body.message, 'Success');
+    $('#editPromoModal').modal('hide');
+    $('.datatables-promo').DataTable().ajax.reload(null, false);
+    return;
+  }
+
+  // ❌ VALIDATION ERRORS (422)
+  if (status === 422 && body.status === 'validation_error') {
+    const errorList = Object.values(body.errors)
+      .flat()
+      .map(error => `
+        <li style="font-size:14px;">
+          <i class="ti ti-alert-triangle text-danger"></i> ${error}
+        </li>
+      `)
+      .join('');
+
+    Swal.fire({
+      title: 'Validation Error',
+      html: `<ul style="list-style:none;padding:0;margin:0;">${errorList}</ul>`,
+      icon: 'warning',
+      customClass: {
+        confirmButton: 'btn btn-primary'
+      },
+      buttonsStyling: false
+    });
+    return;
+  }
+
+  // ❌ NOT FOUND / LOGICAL ERRORS
+  if (status === 404 || body.status === 'error') {
+    Swal.fire({
+      title: 'Error!',
+      text: body.message || 'Record not found',
+      icon: 'error',
+      customClass: {
+        confirmButton: 'btn btn-primary'
+      },
+      buttonsStyling: false
+    });
+    return;
+  }
+
+  // ❌ SERVER ERROR
+  Swal.fire({
+    title: 'Server Error',
+    text: body.message || 'Something went wrong',
+    icon: 'error',
+    customClass: {
+      confirmButton: 'btn btn-primary'
+    },
+    buttonsStyling: false
+  });
+
+})
+.catch(error => {
+  console.error(error);
+  Swal.fire({
+    title: 'Network Error',
+    text: 'Please check your internet connection',
+    icon: 'error',
+    customClass: {
+      confirmButton: 'btn btn-primary'
+    },
+    buttonsStyling: false
+  });
+});
+
   });
 })();
 

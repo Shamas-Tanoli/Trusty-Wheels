@@ -165,14 +165,14 @@ document.addEventListener('DOMContentLoaded', function () {
       ajax: '/dashboard/promo-code/list',
       searchDelay: 1000,
       columns: [
-            { data: 'id', name: 'id' },
-            { data: 'code', name: 'code' },
-            { data: 'type', name: 'type' },
-            { data: 'value', name: 'value' },
-            { data: 'usage_limit', name: 'usage_limit' }, // Usage
+           
+            { data: 'code', name: 'code' ,orderable: false, searchable: false },
+            { data: 'type', name: 'type',orderable: false, searchable: false  },
+            { data: 'value', name: 'value',orderable: false, searchable: false  },
+            { data: 'usage_limit', name: 'usage_limit',orderable: false, searchable: false  }, // Usage
             { data: 'status', name: 'status', orderable: false, searchable: false },
-            { data: 'start_date', name: 'start_date' }, // Expiry
-            { data: 'end_date', name: 'end_date' }, // Expiry
+            { data: 'start_date', name: 'start_date',orderable: false, searchable: false  }, // Expiry
+            { data: 'end_date', name: 'end_date',orderable: false, searchable: false  }, // Expiry
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ],
       dom:

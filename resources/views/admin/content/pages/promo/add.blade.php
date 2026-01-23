@@ -40,7 +40,7 @@ $configData = Helper::appClasses();
         <table class="table datatables-promo">
             <thead>
                 <tr>
-                    <th>#</th>
+                    
                     <th>Code</th>
                     <th>Type</th>
                     <th>Value</th>

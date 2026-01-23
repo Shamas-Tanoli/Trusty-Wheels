@@ -15,47 +15,58 @@ class DiscountController extends Controller
         return view('admin.content.pages.discount.index');
     }
 
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'type' => [
-                'required',
-                Rule::in([Discount::TYPE_PERCENTAGE, Discount::TYPE_FIXED]),
-            ],
-            'value' => 'required|numeric|min:1',
-            'person' => 'required|integer|min:1',
-            'is_active' => [
-                'required',
-                Rule::in(['active', 'inactive']),
-            ],
-        ]);
-
-        if ($validated['type'] === Discount::TYPE_PERCENTAGE && $validated['value'] > 100) 
-        {
-            return response()->json([
-                'status' => false,
-                'message' => 'Percentage discount 100% se zyada nahi ho sakta',
-            ], 422);
-        }
-
-        DB::beginTransaction();
-
         try {
-            $discount = Discount::create($validated);
-            DB::commit();
-            return response()->json([
-                'status' => true,
-                'message' => 'Discount successfully created',
-                'data' => $discount,
-            ], 201);
-        } catch (\Throwable $e) {
-            DB::rollBack();
+            $validated = $request->validate([
+                'type' => [
+                    'required',
+                    Rule::in([Discount::TYPE_PERCENTAGE, Discount::TYPE_FIXED]),
+                ],
+                'value' => 'required|numeric|min:1',
+                'person' => 'required|integer|min:1|unique:discount,person',
+                'is_active' => [
+                    'required',
+                    Rule::in(['active', 'inactive']),
+                ],
+            ]);
 
             
+            if (
+                $validated['type'] === Discount::TYPE_PERCENTAGE &&
+                $validated['value'] > 100
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => [
+                        'value' => ['Percentage discount 100% se zyada nahi ho sakta']
+                    ],
+                ], 422);
+            }
+
+           
+            $validated['is_active'] = $validated['is_active'] === 'active' ? 1 : 0;
+
+            Discount::create($validated);
+
             return response()->json([
-                'status' => false,
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage()
+                'success' => true,
+                'message' => 'Discount successfully created',
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'server' => ['Something went wrong. Please try again.']
+                ],
             ], 500);
         }
     }

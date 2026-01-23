@@ -75,43 +75,44 @@ document.addEventListener('DOMContentLoaded', function () {
         body: formData
       })
        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            form.reset();
+.then(data => {
+  if (data.success) {
 
-            toastr.success(data.message, 'Success');
-            $('#addPromoModal').modal('hide');
-            $('.datatables-promo').DataTable().ajax.reload(null, false);
-          } else {
-            const errorList = Object.values(data.errors)
-              .flat()
-              .map(
-                error => `<li style="font-size: 14px;">
-                            <i class="ti text-danger ti-alert-triangle ti-flashing-hover"></i> ${error}</li>`
-              )
-              .join('');
+    form.reset();
+    toastr.success(data.message, 'Success');
+    $('#addPromoModal').modal('hide');
+    $('.datatables-promo').DataTable().ajax.reload(null, false);
 
-            Swal.fire({
-              title: 'Error!',
-              html: `<ul style="list-style: none; padding: 0; margin: 0;">${errorList}</ul>`,
-              icon: 'error',
-              customClass: { confirmButton: 'btn btn-primary waves-effect waves-light' },
-              buttonsStyling: false
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          Swal.fire({
-            title: 'Error!',
-            text: error.message || 'Something went wrong. Please try again.',
-            icon: 'error',
-            customClass: {
-              confirmButton: 'btn btn-primary waves-effect waves-light'
-            },
-            buttonsStyling: false
-          });
-        });
+  } else {
+
+    const errorList = Object.values(data.errors)
+      .flat()
+      .map(error => `
+        <li style="font-size: 14px;">
+          <i class="ti text-danger ti-alert-triangle"></i> ${error}
+        </li>
+      `)
+      .join('');
+
+    Swal.fire({
+      title: 'Error!',
+      html: `<ul style="list-style:none;padding:0">${errorList}</ul>`,
+      icon: 'error',
+      customClass: { confirmButton: 'btn btn-primary' },
+      buttonsStyling: false
+    });
+  }
+})
+.catch(error => {
+  Swal.fire({
+    title: 'Error!',
+    text: 'Something went wrong. Please try again.',
+    icon: 'error',
+    customClass: { confirmButton: 'btn btn-primary' },
+    buttonsStyling: false
+  });
+});
+
     });
   })();
 

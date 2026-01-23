@@ -17,6 +17,7 @@ class Discount extends Model
         'type',
         'value',
         'person',
+        'is_active'
     ];
 
    

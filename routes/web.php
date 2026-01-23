@@ -97,7 +97,7 @@ Route::prefix('dashboard')->group(function () {
         Route::delete('/delete/{id}', 'destroy')->name('location.destroy');
     });
 
-    
+
 
 
 
@@ -149,86 +149,73 @@ Route::prefix('dashboard')->group(function () {
     });
 
     Route::resource('cities', CityController::class);
-   
+
 
     Route::controller(TownController::class)->prefix('towns')->group(function () {
         Route::get('/', 'index')->name('town.show');
-        Route::post('/store', 'store')->name('town.store');        
+        Route::post('/store', 'store')->name('town.store');
         Route::get('/list', 'list')->name('town.list');
         Route::delete('/delete/{id}', 'destroy')->name('town.destroy');
         Route::post('{id}/update', 'update')->name('town.update');
-
-       
     });
 
 
     Route::controller(ServiceController::class)->prefix('service')->group(function () {
         Route::get('/', 'index')->name('service.show');
-        Route::post('/store', 'store')->name('service.store');        
+        Route::post('/store', 'store')->name('service.store');
         Route::get('/list', 'list')->name('service.list');
         Route::post('{id}/update', 'update')->name('service.update');
         Route::delete('/delete/{id}', 'destroy')->name('service.destroy');
-
-       
     });
 
     Route::controller(ServiceTimeController::class)->prefix('servicetime')->group(function () {
         Route::get('/', 'index')->name('servicetime.show');
-        Route::post('/store', 'store')->name('servicetime.store');        
+        Route::post('/store', 'store')->name('servicetime.store');
         Route::get('/list', 'list')->name('servicetime.list');
         Route::post('{id}/update', 'update')->name('servicetime.update');
         Route::delete('/delete/{id}', 'destroy')->name('servicetime.destroy');
-
-       
     });
 
 
     Route::controller(DriverController::class)->prefix('driver')->group(function () {
         Route::get('/', 'listVew')->name('driver.listview');
         Route::get('/create', 'create')->name('driver.create');
-        Route::post('/store', 'store')->name('driver.store'); 
+        Route::post('/store', 'store')->name('driver.store');
         Route::get('/list', 'list')->name('driver.list');
         Route::get('/{driver}/edit', 'edit')->name('driver.edit');
         Route::post('/update', 'update')->name('driver.update');
-        Route::delete('/delete/{id}', 'destroy')->name('driver.destroy');       
-        Route::get('{id}/detail', 'detail')->name('driver.detail');       
-
-       
+        Route::delete('/delete/{id}', 'destroy')->name('driver.destroy');
+        Route::get('{id}/detail', 'detail')->name('driver.detail');
     });
 
 
-    
+
     Route::controller(PlanController::class)->prefix('plan')->group(function () {
         Route::get('/', 'index')->name('plan.show');
-        Route::post('/store', 'store')->name('plan.store');        
+        Route::post('/store', 'store')->name('plan.store');
         Route::get('/list', 'list')->name('plan.list');
         Route::post('{plan}/update', 'update')->name('plan.update');
         Route::delete('/delete/{id}', 'destroy')->name('plan.destroy');
-
-       
     });
     Route::controller(BookingController::class)->prefix('booking')->group(function () {
         Route::get('/', 'index')->name('booking.show');
         Route::get('/list', 'list')->name('booking.list');
         Route::get('/detail/{id}', 'bookingdetail')->name('booking.detail');
         Route::post('/status/update', 'bookingstatus')->name('booking.status');
-       
 
-         Route::get('/notification', 'send')->name('booking.noti');
-       
+
+        Route::get('/notification', 'send')->name('booking.noti');
     });
-Route::get('/notifications', [NotificationController::class, 'send'])->name('booking.noti');
+    Route::get('/notifications', [NotificationController::class, 'send'])->name('booking.noti');
 
 
 
-Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->group(function () {
+    Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->group(function () {
         Route::get('/', 'index')->name('service.vehicle.show');
         Route::post('/store', 'store')->name('service.vehicle.store');
         Route::get('/list', 'list')->name('service.vehicle.list');
         Route::delete('/delete/{id}', 'destroys')->name('service.vehicle.destroy');
         Route::post('/{id}/update', 'updatee')->name('service.vehicle.update');
-        
-       
     });
 
 
@@ -238,8 +225,6 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         Route::get('/list', 'list')->name('vehicle.check.list');
         Route::delete('/delete/{id}', 'destroy')->name('vehicle.check.destroy');
         Route::post('/{id}/update', 'update')->name('vehicle.check.update');
-        
-       
     });
     Route::controller(BookingTypeController::class)->prefix('booking-type')->group(function () {
         Route::get('/', 'index')->name('booking.type.show');
@@ -249,20 +234,23 @@ Route::controller(ServiceVehicleController::class)->prefix('service-vehicle')->g
         Route::post('/{id}/update', 'update')->name('booking.type.update');
     });
 
-   
+
     Route::controller(JobController::class)->prefix('job')->group(function () {
         Route::get('/', 'list')->name('job.show');
         Route::get('/create', 'create')->name('job.create');
-        Route::post('/store', 'store')->name('job.store');  
+        Route::post('/store', 'store')->name('job.store');
     });
 
 
 
     Route::controller(PromoCodeController::class)->prefix('promo-code')->group(function () {
-        Route::get('/', 'create')->name('promo.show'); 
-        Route::post('/store', 'store')->name('promo.store'); 
+        Route::get('/', 'create')->name('promo.show');
+        Route::post('/store', 'store')->name('promo.store');
+        Route::get('/list', 'list')->name('promo.list');
+        Route::delete('/{id}', 'destroy')->name('promo.destroy');
+        Route::get('/{id}/edit', 'edit')->name('promo.edit');
+        Route::post('/update', 'update')->name('promo.update');
     });
-
 });
 
 

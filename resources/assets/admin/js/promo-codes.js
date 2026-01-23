@@ -2,113 +2,179 @@
 
 document.addEventListener('DOMContentLoaded', function () {
   (function () {
-
     const form = document.getElementById('addPromoForm');
 
     const fv = FormValidation.formValidation(form, {
       fields: {
         code: {
           validators: {
-            notEmpty: { message: 'Please enter promo code' },
+            notEmpty: {
+              message: 'Please enter promo code'
+            },
             stringLength: {
               min: 3,
               message: 'Promo code must be at least 3 characters'
             }
           }
         },
+
+        type: {
+          validators: {
+            notEmpty: {
+              message: 'Please select promo type'
+            }
+          }
+        },
+
         value: {
           validators: {
-            notEmpty: { message: 'Please enter value' },
-            numeric: { message: 'Value must be numeric' }
+            notEmpty: {
+              message: 'Please enter value'
+            },
+            numeric: {
+              message: 'Value must be numeric'
+            },
+            greaterThan: {
+              min: 1,
+              message: 'Value must be greater than 0'
+            }
           }
         },
+
         start_date: {
           validators: {
-            notEmpty: { message: 'Start date is required' }
+            notEmpty: {
+              message: 'Start date is required'
+            }
           }
         },
+
         end_date: {
           validators: {
-            notEmpty: { message: 'End date is required' }
+            notEmpty: {
+              message: 'End date is required'
+            },
+            callback: {
+              message: 'End date must be after or equal to  start date',
+              callback: function (input) {
+                const startDate = form.querySelector('[name="start_date"]').value;
+                const endDate = input.value;
+
+                if (!startDate || !endDate) {
+                  return true;
+                }
+
+                return new Date(endDate) >= new Date(startDate);
+              }
+            }
           }
         },
-        usage_limit: {
-            validators: {
-                integer: { message: 'Usage limit must be an integer' }
-            }
-        }
 
+        usage_limit: {
+          validators: {
+            notEmpty: {
+              message: 'Usage limit is required'
+            },
+            integer: {
+              message: 'Usage limit must be an integer'
+            },
+            greaterThan: {
+              min: 1,
+              message: 'Usage limit must be at least 1'
+            }
+          }
+        },
+
+        is_active: {
+          validators: {
+            notEmpty: {
+              message: 'Please select status'
+            }
+          }
+        }
       },
+
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          rowSelector: '.col-12'
+          rowSelector: '.col-12',
+          eleValidClass: ''
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
-
       const formData = new FormData(form);
 
-      fetch('/admin/promo-codes/store', {
+      fetch('/dashboard/promo-code/store', {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': window.csrfToken,
-          'Accept': 'application/json'
+          Accept: 'application/json'
         },
         body: formData
       })
-        .then(res => res.json())
+       .then(response => response.json())
         .then(data => {
-          if (data) {
-            toastr.success('Promo code added successfully', 'Success');
+          if (data.success) {
             form.reset();
+
+            toastr.success(data.message, 'Success');
             $('#addPromoModal').modal('hide');
-            $('.datatables-promo').DataTable().ajax.reload(null, false);
+            $('.datatables-permissions').DataTable().ajax.reload(null, false);
+          } else {
+            const errorList = Object.values(data.errors)
+              .flat()
+              .map(
+                error => `<li style="font-size: 14px;">
+                            <i class="ti text-danger ti-alert-triangle ti-flashing-hover"></i> ${error}</li>`
+              )
+              .join('');
+
+            Swal.fire({
+              title: 'Error!',
+              html: `<ul style="list-style: none; padding: 0; margin: 0;">${errorList}</ul>`,
+              icon: 'error',
+              customClass: { confirmButton: 'btn btn-primary waves-effect waves-light' },
+              buttonsStyling: false
+            });
           }
         })
         .catch(error => {
+          console.error('Error:', error);
           Swal.fire({
             title: 'Error!',
-            text: error.message,
+            text: error.message || 'Something went wrong. Please try again.',
             icon: 'error',
-            customClass: { confirmButton: 'btn btn-primary' },
+            customClass: {
+              confirmButton: 'btn btn-primary waves-effect waves-light'
+            },
             buttonsStyling: false
           });
         });
     });
-
   })();
 
   /* =========================
      DATATABLE
   ========================== */
-  (function () {
-
+ (function () {
     $('.datatables-promo').DataTable({
-        
       processing: true,
       serverSide: true,
-      ajax: '/admin/promo-codes',
+      ajax: '/dashboard/promo-code/list',
       searchDelay: 1000,
       columns: [
-        { data: 'DT_RowIndex', orderable: false, searchable: false },
-        { data: 'code' },
-        { data: 'type' },
-        { data: 'value' },
-        {
-          data: 'used_count',
-          render: (d, t, r) => `${d} / ${r.usage_limit ?? '∞'}`
-        },
-        {
-          data: 'is_active',
-          render: d => d ? 'Active' : 'Inactive'
-        },
-        { data: 'end_date' },
-        { data: 'actions', orderable: false, searchable: false }
-      ],
+            { data: 'id', name: 'id' },
+            { data: 'code', name: 'code' },
+            { data: 'type', name: 'type' },
+            { data: 'value', name: 'value' },
+            { data: 'usage_limit', name: 'usage_limit' }, // Usage
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'start_date', name: 'start_date' }, // Expiry
+            { data: 'end_date', name: 'end_date' }, // Expiry
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ],
       dom:
         '<"row mx-1"' +
         '<"col-md-3"l>' +
@@ -118,7 +184,6 @@ document.addEventListener('DOMContentLoaded', function () {
         '<"col-md-6"i>' +
         '<"col-md-6"p>' +
         '>',
-    
       language: {
         searchPlaceholder: 'Search Promo Code',
         paginate: {
@@ -127,115 +192,206 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     });
-$(document).ready(function() {
-    // Hide the element with class dt-buttons
-    $('.dt-buttons').css('display', 'none');
+    $('.dt-buttons.btn-group.flex-wrap').css('display', 'none');
+})();
 
-});
-  })();
 
   /* =========================
      DELETE PROMO CODE
   ========================== */
-  (function () {
 
-    $(document).on('click', '.delete-confirm', function () {
-      const id = $(this).data('id');
 
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'This promo code will be deleted!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        customClass: {
-          confirmButton: 'btn btn-primary me-3',
-          cancelButton: 'btn btn-label-secondary'
-        },
-        buttonsStyling: false
-      }).then(result => {
-        if (result.value) {
-          fetch(`/admin/promo-codes/delete/${id}`, {
-            method: 'DELETE',
-            headers: {
-              'X-CSRF-TOKEN': window.csrfToken,
-              'Accept': 'application/json'
+ 
+ $(document).on('click', '.delete-btn', function() {
+    let id = $(this).data('id');
+    if (!id) return;
+
+    if (confirm('Are you sure you want to delete this promo code?')) {
+        $.ajax({
+            url: '/dashboard/promo-code/' + id,
+            type: 'DELETE',
+            headers: { 
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if(response.status === 'success'){
+                    alert(response.message);
+                    $('.datatables-promo').DataTable().ajax.reload(); // refresh table
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function(xhr) {
+                alert('Something went wrong!');
             }
-          })
-            .then(res => res.json())
-            .then(() => {
-              toastr.success('Promo code deleted', 'Success');
-              $('.datatables-promo').DataTable().ajax.reload(null, false);
-            });
-        }
-      });
-    });
-
-  })();
-
-  /* =========================
-     EDIT PROMO CODE
-  ========================== */
-  (function () {
-
-    let promo_id;
-
-    $(document).on('click', '.edit-btn', function () {
-      promo_id = $(this).data('id');
-
-      fetch(`/admin/promo-codes/${promo_id}`)
-        .then(res => res.json())
-        .then(data => {
-          $('#editPromoForm [name="id"]').val(data.id);
-          $('#editPromoForm [name="code"]').val(data.code);
-          $('#editPromoForm [name="type"]').val(data.type);
-          $('#editPromoForm [name="value"]').val(data.value);
-          $('#editPromoForm [name="start_date"]').val(data.start_date);
-          $('#editPromoForm [name="end_date"]').val(data.end_date);
-          $('#editPromoModal').modal('show');
         });
-    });
+    }
+});
 
-    const fv = FormValidation.formValidation(
-      document.getElementById('editPromoForm'),
-      {
-        fields: {
-          code: {
-            validators: {
-              notEmpty: { message: 'Promo code is required' }
+// Click Edit button
+$(document).on('click', '.edit-btn', function() {
+    let id = $(this).data('id');
+
+    $.get('/dashboard/promo-code/' + id + '/edit', function(res) {
+        if(res.status === 'success') {
+            let data = res.data;
+            let modal = $('#editPromoModal');
+
+            modal.find('input[name="id"]').val(data.id);
+            modal.find('input[name="code"]').val(data.code);
+            modal.find('select[name="type"]').val(data.type);
+            modal.find('input[name="value"]').val(data.value);
+            modal.find('input[name="start_date"]').val(data.start_date);
+            modal.find('input[name="end_date"]').val(data.end_date);
+            modal.find('input[name="usage_limit"]').val(data.usage_limit);
+            modal.find('select[name="is_active"]').val(data.is_active ? 'active' : 'inactive');
+
+            modal.modal('show');
+        } else {
+            alert(res.message);
+        }
+    });
+});
+
+
+
+(function () {
+  const form = document.getElementById('editPromoForm');
+
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      id: {
+        validators: {
+          notEmpty: { message: 'Invalid promo ID' }
+        }
+      },
+      code: {
+        validators: {
+          notEmpty: { message: 'Please enter promo code' },
+          stringLength: { min: 3, message: 'Promo code must be at least 3 characters' }
+        }
+      },
+      type: {
+        validators: { notEmpty: { message: 'Please select promo type' } }
+      },
+      value: {
+        validators: {
+          notEmpty: { message: 'Please enter value' },
+          numeric: { message: 'Value must be numeric' },
+          greaterThan: { min: 1, message: 'Value must be greater than 0' }
+        }
+      },
+      start_date: {
+        validators: { notEmpty: { message: 'Start date is required' } }
+      },
+      end_date: {
+        validators: {
+          notEmpty: { message: 'End date is required' },
+          callback: {
+            message: 'End date must be after or equal to start date',
+            callback: function (input) {
+              const startDate = form.querySelector('[name="start_date"]').value;
+              const endDate = input.value;
+              if (!startDate || !endDate) return true;
+              return new Date(endDate) >= new Date(startDate);
             }
           }
-        },
-        plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-            eleValidClass: '',
-            rowSelector: '.col-12'
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus()
         }
+      },
+      usage_limit: {
+        validators: {
+          notEmpty: { message: 'Usage limit is required' },
+          integer: { message: 'Usage limit must be an integer' },
+          greaterThan: { min: 1, message: 'Usage limit must be at least 1' }
+        }
+      },
+      is_active: {
+        validators: { notEmpty: { message: 'Please select status' } }
       }
-    ).on('core.form.valid', function () {
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({ rowSelector: '.col-12', eleValidClass: '' }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    const formData = new FormData(form);
 
-      const formData = new FormData(document.getElementById('editPromoForm'));
-
-      fetch('/admin/promo-codes/update', {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': window.csrfToken,
-          'Accept': 'application/json'
-        },
-        body: formData
-      })
-        .then(res => res.json())
-        .then(() => {
-          toastr.success('Promo code updated', 'Success');
+    // Send to update route
+    fetch('/dashboard/promo-code/update', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': window.csrfToken,
+        Accept: 'application/json'
+      },
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          form.reset();
+          toastr.success(data.message, 'Success');
           $('#editPromoModal').modal('hide');
           $('.datatables-promo').DataTable().ajax.reload(null, false);
-        });
-    });
+        } else {
+          const errorList = Object.values(data.errors || {})
+            .flat()
+            .map(
+              error => `<li style="font-size: 14px;">
+                          <i class="ti text-danger ti-alert-triangle ti-flashing-hover"></i> ${error}</li>`
+            )
+            .join('');
 
-  })();
+          Swal.fire({
+            title: 'Error!',
+            html: `<ul style="list-style: none; padding: 0; margin: 0;">${errorList}</ul>`,
+            icon: 'error',
+            customClass: { confirmButton: 'btn btn-primary waves-effect waves-light' },
+            buttonsStyling: false
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: error.message || 'Something went wrong. Please try again.',
+          icon: 'error',
+          customClass: { confirmButton: 'btn btn-primary waves-effect waves-light' },
+          buttonsStyling: false
+        });
+      });
+  });
+})();
+
+
+
+// Submit Edit Form
+// $('#editPromoForm').on('submit', function(e) {
+//     e.preventDefault();
+
+//     $.ajax({
+//         url: '/dashboard/promo-code/update',
+//         type: 'POST',
+//         data: $(this).serialize(),
+//         headers: { 
+//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//         },
+//         success: function(res) {
+//             if(res.status === 'success') {
+//                 alert(res.message);
+//                 $('#editPromoModal').modal('hide');
+//                 $('.datatables-promo').DataTable().ajax.reload();
+//             } else {
+//                 alert(res.message);
+//             }
+//         },
+//         error: function(xhr) {
+//             alert('Something went wrong!');
+//         }
+//     });
+// });
+
 
 });

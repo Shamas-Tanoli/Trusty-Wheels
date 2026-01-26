@@ -61,7 +61,9 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::get('driver/{driver}/jobs/{job}', [DriverJobController::class, 'getDriverJobDetails']);
     Route::post('driver/service/jobs', [ServiceJobController::class, 'createJobTracking']);
 
-    // amaar on tour 
+    
+
+    
     Route::post('driver/service-job/passenger-tracks', [ServiceJobPassangerController::class, 'getServiceJobPassengerTracks']);
     Route::post('service-job-passenger-track/pickup-trip-one', [ServiceJobPassangerController::class, 'updatePickupTripOne']);
     Route::post('service-job-passenger-track/dropoff-trip-one', [ServiceJobPassangerController::class, 'updateDropoffTripOne']);

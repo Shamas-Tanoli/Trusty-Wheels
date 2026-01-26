@@ -17,6 +17,8 @@ return new class extends Migration
             $table->date('invoice_for_date');
             $table->decimal('total_amount', 10, 2);
             $table->decimal('discounted_total', 10, 2);
+            $table->decimal('after_discount', 10, 2);
+
             $table->enum('discount_type',['promocode','offer']);
             $table->enum('status', ['pending','paid','partial','overdue'])->default('pending');
             $table->date('due_date');

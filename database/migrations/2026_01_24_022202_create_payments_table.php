@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id(); 
             $table->foreignId('invoice_id')->constrained('customer_invoices')->cascadeOnDelete();
-            $table->decimal('amount', 10, 2);
-                $table->foreignId('customer_id')->constrained('users')->cascadeOnDelete();
-        $table->enum('payment_method', ['cash','bank','jazzcash','easypaisa','card']);
+            $table->foreignId('customer_id')->constrained('users')->cascadeOnDelete();
+             $table->date('invoice_for_date');
+            $table->decimal('total_amount', 10, 2);
+            $table->decimal('paid_amount', 10, 2);
+            $table->decimal('remaining_amount', 10, 2);
+            $table->enum('payment_method', ['cash','bank','jazzcash','easypaisa','card']);
             $table->string('transaction_ref')->nullable();
             $table->enum('status', ['success','failed','pending'])->default('success');
             $table->timestamp('paid_at');

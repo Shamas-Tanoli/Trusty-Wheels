@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('users'); 
             $table->date('invoice_for_date');
             $table->decimal('total_amount', 10, 2);
-            $table->enum('status', ['pending','paid','overdue'])->default('pending');
+            $table->decimal('discounted_total', 10, 2);
+            $table->enum('discount_type',['promocode','offer']);
+            $table->enum('status', ['pending','paid','partial','overdue'])->default('pending');
             $table->date('due_date');
             $table->timestamp('paid_at')->nullable();
             $table->timestamps(); 

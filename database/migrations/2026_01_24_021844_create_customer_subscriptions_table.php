@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->decimal('price', 10, 2); 
             $table->enum('payment_type', ['one_time','monthly']);
-            $table->enum('status', ['pending','active','paused','cancelled'])->default('active');
+            $table->enum('status', ['active','paused','cancelled'])->default('active');
             $table->timestamps(); 
         });
     }

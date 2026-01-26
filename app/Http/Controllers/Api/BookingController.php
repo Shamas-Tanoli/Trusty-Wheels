@@ -86,13 +86,11 @@ public function addChildren(Request $request, $id)
 
     public function passengerStatus(Request $request)
 {
-    // 1. Validate request
+   
     $validated = $request->validate([
         'passenger_id' => 'required|exists:service_job_passengers,passenger_id',
         'status'       => 'required|string',
     ]);
-
-    // 2. Find passenger
     $passenger = ServiceJobPassenger::where('passenger_id', $validated['passenger_id'])->first();
 
     if (!$passenger) {
@@ -102,11 +100,10 @@ public function addChildren(Request $request, $id)
         ], 404);
     }
 
-    // 3. Update status
     $passenger->status = $validated['status'];
     $passenger->save();
 
-    // 4. Return success response
+   
     return response()->json([
         'success' => true,
         'message' => 'Passenger status updated successfully',
@@ -150,7 +147,7 @@ public function addChildren(Request $request, $id)
 
     public function areaToAreaFromServiceTimePlan(Request $request)
     {
-        // validation
+        
         $request->validate([
             'area_to_id' => 'required|integer',
             'area_from_id' => 'required|integer',
@@ -215,7 +212,7 @@ public function addChildren(Request $request, $id)
 
 
         $validatedData = $request->validate([
-            // Booking fields
+           
             'booking_type_id' => 'required|exists:booking_types,id',
             'customer_id' => 'required|exists:users,id',
             'service_time_id' => 'required|exists:service_times,id',
@@ -223,7 +220,7 @@ public function addChildren(Request $request, $id)
             'town_id' => 'required|exists:towns,id',
             'status' => 'required|string',
 
-            // Passengers
+            
             'passengers' => 'required|array|min:1',
 
             'passengers.*.name' => 'required|string|max:255',
@@ -241,7 +238,7 @@ public function addChildren(Request $request, $id)
         DB::beginTransaction();
 
         try {
-            // 1️⃣ Create Booking
+           
             $booking = Booking::create([
                 'booking_type_id' => $validatedData['booking_type_id'],
                 'customer_id' => $validatedData['customer_id'],
@@ -251,7 +248,7 @@ public function addChildren(Request $request, $id)
                 'status' => $validatedData['status'],
             ]);
 
-            // 2️⃣ Create Passengers
+           
             foreach ($validatedData['passengers'] as $passenger) {
                 $booking->passengers()->create([
                     'customer_id' => $validatedData['customer_id'],

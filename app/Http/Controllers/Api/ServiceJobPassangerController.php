@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\ServiceJob;
 use Illuminate\Http\Request;
+use App\Models\ServiceJobTrack;
 use App\Services\FirebaseService;
 use App\Models\ServiceJobPassenger;
 use App\Http\Controllers\Controller;
@@ -11,13 +12,13 @@ use App\Models\ServiceJobPassengerTrack;
 
 class ServiceJobPassangerController extends Controller
 {
-     protected $firebase;
+    protected $firebase;
 
     public function __construct(FirebaseService $firebase)
     {
         $this->firebase = $firebase;
     }
-    
+
     public function getChildrenWithJobs(Request $request)
     {
         $customer = $request->user();
@@ -75,7 +76,7 @@ class ServiceJobPassangerController extends Controller
 
 
         return response()->json([
-            
+
             'status' => true,
             'data' => [
                 'service_job' => [
@@ -114,65 +115,55 @@ class ServiceJobPassangerController extends Controller
         ]);
     }
 
-
-    public function updatePickupTripOne(Request $request)
+    public function updatePickupTripOneByJob(Request $request)
     {
         $request->validate([
-            'track_id' => 'required|exists:service_job_passenger_track,id',
-            'status'   => 'required|in:picked,pending',
+            'service_job_id' => 'required|exists:service_jobs,id',
+            'status'         => 'required|in:picked,pending',
         ]);
 
-        
-        $currentTrack = ServiceJobPassengerTrack::with([
-            'jobTrack.job.driver',
-            'jobTrack.job.vehicle',
-        ])->findOrFail($request->track_id);
+        $jobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->firstOrFail();
+        $passengerTracks = ServiceJobPassengerTrack::where('service_job_track_id', $jobTrack->id)->get();
 
-        
-        $currentTrack->pickup_trip_one = $request->status;
-        $currentTrack->save();
+        $passengerTracks->pickup_trip_one = $request->status; 
+        $passengerTracks->save();
 
-        $nextPassengerTrack = ServiceJobPassengerTrack::with(
-            'passenger.passenger.user'
-        )
-            ->where('service_job_track_id', $currentTrack->service_job_track_id)
-            ->where('id', '>', $currentTrack->id) 
-            ->orderBy('id')
-            ->first();
 
-        
-        if ($nextPassengerTrack) {
-
-            $user = $nextPassengerTrack->passenger->passenger->user ?? null;
-            $token = $user->fcm_token ?? null;
-
-            if ($token) {
-                $serviceJob = $currentTrack->jobTrack->job;
-
-                $this->firebase->sendToToken(
-                    $token,
-                    'Dear Customer',
-                    "Driver is heading to your pickup location. Please be ready.",
-                    [
-                        'service_job_id' => $serviceJob->id,
-                        'status' => 'next_pickup',
-                        'driver' => $serviceJob->driver->name ?? null,
-                        'vehicle' => $serviceJob->vehicle->registration_no ?? null,
-                    ]
-                );
+        $notifiedCount = 0;
+        foreach ($passengerTracks as $track) {
+            $track->pickup_trip_one = $request->status;
+            $track->save();
+            if ($request->status === 'pending') {
+                $user = $track->passenger->passenger->user ?? null;
+                $token = $user->fcm_token ?? null;
+                if ($token) {
+                    $serviceJob = $jobTrack->job;
+                    $this->firebase->sendToToken(
+                        $token,
+                        'Dear Customer',
+                        "Driver is heading to your pickup location. Please be ready.",
+                        [
+                            'service_job_id' => $serviceJob->id,
+                            'status' => 'next_pickup',
+                            'driver' => $serviceJob->driver->name ?? null,
+                            'vehicle' => $serviceJob->vehicle->registration_no ?? null,
+                        ]
+                    );
+                    $notifiedCount++;
+                }
             }
         }
-
         return response()->json([
             'status' => true,
             'data' => [
-                'track_id' => $currentTrack->id,
-                'pickup_trip_one' => $currentTrack->pickup_trip_one,
-                'next_passenger_notified' => $nextPassengerTrack ? true : false,
+                'service_job_id' => $request->service_job_id,
+                'updated_status' => $request->status,
+                'passengers_notified' => $notifiedCount,
             ],
-            'message' => 'Pickup status updated successfully.',
+            'message' => 'Pickup status updated for all passengers of this job.',
         ]);
     }
+
 
 
     public function updateDropoffTripOne(Request $request)
@@ -200,7 +191,7 @@ class ServiceJobPassangerController extends Controller
     {
         $request->validate([
             'track_id' => 'required|exists:service_job_passenger_track,id',
-          'status'   => 'required|in:picked,pending'
+            'status'   => 'required|in:picked,pending'
         ]);
 
         $track = ServiceJobPassengerTrack::findOrFail($request->track_id);

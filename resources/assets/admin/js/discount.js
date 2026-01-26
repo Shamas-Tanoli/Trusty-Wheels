@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } else {
                 // Success
-                 $('#editPromoModal').modal('hide');
+                $('#editPromoModal').modal('hide');
                 $('.datatables-promo').DataTable().ajax.reload(null, false);
                 alert(data.message);
                 // Optional: close modal or reset form

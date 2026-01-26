@@ -16,6 +16,74 @@ use App\Http\Controllers\Controller;
 class BookingController extends Controller
 {
 
+public function addChildren(Request $request, $id)
+{
+   
+    $booking = Booking::with('passengers')->find($id);
+
+    if (!$booking) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Booking not found'
+        ], 404);
+    }
+
+  
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'pickup_time' => 'required',
+        'dropoff_time' => 'required',
+        'pickup_latitude' => 'required|numeric',
+        'pickup_longitude' => 'required|numeric',
+        'dropoff_latitude' => 'required|numeric',
+        'dropoff_longitude' => 'required|numeric',
+        'pickup_location' => 'required|string',
+        'dropoff_location' => 'required|string',
+        'plan_id' => 'required|exists:plans,id',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        
+        $passenger = $booking->passengers()->create([
+            'plan_id' => $validated['plan_id'],
+            'customer_id' => $booking->customer_id,
+            'booking_id' => $booking->id, 
+            'name' => $validated['name'],
+            'pickup_time' => $validated['pickup_time'],
+            'dropoff_time' => $validated['dropoff_time'],
+            'pickup_latitude' => $validated['pickup_latitude'],
+            'pickup_longitude' => $validated['pickup_longitude'],
+            'dropoff_latitude' => $validated['dropoff_latitude'],
+            'dropoff_longitude' => $validated['dropoff_longitude'],
+            'pickup_location' => $validated['pickup_location'],
+            'dropoff_location' => $validated['dropoff_location'],
+           
+        ]);
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Passenger added successfully',
+            'data' => $passenger
+        ], 201);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to add passenger',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+   
+    
+
     public function passengerStatus(Request $request)
 {
     // 1. Validate request

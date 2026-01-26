@@ -38,8 +38,13 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/customer/bookings/all', [BookingController::class, 'customerbooking']);
     Route::post('/passenger/status', [BookingController::class, 'passengerStatus']);
     Route::get('/customer/children', [ServiceJobPassangerController::class, 'getChildrenWithJobs']);
+    
+    Route::post('/customer/booking/{id}/passenger/add', [BookingController::class, 'addChildren']);
+
+
 });
 
+// booking me child add krny hen 
 
 
 
@@ -62,6 +67,7 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::post('service-job-passenger-track/dropoff-trip-one', [ServiceJobPassangerController::class, 'updateDropoffTripOne']);
     Route::post('service-job-passenger-track/pickup-trip-two', [ServiceJobPassangerController::class, 'updatePickupTripTwo']);
     Route::post('service-job-passenger-track/dropoff-trip-two', [ServiceJobPassangerController::class, 'updateDropoffTripTwo']);
+    
 });
 
 // Customer + Driver APIs

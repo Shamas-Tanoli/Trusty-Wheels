@@ -57,7 +57,7 @@ Route::post('/driver/login', [DriverAuthController::class, 'login']);
 Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::post('/driver/logout', [DriverAuthController::class, 'logout']);
 
-    Route::get('driver/{driver}/jobs', [DriverJobController::class, 'getDriverJobs']);
+    Route::post('driver/{driver}/jobs', [DriverJobController::class, 'getDriverJobs']);
     Route::get('driver/{driver}/jobs/{job}', [DriverJobController::class, 'getDriverJobDetails']);
     Route::post('driver/service/jobs', [ServiceJobController::class, 'createJobTracking']);
 
@@ -71,6 +71,9 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::post('service-job-passenger-track/dropoff-trip-two', [ServiceJobPassangerController::class, 'updateDropoffTripTwo']);
     
 });
+
+
+
 
 // Customer + Driver APIs
 Route::middleware(['auth:sanctum', 'role:customer,driver'])->group(function () {

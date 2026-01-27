@@ -11,7 +11,7 @@ class ServiceTime extends Model
         'timing'
     ];
 
-    public function service()
+    public function service() 
     {
         return $this->belongsTo(Service::class);
     }
@@ -19,6 +19,10 @@ class ServiceTime extends Model
     public function plans()
     {
         return $this->hasMany(Plan::class, 'service_time_id');
+    }
+    public function jobs()
+    {
+        return $this->hasMany(ServiceJob::class, 'service_time_id');
     }
     
 }

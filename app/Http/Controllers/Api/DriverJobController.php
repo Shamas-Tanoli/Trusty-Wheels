@@ -54,8 +54,12 @@ class DriverJobController extends Controller
 
     }
 
-    public function getDriverJobs($driverId)
+    public function getDriverJobs(Request $request ,$driverId)
 {
+    $request->validate([
+        'service_time_id' => 'required'
+    ]);
+
     
     $driver = \App\Models\User::find($driverId);
     if (!$driver) {
@@ -70,9 +74,11 @@ class DriverJobController extends Controller
    
     $jobs = \App\Models\ServiceJob::with([
         'vehicle',
-        'passengers.passenger'
+        'passengers.passenger',
+        'serviceTime',    
     ])
     ->where('driver_id', $driverid->id)
+    ->where('service_time_id', $request->service_time_id)
     ->get();
 
     

@@ -38,6 +38,7 @@ class JobController extends Controller
             'vehicle_id' => $validatedData['vehicle_id'],
             'status'     => 'active',
             'job_date'   => $validatedData['date'],
+            'service_time_id' => 1
         ]);
 
       

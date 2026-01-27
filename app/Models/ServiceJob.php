@@ -11,8 +11,9 @@ class ServiceJob extends Model
         'vehicle_id',
         'status',
         'job_date',
+        'service_time_id'
     ];
-
+ 
     public function passengers()
     {
         return $this->hasMany(ServiceJobPassenger::class);
@@ -21,6 +22,12 @@ class ServiceJob extends Model
     public function driver()
     {
         return $this->belongsTo(User::class, 'driver_id');
+    }
+
+
+    public function servicetime()
+    {
+        return $this->belongsTo(ServiceTime::class, 'service_time_id');
     }
 
     // Vehicle relation

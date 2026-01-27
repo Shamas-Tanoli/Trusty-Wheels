@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Driver;
+use App\Models\ServiceJob;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DriverJobController extends Controller
 {
 
-    public function getDriverJobDetails($userid, $jobId){
+    public function getDriverJobDetails($userid, $jobId)
+    {
 
         $driver = \App\Models\User::find($userid);
         if (!$driver) {
@@ -26,14 +30,14 @@ class DriverJobController extends Controller
             ], 404);
         }
 
-        
+
         $job = \App\Models\ServiceJob::with([
             'vehicle',
             'passengers.passenger'
         ])
-        ->where('id', $jobId)
-        ->where('driver_id', $driverModel->id)
-        ->first();
+            ->where('id', $jobId)
+            ->where('driver_id', $driverModel->id)
+            ->first();
 
         if (!$job) {
             return response()->json([
@@ -51,44 +55,55 @@ class DriverJobController extends Controller
             ],
             'job' => $job
         ]);
+    }
+public function getDriverJobs(Request $request, $driverId, $serviceTimeId = null)
+{
+    
+    if ($serviceTimeId) {
+        $request->merge(['service_time_id' => $serviceTimeId]);
 
+        $request->validate([
+            'service_time_id' => 'nullable'
+        ]);
     }
 
-    public function getDriverJobs(Request $request ,$driverId)
-{
-    $request->validate([
-        'service_time_id' => 'required'
-    ]);
-
-    
-    $driver = \App\Models\User::find($driverId);
-    if (!$driver) {
+    // Driver user check
+    $driverUser = \App\Models\User::find($driverId);
+    if (!$driverUser) {
         return response()->json([
             'status' => 'error',
             'message' => 'Driver not found'
         ], 404);
     }
 
-    $driverid = \App\Models\Driver::where('user_id', $driverId)->first();
+    
+    $driver = \App\Models\Driver::where('user_id', $driverId)->first();
+    if (!$driver) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Driver profile not found'
+        ], 404);
+    }
 
-   
    
     $jobs = \App\Models\ServiceJob::with([
-        'vehicle',
-        'passengers.passenger',
-        'serviceTime',    
-    ])
-    ->where('driver_id', $driverid->id)
-    ->where('service_time_id', $request->service_time_id)
-    ->get();
+            'vehicle',
+            'passengers.passenger',
+            'serviceTime',
+        ])
+        ->where('driver_id', $driver->id)
+        ->when($serviceTimeId, function ($query) use ($serviceTimeId) {
+            $query->where('service_time_id', $serviceTimeId);
+        })
+        ->orderBy('id', 'desc')
+        ->get();
 
-    
     return response()->json([
         'status' => 'success',
         'driver' => [
-            'id' => $driver->id,
-            'name' => $driver->name,
-            'email' => $driver->email,
+            'id'    => $driverUser->id,
+            'name'  => $driverUser->name,
+            'email' => $driverUser->email,
         ],
         'jobs' => $jobs
     ]);

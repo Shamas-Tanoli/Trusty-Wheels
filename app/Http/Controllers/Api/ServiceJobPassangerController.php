@@ -115,30 +115,66 @@ class ServiceJobPassangerController extends Controller
         ]);
     }
 
-    public function updatePickupTripOneByJob(Request $request)
-    {
-        $request->validate([
-            'service_job_id' => 'required|exists:service_jobs,id',
-            'status'         => 'required|in:picked,pending',
-            'passenger_id'         => 'required',
-        ]);
+ public function updatePickupTripOne(Request $request)
+{
+    
+    $request->validate([
+        'service_job_id' => 'required|exists:service_jobs,id',
+        'passenger_id'   => 'required|exists:booking_passengers,id',
+        'status'         => 'required|in:picked,pending',
+    ]);
 
-        $jobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->firstOrFail();
-        $ServiceJobPassenger = ServiceJobPassenger::where('service_job_id', $jobTrack->id)->firstOrFail();
-        $passengerTracks = ServiceJobPassengerTrack::where('service_job_passengers_id', $ServiceJobPassenger->id)->get();
+    try {
+       
+        $serviceJobPassenger = ServiceJobPassenger::where('service_job_id', $request->service_job_id)
+            ->where('passenger_id', $request->passenger_id)
+            ->first();
 
-        $passengerTracks->pickup_trip_one = $request->status; 
-        $passengerTracks->save();
+        if (!$serviceJobPassenger) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passenger is not assigned to this service job.'
+            ], 404);
+        }
 
+        
+        $passengerTrack = ServiceJobPassengerTrack::where(
+            'service_job_passengers_id',
+            $serviceJobPassenger->id
+        )->first();
+
+        if (!$passengerTrack) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passenger track not found.'
+            ], 404);
+        }
+
+       
+        $passengerTrack->pickup_trip_one = $request->status;
+        $passengerTrack->save();
+
+        
         return response()->json([
             'status' => true,
+            'message' => 'Pickup status updated successfully.',
             'data' => [
                 'service_job_id' => $request->service_job_id,
-                'updated_status' => $request->status,
-            ],
-            'message' => 'Pickup status updated for all passengers of this job.',
+                'passenger_id'   => $request->passenger_id,
+                'status'         => $request->status,
+            ]
         ]);
+
+    } catch (\Exception $e) {
+     
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong while updating pickup status.',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
 
 
 

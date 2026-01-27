@@ -40,7 +40,7 @@ class ServiceJobController extends Controller
         }
 
         $serviceJob = ServiceJob::with([
-            'passengers.passenger.customer.user',
+            'passengers.passenger.user',
             'driver',
             'vehicle'
         ])->findOrFail($request->service_job_id);

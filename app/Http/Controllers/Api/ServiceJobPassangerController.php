@@ -120,45 +120,21 @@ class ServiceJobPassangerController extends Controller
         $request->validate([
             'service_job_id' => 'required|exists:service_jobs,id',
             'status'         => 'required|in:picked,pending',
+            'passenger_id'         => 'required',
         ]);
 
         $jobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->firstOrFail();
-        $passengerTracks = ServiceJobPassengerTrack::where('service_job_track_id', $jobTrack->id)->get();
+        $ServiceJobPassenger = ServiceJobPassenger::where('service_job_id', $jobTrack->id)->firstOrFail();
+        $passengerTracks = ServiceJobPassengerTrack::where('service_job_passengers_id', $ServiceJobPassenger->id)->get();
 
         $passengerTracks->pickup_trip_one = $request->status; 
         $passengerTracks->save();
 
-
-        $notifiedCount = 0;
-        foreach ($passengerTracks as $track) {
-            $track->pickup_trip_one = $request->status;
-            $track->save();
-            if ($request->status === 'pending') {
-                $user = $track->passenger->passenger->user ?? null;
-                $token = $user->fcm_token ?? null;
-                if ($token) {
-                    $serviceJob = $jobTrack->job;
-                    $this->firebase->sendToToken(
-                        $token,
-                        'Dear Customer',
-                        "Driver is heading to your pickup location. Please be ready.",
-                        [
-                            'service_job_id' => $serviceJob->id,
-                            'status' => 'next_pickup',
-                            'driver' => $serviceJob->driver->name ?? null,
-                            'vehicle' => $serviceJob->vehicle->registration_no ?? null,
-                        ]
-                    );
-                    $notifiedCount++;
-                }
-            }
-        }
         return response()->json([
             'status' => true,
             'data' => [
                 'service_job_id' => $request->service_job_id,
                 'updated_status' => $request->status,
-                'passengers_notified' => $notifiedCount,
             ],
             'message' => 'Pickup status updated for all passengers of this job.',
         ]);
@@ -169,22 +145,26 @@ class ServiceJobPassangerController extends Controller
     public function updateDropoffTripOne(Request $request)
     {
         $request->validate([
-            'track_id' => 'required|exists:service_job_passenger_track,id',
-            'status'   => 'required|in:picked,pending',
+            'service_job_id' => 'required|exists:service_jobs,id',
+            'status'         => 'required|in:picked,pending',
         ]);
 
-        $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
-        $track->dropoff_trip_one = $request->status;
-        $track->save();
+        $jobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->firstOrFail();
+        $passengerTracks = ServiceJobPassengerTrack::where('service_job_track_id', $jobTrack->id)->get();
+
+        $passengerTracks->dropoff_trip_one = $request->status;
+        $passengerTracks->save();
 
         return response()->json([
             'status' => true,
             'data' => [
-                'track_id' => $track->id,
-                'dropoff_trip_one' => $track->dropoff_trip_one,
+                'service_job_id' => $request->service_job_id,
+                 'dropoff_trip_one' => $passengerTracks->dropoff_trip_one,
             ],
             'message' => 'Dropoff status updated successfully.',
         ]);
+
+        
     }
 
     public function updatePickupTripTwo(Request $request)

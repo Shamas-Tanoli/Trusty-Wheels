@@ -72,6 +72,7 @@ class DriverJobController extends Controller
     $driverid = \App\Models\Driver::where('user_id', $driverId)->first();
 
    
+   
     $jobs = \App\Models\ServiceJob::with([
         'vehicle',
         'passengers.passenger',

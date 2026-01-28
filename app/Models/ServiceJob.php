@@ -52,6 +52,7 @@ class ServiceJob extends Model
         );
     }
 
+    
     public function passengerTracks()
     {
         return $this->hasManyThrough(

@@ -34,7 +34,7 @@ class DriverJobController extends Controller
 
         $job = \App\Models\ServiceJob::with([
             'vehicle',
-            'jobTrack.passengerTracks',
+            'jobTrack.passengerTracks.passenger.passengerTrack',
             'passengers.passenger'
         ])
 
@@ -63,6 +63,8 @@ class DriverJobController extends Controller
             'job' => $job
         ]);
     }
+
+
 public function getDriverJobs(Request $request, $driverId, $serviceTimeId = null)
 {
     

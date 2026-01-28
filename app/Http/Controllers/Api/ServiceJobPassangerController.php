@@ -157,7 +157,7 @@ class ServiceJobPassangerController extends Controller
         
         return response()->json([
             'status' => true,
-            'message' => 'Pickup status updated successfully.',
+            'message' => 'Pickup trip one updated successfully.',
             'data' => [
                 'service_job_id' => $request->service_job_id,
                 'passenger_id'   => $request->passenger_id,
@@ -217,7 +217,125 @@ public function updateDropoffTripOne(Request $request)
         
         return response()->json([
             'status' => true,
-            'message' => 'Pickup status updated successfully.',
+            'message' => 'Pickup trip one updated successfully.',
+            'data' => [
+                'service_job_id' => $request->service_job_id,
+                'passenger_id'   => $request->passenger_id,
+                'status'         => $request->status,
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+     
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong while updating pickup status.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+public function updatePickupTripTwo(Request $request)
+{
+    
+    $request->validate([
+        'service_job_id' => 'required|exists:service_jobs,id',
+        'passenger_id'   => 'required|exists:booking_passengers,id',
+        'status'         => 'required|in:picked,pending',
+    ]);
+
+    try {
+       
+        $serviceJobPassenger = ServiceJobPassenger::where('service_job_id', $request->service_job_id)
+            ->where('passenger_id', $request->passenger_id)
+            ->first();
+
+        if (!$serviceJobPassenger) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passenger is not assigned to this service job.'
+            ], 404);
+        }
+
+        
+        $passengerTrack = ServiceJobPassengerTrack::where(
+            'service_job_passengers_id',
+            $serviceJobPassenger->id
+        )->first();
+
+        if (!$passengerTrack) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passenger track not found.'
+            ], 404);
+        }
+
+       
+        $passengerTrack->dropoff_trip_two = $request->status;
+        $passengerTrack->save();
+
+        
+        return response()->json([
+            'status' => true,
+            'message' => 'Pickup trip two updated successfully.',
+            'data' => [
+                'service_job_id' => $request->service_job_id,
+                'passenger_id'   => $request->passenger_id,
+                'status'         => $request->status,
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+     
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong while updating pickup status.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+public function updateDropoffTripTwo(Request $request)
+{
+    
+    $request->validate([
+        'service_job_id' => 'required|exists:service_jobs,id',
+        'passenger_id'   => 'required|exists:booking_passengers,id',
+        'status'         => 'required|in:picked,pending',
+    ]);
+
+    try {
+       
+        $serviceJobPassenger = ServiceJobPassenger::where('service_job_id', $request->service_job_id)
+            ->where('passenger_id', $request->passenger_id)
+            ->first();
+
+        if (!$serviceJobPassenger) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passenger is not assigned to this service job.'
+            ], 404);
+        }
+
+        
+        $passengerTrack = ServiceJobPassengerTrack::where(
+            'service_job_passengers_id',
+            $serviceJobPassenger->id
+        )->first();
+
+        if (!$passengerTrack) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passenger track not found.'
+            ], 404);
+        }
+
+       
+       $passengerTrack->dropoff_trip_two = $request->status;
+        $passengerTrack->save();
+
+        
+        return response()->json([
+            'status' => true,
+            'message' => 'Dropoff trip two status updated successfully.',
             'data' => [
                 'service_job_id' => $request->service_job_id,
                 'passenger_id'   => $request->passenger_id,
@@ -239,44 +357,6 @@ public function updateDropoffTripOne(Request $request)
 
     
 
-    public function updatePickupTripTwo(Request $request)
-    {
-        $request->validate([
-            'track_id' => 'required|exists:service_job_passenger_track,id',
-            'status'   => 'required|in:picked,pending'
-        ]);
-
-        $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
-        $track->pickup_trip_two = $request->status;
-        $track->save();
-
-        return response()->json([
-            'status' => true,
-            'data' => [
-                'track_id' => $track->id,
-                'pickup_trip_two' => $track->pickup_trip_two,
-            ],
-            'message' => 'Pickup status updated successfully.',
-        ]);
-    }
-    public function updateDropoffTripTwo(Request $request)
-    {
-        $request->validate([
-            'track_id' => 'required|exists:service_job_passenger_track,id',
-            'status'   => 'required|in:picked,pending',
-        ]);
-
-        $track = ServiceJobPassengerTrack::findOrFail($request->track_id);
-        $track->dropoff_trip_two = $request->status;
-        $track->save();
-
-        return response()->json([
-            'status' => true,
-            'data' => [
-                'track_id' => $track->id,
-                'dropoff_trip_two' => $track->dropoff_trip_two,
-            ],
-            'message' => 'Dropoff status updated successfully.',
-        ]);
-    }
+    
+    
 }

@@ -13,6 +13,7 @@ class DriverJobController extends Controller
 
     public function getDriverJobDetails($userid, $jobId)
     {
+      
 
         $driver = \App\Models\User::find($userid);
         if (!$driver) {
@@ -33,11 +34,17 @@ class DriverJobController extends Controller
 
         $job = \App\Models\ServiceJob::with([
             'vehicle',
+            'jobTrack.passengerTracks',
             'passengers.passenger'
         ])
+
+        
             ->where('id', $jobId)
             ->where('driver_id', $driverModel->id)
             ->first();
+
+
+           
 
         if (!$job) {
             return response()->json([

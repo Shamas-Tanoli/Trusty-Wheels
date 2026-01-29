@@ -23,6 +23,7 @@ class JobStartController extends Controller
         $passengerTrack = ServiceJobTrack::where('service_job_id',$request->service_job_id)->first();
 
         $passengerTrack->status =$request->status;
+        $passengerTrack->save();
 
 
          return response()->json([

@@ -43,6 +43,8 @@ class ServiceJobController extends Controller
         return $passenger->pickup_trip_one === 'picked' && $passenger->dropoff_trip_one === 'dropped';
     });
 
+    
+
     $serviceJobTripTrack = ServiceJobTripTrack::where('service_job_track_id', $serviceJobTrack->id)->first();
     if (!$serviceJobTripTrack) {
         return response()->json(['status' => 'error', 'message' => 'Service job trip track not found'], 404);

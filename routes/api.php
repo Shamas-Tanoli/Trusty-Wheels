@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\JobStartController;
 use App\Http\Controllers\Api\DriverJobController;
 use App\Http\Controllers\Api\DriverAuthController;
 use App\Http\Controllers\Api\ServiceJobController;
@@ -72,6 +73,7 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::post('driver/job/trip/one/status', [ServiceJobController::class, 'tripOne']);
 });
 
+Route::post('start/job', [JobStartController::class, 'store']);
 
 
 

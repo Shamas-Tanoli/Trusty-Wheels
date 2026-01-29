@@ -181,7 +181,7 @@ public function updateDropoffTripOne(Request $request)
     $request->validate([
         'service_job_id' => 'required|exists:service_jobs,id',
         'passenger_id'   => 'required|exists:booking_passengers,id',
-        'status'         => 'required|in:picked,pending',
+        'status'         => 'required|in:droped,pending',
     ]);
 
     try {
@@ -299,7 +299,7 @@ public function updateDropoffTripTwo(Request $request)
     $request->validate([
         'service_job_id' => 'required|exists:service_jobs,id',
         'passenger_id'   => 'required|exists:booking_passengers,id',
-        'status'         => 'required|in:picked,pending',
+        'status'         => 'required|in:droped,pending',
     ]);
 
     try {

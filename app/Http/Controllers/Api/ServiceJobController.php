@@ -21,19 +21,46 @@ class ServiceJobController extends Controller
         $this->firebase = $firebase;
     }
 
-    public function tripOne(Request $request){
-
-        $request->validate([
-             'service_job_id' => 'required|exists:service_jobs,id',
-        ]);
-
-        $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->get();
-
-        
+    public function tripOne(Request $request)
+{
+    $request->validate([
+        'service_job_id' => 'required|exists:service_jobs,id',
+        'status'         => 'required|in:completed,pending,ongoing',
+    ]);
 
     
-
+    $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->first();
+    if (!$serviceJobTrack) {
+        return response()->json(['status' => 'error', 'message' => 'Service job track not found'], 404);
     }
+
+    $jobPassengers = ServiceJobPassengerTrack::where('service_job_track_id', $serviceJobTrack->id)
+        ->where('status', 'active')
+        ->get();
+
+   
+    $allPickedAndDropped = $jobPassengers->every(function ($passenger) {
+        return $passenger->pickup_trip_one === 'picked' && $passenger->dropoff_trip_one === 'dropped';
+    });
+
+    $serviceJobTripTrack = ServiceJobTripTrack::where('service_job_track_id', $serviceJobTrack->id)->first();
+    if (!$serviceJobTripTrack) {
+        return response()->json(['status' => 'error', 'message' => 'Service job trip track not found'], 404);
+    }
+
+   
+    if ($allPickedAndDropped) {
+        $serviceJobTripTrack->trip_one_status = $request->status;
+        $serviceJobTripTrack->save();
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => $allPickedAndDropped ? 'Trip one status updated' : 'Not all passengers completed trip one',
+        'trip_one_status' => $serviceJobTripTrack->trip_one_status
+    ]);
+}
+
 
     public function createJobTracking(Request $request)
     {
@@ -74,7 +101,7 @@ class ServiceJobController extends Controller
                 'vehicle_id' => $serviceJob->vehicle_id,
                 'trip_one_status' => 'ongoing',
                 // 'trip_two_status' => 'pending',
-                
+
             ]);
 
 

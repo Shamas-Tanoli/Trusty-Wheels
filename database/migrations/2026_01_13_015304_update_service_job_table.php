@@ -12,12 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('service_jobs', function (Blueprint $table) {
-            // drop unwanted columns
             $table->dropForeign(['service_timing_id']);
             $table->dropColumn(['service_timing_id']);
-
-            // add new columns
-          
             $table->date('job_date');
         });
     }

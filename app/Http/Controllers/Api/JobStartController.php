@@ -2,14 +2,37 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ServiceJob;
-use App\Models\ServiceJobPassenger;
+use Illuminate\Http\Request;
+use App\Models\ServiceJobTrack;
 use Illuminate\Support\Facades\DB;
+use App\Models\ServiceJobPassenger;
+use App\Http\Controllers\Controller;
 
 class JobStartController extends Controller
 {
+    public function status(Request $request){
+
+    
+        $request->validate([
+            'service_job_id' => 'required|exists:service_jobs,id',
+            'status' => 'required|in:ongoing,pending,completed',
+        ]);
+
+          
+        $passengerTrack = ServiceJobTrack::where('service_job_id',$request->service_job_id)->first();
+
+        $passengerTrack->status =$request->status;
+
+
+         return response()->json([
+                'status' => false,
+                'message' => 'status change',
+            'status'=>$request->status
+            ], 200);
+
+
+    }
     
     public function store(Request $request)
     {

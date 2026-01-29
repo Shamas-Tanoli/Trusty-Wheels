@@ -21,6 +21,20 @@ class ServiceJobController extends Controller
         $this->firebase = $firebase;
     }
 
+    public function tripOne(Request $request){
+
+        $request->validate([
+             'service_job_id' => 'required|exists:service_jobs,id',
+        ]);
+
+        $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->get();
+
+        
+
+    
+
+    }
+
     public function createJobTracking(Request $request)
     {
         $request->validate([

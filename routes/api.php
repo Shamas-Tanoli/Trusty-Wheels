@@ -67,6 +67,9 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     
     Route::post('driver/passenger/trip/two/pickup/status', [ServiceJobPassangerController::class, 'updatePickupTripTwo']);
     Route::post('driver/passenger/trip/two/dropoff/status', [ServiceJobPassangerController::class, 'updateDropoffTripTwo']);
+
+
+    Route::post('driver/job/trip/one/status', [ServiceJobController::class, 'tripOne']);
 });
 
 

@@ -35,6 +35,7 @@ class DriverJobController extends Controller
         $job = \App\Models\ServiceJob::with([
             'vehicle',
             'jobTrack.passengerTracks.passenger.passengerTrack',
+            'jobTrack.tripTracks',
             'passengers.passenger'
         ])
 

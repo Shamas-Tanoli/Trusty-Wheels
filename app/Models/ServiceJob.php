@@ -52,6 +52,18 @@ class ServiceJob extends Model
         );
     }
 
+    public function bookingPassengers()
+    {
+        return $this->hasManyThrough(
+            BookingPassenger::class,
+            ServiceJobPassenger::class,
+            'service_job_id',   // FK on service_job_passengers
+            'id',               // PK on booking_passengers
+            'id',               // PK on service_jobs
+            'passenger_id'      // FK on service_job_passengers
+        );
+    }
+
     
     public function passengerTracks()
     {

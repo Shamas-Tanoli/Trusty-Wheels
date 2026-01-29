@@ -36,10 +36,11 @@ class DriverJobController extends Controller
             'vehicle',
             'jobTrack.passengerTracks.passenger.passengerTrack',
             'jobTrack.tripTracks',
-            'passengers.passenger'
+            'passengers.passenger',
+            'bookingPassengers.plan.servicetime.service'
         ])
 
-        
+       
             ->where('id', $jobId)
             ->where('driver_id', $driverModel->id)
             ->first();
@@ -54,6 +55,13 @@ class DriverJobController extends Controller
             ], 404);
         }
 
+        $trip = $job->bookingPassengers->map(function ($passenger) {
+    return [
+       
+        'service' => $passenger->plan->servicetime->service,
+    ];
+});
+
         return response()->json([
             'status' => 'success',
             'driver' => [
@@ -61,6 +69,8 @@ class DriverJobController extends Controller
                 'name' => $driver->name,
                 'email' => $driver->email,
             ],
+            'trip' => $trip,
+            
             'job' => $job
         ]);
     }

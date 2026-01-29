@@ -15,6 +15,7 @@
 docker-compose.override.yml
 /.zip
 .zip
+/*.zip
 Homestead.json
 Homestead.yaml
 npm-debug.log

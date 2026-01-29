@@ -71,6 +71,7 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
 
 
     Route::post('driver/job/trip/one/status', [ServiceJobController::class, 'tripOne']);
+    Route::post('driver/job/trip/one/status', [ServiceJobController::class, 'tripTwo']);
 });
 
 Route::post('start/job', [JobStartController::class, 'store']);

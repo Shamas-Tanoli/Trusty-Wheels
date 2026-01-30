@@ -34,6 +34,8 @@ class ServiceJobController extends Controller
         return response()->json(['status' => 'error', 'message' => 'Service job track not found'], 404);
     }
 
+
+
     $jobPassengers = ServiceJobPassengerTrack::where('service_job_track_id', $serviceJobTrack->id)
         ->where('status', 'active')
         ->get();
@@ -56,6 +58,8 @@ class ServiceJobController extends Controller
         $serviceJobTripTrack->save();
     }
 
+
+
     return response()->json([
         'status' => true,
         'message' => $allPickedAndDropped ? 'Trip two status updated' : 'Not all passengers completed trip two',
@@ -68,6 +72,11 @@ class ServiceJobController extends Controller
         'service_job_id' => 'required|exists:service_jobs,id',
         'status'         => 'required|in:completed,pending,ongoing',
     ]);
+
+    $serviceJob = ServiceJob::with('serviceTiming.service')->find($request->service_job_id);
+    if (!$serviceJob) {
+        return response()->json(['status' => false, 'message' => 'Service job not found'], 404);
+    }
 
     
     $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->first();
@@ -95,6 +104,13 @@ class ServiceJobController extends Controller
     if ($allPickedAndDropped) {
         $serviceJobTripTrack->trip_one_status = $request->status;
         $serviceJobTripTrack->save();
+    }
+
+    $service = $serviceJob->serviceTiming->service;
+
+    if ($service->name === 'single_trip') {
+        $serviceJob->status = 'completed';
+        $serviceJob->save();
     }
 
     return response()->json([

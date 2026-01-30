@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::table('plans', function (Blueprint $table) {
 
-            // ❌ old columns remove
+          
             $table->dropColumn(['area_from', 'area_to', 'trip_type']);
 
-            // ✅ new foreign keys add
             $table->foreignId('area_from_id')
                    ->after('price')
                   ->constrained('towns')

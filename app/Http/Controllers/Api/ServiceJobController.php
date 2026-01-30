@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\ServiceJobTripTrack;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceJobPassengerTrack;
+use Illuminate\Foundation\Exceptions\Renderer\Exception;
 
 class ServiceJobController extends Controller
 {
@@ -61,6 +62,8 @@ class ServiceJobController extends Controller
         }
 
 
+        try{
+
         if ($allPickedAndDropped) {
             $serviceJobTripTrack->trip_one_status = $request->status;
             $serviceJobTripTrack->save();
@@ -72,6 +75,15 @@ class ServiceJobController extends Controller
                 $serviceJob->save();
             }
         }
+        }
+        catch (\Exception $e) {
+     
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong while updating trip one status.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
 
 
 

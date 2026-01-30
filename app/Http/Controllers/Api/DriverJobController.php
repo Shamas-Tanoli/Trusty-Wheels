@@ -13,7 +13,7 @@ class DriverJobController extends Controller
 
     public function getDriverJobDetails($userid, $jobId)
     {
-      
+
 
         $driver = \App\Models\User::find($userid);
         if (!$driver) {
@@ -40,13 +40,15 @@ class DriverJobController extends Controller
             'bookingPassengers.plan.servicetime.service'
         ])
 
-       
+
+
             ->where('id', $jobId)
             ->where('driver_id', $driverModel->id)
             ->first();
 
 
-           
+
+
 
         if (!$job) {
             return response()->json([
@@ -56,11 +58,11 @@ class DriverJobController extends Controller
         }
 
         $trip = $job->bookingPassengers->map(function ($passenger) {
-    return [
-       
-        'service' => $passenger->plan->servicetime->service,
-    ];
-});
+            return [
+
+                'service' => $passenger->plan->servicetime->service,
+            ];
+        });
 
         return response()->json([
             'status' => 'success',
@@ -70,63 +72,62 @@ class DriverJobController extends Controller
                 'email' => $driver->email,
             ],
             'trip' => $trip,
-            
+
             'job' => $job
         ]);
     }
 
 
-public function getDriverJobs(Request $request, $driverId, $serviceTimeId = null)
-{
-    
-    if ($serviceTimeId) {
-        $request->merge(['service_time_id' => $serviceTimeId]);
+    public function getDriverJobs(Request $request, $driverId, $serviceTimeId = null)
+    {
 
-        $request->validate([
-            'service_time_id' => 'nullable'
-        ]);
-    }
+        if ($serviceTimeId) {
+            $request->merge(['service_time_id' => $serviceTimeId]);
 
-    // Driver user check
-    $driverUser = \App\Models\User::find($driverId);
-    if (!$driverUser) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Driver not found'
-        ], 404);
-    }
+            $request->validate([
+                'service_time_id' => 'nullable'
+            ]);
+        }
 
-    
-    $driver = \App\Models\Driver::where('user_id', $driverId)->first();
-    if (!$driver) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Driver profile not found'
-        ], 404);
-    }
+        // Driver user check
+        $driverUser = \App\Models\User::find($driverId);
+        if (!$driverUser) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Driver not found'
+            ], 404);
+        }
 
-   
-    $jobs = \App\Models\ServiceJob::with([
+
+        $driver = \App\Models\Driver::where('user_id', $driverId)->first();
+        if (!$driver) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Driver profile not found'
+            ], 404);
+        }
+
+
+        $jobs = \App\Models\ServiceJob::with([
             'vehicle',
             'passengers.passenger',
             'serviceTime',
         ])
-        ->where('driver_id', $driver->id)
-        ->when($serviceTimeId, function ($query) use ($serviceTimeId) {
-            $query->where('service_time_id', $serviceTimeId);
-        })
-        ->orderBy('id', 'desc')
-        ->get();
+            ->where('driver_id', $driver->id)
+            ->when($serviceTimeId, function ($query) use ($serviceTimeId) {
+                $query->where('service_time_id', $serviceTimeId);
+            })
+            ->orderBy('id', 'desc')
+            ->get();
 
-    return response()->json([
-        'status' => 'success',
-        'driver' => [
-            'id'    => $driverUser->id,
-            'name'  => $driverUser->name,
-            'email' => $driverUser->email,
-        ],
-        'jobs' => $jobs
-    ]);
-}
-
+        return response()->json([
+            'status' => 'success',
+            'driver' => [
+                'id'    => $driverUser->id,
+                'name'  => $driverUser->name,
+                'email' => $driverUser->email,
+            ],
+            'jobs' => $jobs
+        ]);
+    }
 }

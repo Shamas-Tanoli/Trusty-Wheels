@@ -137,11 +137,12 @@ class ServiceJobController extends Controller
                 $serviceJobTripTrack->save();
 
                 $service = $serviceJob->servicetime->service;
-
-                if (!($service->name === 'single trip')) {
-                    $serviceJob->status = 'completed';
-                    $serviceJob->save();
-                }
+                $isMultiTrip = $service->name !== 'single trip';
+                
+                    if ($isMultiTrip && $serviceJobTripTrack->trip_two_status === 'completed') {
+                        $serviceJob->status = 'completed';
+                        $serviceJob->save();
+                    }
             }
         } catch (\Exception $e) {
 

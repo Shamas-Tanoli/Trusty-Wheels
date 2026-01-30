@@ -21,104 +21,115 @@ class ServiceJobController extends Controller
         $this->firebase = $firebase;
     }
 
-    public function tripTwo(Request $request)
-{
-    $request->validate([
-        'service_job_id' => 'required|exists:service_jobs,id',
-        'status'         => 'required|in:completed,pending,ongoing',
-    ]);
-
-    
-    $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->first();
-    if (!$serviceJobTrack) {
-        return response()->json(['status' => 'error', 'message' => 'Service job track not found'], 404);
-    }
-
-
-
-    $jobPassengers = ServiceJobPassengerTrack::where('service_job_track_id', $serviceJobTrack->id)
-        ->where('status', 'active')
-        ->get();
-
-   
-    $allPickedAndDropped = $jobPassengers->every(function ($passenger) {
-        return $passenger->pickup_trip_two === 'picked' && $passenger->dropoff_trip_two === 'dropped';
-    });
-
-    
-
-    $serviceJobTripTrack = ServiceJobTripTrack::where('service_job_track_id', $serviceJobTrack->id)->first();
-    if (!$serviceJobTripTrack) {
-        return response()->json(['status' => 'error', 'message' => 'Service job trip track not found'], 404);
-    }
-
-   
-    if ($allPickedAndDropped) {
-        $serviceJobTripTrack->trip_two_status = $request->status;
-        $serviceJobTripTrack->save();
-    }
-
-
-
-    return response()->json([
-        'status' => true,
-        'message' => $allPickedAndDropped ? 'Trip two status updated' : 'Not all passengers completed trip two',
-        'trip_two_status' => $serviceJobTripTrack->trip_two_status
-    ]);
-}
     public function tripOne(Request $request)
-{
-    $request->validate([
-        'service_job_id' => 'required|exists:service_jobs,id',
-        'status'         => 'required|in:completed,pending,ongoing',
-    ]);
+    {
+       
+        $request->validate([
+            'service_job_id' => 'required|exists:service_jobs,id',
+            'status'         => 'required|in:completed,pending,ongoing',
+        ]);
 
-    $serviceJob = ServiceJob::with('serviceTiming.service')->find($request->service_job_id);
-    if (!$serviceJob) {
-        return response()->json(['status' => false, 'message' => 'Service job not found'], 404);
+     
+
+        $serviceJob = ServiceJob::with('servicetime.service')->find($request->service_job_id);
+        if (!$serviceJob) {
+            return response()->json(['status' => false, 'message' => 'Service job not found'], 404);
+        }
+
+
+        $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->first();
+        if (!$serviceJobTrack) {
+            return response()->json(['status' => 'error', 'message' => 'Service job track not found'], 404);
+        }
+
+        $jobPassengers = ServiceJobPassengerTrack::where('service_job_track_id', $serviceJobTrack->id)
+            ->where('status', 'active')
+            ->get();
+
+
+        $allPickedAndDropped = $jobPassengers->every(function ($passenger) {
+            return $passenger->pickup_trip_one === 'picked' && $passenger->dropoff_trip_one === 'dropped';
+        });
+
+        
+
+
+
+        $serviceJobTripTrack = ServiceJobTripTrack::where('service_job_track_id', $serviceJobTrack->id)->first();
+        if (!$serviceJobTripTrack) {
+            return response()->json(['status' => 'error', 'message' => 'Service job trip track not found'], 404);
+        }
+
+
+        if ($allPickedAndDropped) {
+            $serviceJobTripTrack->trip_one_status = $request->status;
+            $serviceJobTripTrack->save();
+
+            $service = $serviceJob->servicetime->service;
+
+            if ($service->name === 'single trip') {
+                $serviceJob->status = 'completed';
+                $serviceJob->save();
+            }
+        }
+
+
+
+        return response()->json([
+            'status' => true,
+            'message' => $allPickedAndDropped ? 'Trip one status updated' : 'Not all passengers completed trip one',
+            'trip_one_status' => $serviceJobTripTrack->trip_one_status,
+            'service_job_status' => $serviceJob->status,
+        ]);
     }
 
+
+    public function tripTwo(Request $request)
+    {
+        $request->validate([
+            'service_job_id' => 'required|exists:service_jobs,id',
+            'status'         => 'required|in:completed,pending,ongoing',
+        ]);
+
+
+        $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->first();
+        if (!$serviceJobTrack) {
+            return response()->json(['status' => 'error', 'message' => 'Service job track not found'], 404);
+        }
+
+
+
+        $jobPassengers = ServiceJobPassengerTrack::where('service_job_track_id', $serviceJobTrack->id)
+            ->where('status', 'active')
+            ->get();
+
+
+        $allPickedAndDropped = $jobPassengers->every(function ($passenger) {
+            return $passenger->pickup_trip_two === 'picked' && $passenger->dropoff_trip_two === 'dropped';
+        });
+
+
+
+        $serviceJobTripTrack = ServiceJobTripTrack::where('service_job_track_id', $serviceJobTrack->id)->first();
+        if (!$serviceJobTripTrack) {
+            return response()->json(['status' => 'error', 'message' => 'Service job trip track not found'], 404);
+        }
+
+
+        if ($allPickedAndDropped) {
+            $serviceJobTripTrack->trip_two_status = $request->status;
+            $serviceJobTripTrack->save();
+        }
+
+
+
+        return response()->json([
+            'status' => true,
+            'message' => $allPickedAndDropped ? 'Trip two status updated' : 'Not all passengers completed trip two',
+            'trip_two_status' => $serviceJobTripTrack->trip_two_status
+        ]);
+    }
     
-    $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->first();
-    if (!$serviceJobTrack) {
-        return response()->json(['status' => 'error', 'message' => 'Service job track not found'], 404);
-    }
-
-    $jobPassengers = ServiceJobPassengerTrack::where('service_job_track_id', $serviceJobTrack->id)
-        ->where('status', 'active')
-        ->get();
-
-   
-    $allPickedAndDropped = $jobPassengers->every(function ($passenger) {
-        return $passenger->pickup_trip_one === 'picked' && $passenger->dropoff_trip_one === 'dropped';
-    });
-
-    
-
-    $serviceJobTripTrack = ServiceJobTripTrack::where('service_job_track_id', $serviceJobTrack->id)->first();
-    if (!$serviceJobTripTrack) {
-        return response()->json(['status' => 'error', 'message' => 'Service job trip track not found'], 404);
-    }
-
-   
-    if ($allPickedAndDropped) {
-        $serviceJobTripTrack->trip_one_status = $request->status;
-        $serviceJobTripTrack->save();
-    }
-
-    $service = $serviceJob->serviceTiming->service;
-
-    if ($service->name === 'single_trip') {
-        $serviceJob->status = 'completed';
-        $serviceJob->save();
-    }
-
-    return response()->json([
-        'status' => true,
-        'message' => $allPickedAndDropped ? 'Trip one status updated' : 'Not all passengers completed trip one',
-        'trip_one_status' => $serviceJobTripTrack->trip_one_status
-    ]);
-}
 
 
     public function createJobTracking(Request $request)

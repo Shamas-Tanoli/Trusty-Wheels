@@ -78,6 +78,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof \App\Exceptions\BusinessException) {
             return ApiResponse::error($e->getMessage(), $e->getCode() ?: 409);
         }
+        
         return ApiResponse::error(
             config('app.debug') ? $e->getMessage() : 'Internal server error',
             500

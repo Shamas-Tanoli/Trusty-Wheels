@@ -11,44 +11,41 @@ use App\Http\Controllers\Controller;
 
 class JobStartController extends Controller
 {
-    public function status(Request $request){
+    public function status(Request $request)
+    {
 
-    
+
         $request->validate([
             'service_job_id' => 'required|exists:service_jobs,id',
             'status' => 'required|in:ongoing,pending,completed',
         ]);
 
-          
-        $passengerTrack = ServiceJobTrack::where('service_job_id',$request->service_job_id)->first();
 
-        $passengerTrack->status =$request->status;
-        $passengerTrack->save();
+        $passengerTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)
+            ->update(['status' => $request->status]);
 
 
-         return response()->json([
-                'status' => false,
-                'message' => 'status change',
-            'status'=>$request->status
-            ], 200);
-
-
+        return response()->json([
+            'status' => false,
+            'message' => 'status change',
+            'status' => $request->status
+        ], 200);
     }
-    
+
     public function store(Request $request)
     {
-       
+
         $validatedData = $request->validate([
             'driver_id'      => 'required|exists:users,id',
             'vehicle_id'     => 'required|exists:service_vehicles,id',
             'date'           => 'required|date',
             'passenger_ids'  => 'required|array',
-            'passenger_ids.*'=> 'exists:booking_passengers,id|distinct',
+            'passenger_ids.*' => 'exists:booking_passengers,id|distinct',
         ]);
 
         DB::transaction(function () use ($validatedData) {
 
-           
+
             $job = ServiceJob::create([
                 'driver_id'      => $validatedData['driver_id'],
                 'vehicle_id'     => $validatedData['vehicle_id'],
@@ -57,7 +54,7 @@ class JobStartController extends Controller
                 'service_time_id' => 1,
             ]);
 
-            
+
             foreach ($validatedData['passenger_ids'] as $pid) {
                 ServiceJobPassenger::create([
                     'service_job_id' => $job->id,
@@ -66,12 +63,8 @@ class JobStartController extends Controller
                 ]);
             }
 
-           
+
             $job->load(['driver', 'vehicle', 'passengers.passenger.user']);
-
-            
-           
-
         });
 
         // Return JSON response

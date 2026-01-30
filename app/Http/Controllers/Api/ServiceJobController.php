@@ -24,13 +24,13 @@ class ServiceJobController extends Controller
 
     public function tripOne(Request $request)
     {
-       
+
         $request->validate([
             'service_job_id' => 'required|exists:service_jobs,id',
             'status'         => 'required|in:completed,pending,ongoing',
         ]);
 
-     
+
 
         $serviceJob = ServiceJob::with('servicetime.service')->find($request->service_job_id);
         if (!$serviceJob) {
@@ -52,7 +52,7 @@ class ServiceJobController extends Controller
             return $passenger->pickup_trip_one === 'picked' && $passenger->dropoff_trip_one === 'dropped';
         });
 
-        
+
 
 
 
@@ -62,28 +62,27 @@ class ServiceJobController extends Controller
         }
 
 
-        try{
+        try {
 
-        if ($allPickedAndDropped) {
-            $serviceJobTripTrack->trip_one_status = $request->status;
-            $serviceJobTripTrack->save();
+            if ($allPickedAndDropped) {
+                $serviceJobTripTrack->trip_one_status = $request->status;
+                $serviceJobTripTrack->save();
 
-            $service = $serviceJob->servicetime->service;
+                $service = $serviceJob->servicetime->service;
 
-            if ($service->name === 'single trip') {
-                $serviceJob->status = 'completed';
-                $serviceJob->save();
+                if ($service->name === 'single trip') {
+                    $serviceJob->status = 'completed';
+                    $serviceJob->save();
+                }
             }
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong while updating trip one status.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-        }
-        catch (\Exception $e) {
-     
-        return response()->json([
-            'status' => false,
-            'message' => 'Something went wrong while updating trip one status.',
-            'error' => $e->getMessage()
-        ], 500);
-    }
 
 
 
@@ -102,6 +101,11 @@ class ServiceJobController extends Controller
             'service_job_id' => 'required|exists:service_jobs,id',
             'status'         => 'required|in:completed,pending,ongoing',
         ]);
+
+        $serviceJob = ServiceJob::with('servicetime.service')->find($request->service_job_id);
+        if (!$serviceJob) {
+            return response()->json(['status' => false, 'message' => 'Service job not found'], 404);
+        }
 
 
         $serviceJobTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)->first();
@@ -127,10 +131,25 @@ class ServiceJobController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Service job trip track not found'], 404);
         }
 
+        try {
+            if ($allPickedAndDropped) {
+                $serviceJobTripTrack->trip_two_status = $request->status;
+                $serviceJobTripTrack->save();
 
-        if ($allPickedAndDropped) {
-            $serviceJobTripTrack->trip_two_status = $request->status;
-            $serviceJobTripTrack->save();
+                $service = $serviceJob->servicetime->service;
+
+                if (!($service->name === 'single trip')) {
+                    $serviceJob->status = 'completed';
+                    $serviceJob->save();
+                }
+            }
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong while updating trip one status.',
+                'error' => $e->getMessage()
+            ], 500);
         }
 
 
@@ -138,10 +157,11 @@ class ServiceJobController extends Controller
         return response()->json([
             'status' => true,
             'message' => $allPickedAndDropped ? 'Trip two status updated' : 'Not all passengers completed trip two',
-            'trip_two_status' => $serviceJobTripTrack->trip_two_status
+            'trip_two_status' => $serviceJobTripTrack->trip_two_status,
+            'service_job_status' => $serviceJob->status,
         ]);
     }
-    
+
 
 
     public function createJobTracking(Request $request)

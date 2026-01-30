@@ -13,6 +13,7 @@ use App\Models\ServiceJobPassengerTrack;
 class ServiceJobPassangerController extends Controller
 {
     protected $firebase;
+    
 
     public function __construct(FirebaseService $firebase)
     {

@@ -8,7 +8,7 @@ class BookingPassenger extends Model
 {
     protected $table = 'booking_passengers';
 
-     protected $fillable = [
+    protected $fillable = [
         'customer_id',
         'booking_id',
         'name',
@@ -30,7 +30,7 @@ class BookingPassenger extends Model
     }
 
 
- public function plan()
+    public function plan()
     {
         return $this->belongsTo(Plan::class);
     }
@@ -38,5 +38,4 @@ class BookingPassenger extends Model
     {
         return $this->belongsTo(User::class, 'customer_id');
     }
-   
 }

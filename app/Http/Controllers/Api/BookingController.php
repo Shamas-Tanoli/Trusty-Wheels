@@ -6,8 +6,10 @@ use App\Models\Plan;
 use App\Models\Town;
 use App\Models\Booking;
 use App\Models\Service;
+use App\Models\Discount;
 use App\Models\ServiceTime;
 use Illuminate\Http\Request;
+use App\Models\BookingPassenger;
 use Illuminate\Support\Facades\DB;
 use App\Models\ServiceJobPassenger;
 use App\Http\Controllers\Controller;
@@ -16,99 +18,98 @@ use App\Http\Controllers\Controller;
 class BookingController extends Controller
 {
 
-public function addChildren(Request $request, $id)
-{
-   
-    $booking = Booking::with('passengers')->find($id);
+    public function addChildren(Request $request, $id)
+    {
 
-    if (!$booking) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Booking not found'
-        ], 404);
-    }
+        $booking = Booking::with('passengers')->find($id);
 
-  
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'pickup_time' => 'required',
-        'dropoff_time' => 'required',
-        'pickup_latitude' => 'required|numeric',
-        'pickup_longitude' => 'required|numeric',
-        'dropoff_latitude' => 'required|numeric',
-        'dropoff_longitude' => 'required|numeric',
-        'pickup_location' => 'required|string',
-        'dropoff_location' => 'required|string',
-        'plan_id' => 'required|exists:plans,id',
-    ]);
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Booking not found'
+            ], 404);
+        }
 
-    DB::beginTransaction();
 
-    try {
-        
-        $passenger = $booking->passengers()->create([
-            'plan_id' => $validated['plan_id'],
-            'customer_id' => $booking->customer_id,
-            'booking_id' => $booking->id, 
-            'name' => $validated['name'],
-            'pickup_time' => $validated['pickup_time'],
-            'dropoff_time' => $validated['dropoff_time'],
-            'pickup_latitude' => $validated['pickup_latitude'],
-            'pickup_longitude' => $validated['pickup_longitude'],
-            'dropoff_latitude' => $validated['dropoff_latitude'],
-            'dropoff_longitude' => $validated['dropoff_longitude'],
-            'pickup_location' => $validated['pickup_location'],
-            'dropoff_location' => $validated['dropoff_location'],
-           
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'pickup_time' => 'required',
+            'dropoff_time' => 'required',
+            'pickup_latitude' => 'required|numeric',
+            'pickup_longitude' => 'required|numeric',
+            'dropoff_latitude' => 'required|numeric',
+            'dropoff_longitude' => 'required|numeric',
+            'pickup_location' => 'required|string',
+            'dropoff_location' => 'required|string',
+            'plan_id' => 'required|exists:plans,id',
         ]);
 
-        DB::commit();
+        DB::beginTransaction();
+
+        try {
+
+            $passenger = $booking->passengers()->create([
+                'plan_id' => $validated['plan_id'],
+                'customer_id' => $booking->customer_id,
+                'booking_id' => $booking->id,
+                'name' => $validated['name'],
+                'pickup_time' => $validated['pickup_time'],
+                'dropoff_time' => $validated['dropoff_time'],
+                'pickup_latitude' => $validated['pickup_latitude'],
+                'pickup_longitude' => $validated['pickup_longitude'],
+                'dropoff_latitude' => $validated['dropoff_latitude'],
+                'dropoff_longitude' => $validated['dropoff_longitude'],
+                'pickup_location' => $validated['pickup_location'],
+                'dropoff_location' => $validated['dropoff_location'],
+
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Passenger added successfully',
+                'data' => $passenger
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to add passenger',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+
+
+    public function passengerStatus(Request $request)
+    {
+
+        $validated = $request->validate([
+            'passenger_id' => 'required|exists:service_job_passengers,passenger_id',
+            'status'       => 'required|string',
+        ]);
+        $passenger = ServiceJobPassenger::where('passenger_id', $validated['passenger_id'])->first();
+
+        if (!$passenger) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Passenger not found',
+            ], 404);
+        }
+
+        $passenger->status = $validated['status'];
+        $passenger->save();
+
 
         return response()->json([
             'success' => true,
-            'message' => 'Passenger added successfully',
-            'data' => $passenger
-        ], 201);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to add passenger',
-            'error' => $e->getMessage()
-        ], 500);
+            'message' => 'Passenger status updated successfully',
+        ]);
     }
-}
-
-   
-    
-
-    public function passengerStatus(Request $request)
-{
-   
-    $validated = $request->validate([
-        'passenger_id' => 'required|exists:service_job_passengers,passenger_id',
-        'status'       => 'required|string',
-    ]);
-    $passenger = ServiceJobPassenger::where('passenger_id', $validated['passenger_id'])->first();
-
-    if (!$passenger) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Passenger not found',
-        ], 404);
-    }
-
-    $passenger->status = $validated['status'];
-    $passenger->save();
-
-   
-    return response()->json([
-        'success' => true,
-        'message' => 'Passenger status updated successfully',
-    ]);
-}
 
     public function customerbooking(Request $request)
     {
@@ -147,7 +148,7 @@ public function addChildren(Request $request, $id)
 
     public function areaToAreaFromServiceTimePlan(Request $request)
     {
-        
+
         $request->validate([
             'area_to_id' => 'required|integer',
             'area_from_id' => 'required|integer',
@@ -212,7 +213,7 @@ public function addChildren(Request $request, $id)
 
 
         $validatedData = $request->validate([
-           
+
             'booking_type_id' => 'required|exists:booking_types,id',
             'customer_id' => 'required|exists:users,id',
             'service_time_id' => 'required|exists:service_times,id',
@@ -220,7 +221,7 @@ public function addChildren(Request $request, $id)
             'town_id' => 'required|exists:towns,id',
             'status' => 'required|string',
 
-            
+
             'passengers' => 'required|array|min:1',
 
             'passengers.*.name' => 'required|string|max:255',
@@ -238,7 +239,7 @@ public function addChildren(Request $request, $id)
         DB::beginTransaction();
 
         try {
-           
+
             $booking = Booking::create([
                 'booking_type_id' => $validatedData['booking_type_id'],
                 'customer_id' => $validatedData['customer_id'],
@@ -248,7 +249,7 @@ public function addChildren(Request $request, $id)
                 'status' => $validatedData['status'],
             ]);
 
-           
+
             foreach ($validatedData['passengers'] as $passenger) {
                 $booking->passengers()->create([
                     'customer_id' => $validatedData['customer_id'],
@@ -265,12 +266,70 @@ public function addChildren(Request $request, $id)
                 ]);
             }
 
-            DB::commit();
+            // DB::commit();
+
+            $booking->load('passengers.plan');
+            $totalAmount = $booking->passengers->sum('plan.price');
+            $currentBookingPassengers = $booking->passengers->count();
+
+         
+            $activeLifetimePassengers = BookingPassenger::where('customer_id', $validatedData['customer_id'])
+                ->whereHas('booking', function ($q) {
+                    $q->where('status', 'active');
+                })
+                ->count();
+
+           
+            $totalPassengersForDiscount = $activeLifetimePassengers + $currentBookingPassengers;
+
+
+            dd($totalPassengersForDiscount);
+        
+            $discountAmount = 0;
+            $discountApplied = null;
+
+            if ($totalPassengersForDiscount > 1) {
+
+                $discount = Discount::where('is_active', 1)
+                    ->where('person', '<=', $totalPassengersForDiscount)
+                    ->orderBy('person', 'desc')
+                    ->first();
+
+                if ($discount) {
+                    if ($discount->type === 'percentage') {
+                        $discountAmount = ($totalAmount * $discount->value) / 100;
+                    } else {
+                        $discountAmount = $discount->value;
+                    }
+
+                    
+                    $discountAmount = min($discountAmount, $totalAmount);
+                    $discountApplied = $discount;
+                }
+            }
+
+            $payableAmount = $totalAmount - $discountAmount;
+
+
+
+            DB::rollBack();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Booking and passengers created successfully',
-                'data' => $booking->load('passengers')
+                'message' => 'Booking created successfully',
+
+                'current_booking_passengers' => $currentBookingPassengers,
+                'active_lifetime_passengers' => $totalPassengersForDiscount,
+
+                'total_amount'   => $totalAmount,
+                'discount' => [
+                    'applied' => $discountAmount > 0,
+                    'type'    => $discountApplied?->type,
+                    'value'   => $discountApplied?->value,
+                    'amount'  => $discountAmount,
+                ],
+                'payable_amount' => $payableAmount,
+
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();

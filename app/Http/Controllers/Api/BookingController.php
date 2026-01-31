@@ -284,9 +284,10 @@ class BookingController extends Controller
 
 
            
-        
+            $isPromoNeeded = $totalPassengersForDiscount ? false :true;
             $discountAmount = 0;
             $discountApplied = null;
+
 
             if ($totalPassengersForDiscount > 1) {
 
@@ -327,6 +328,7 @@ class BookingController extends Controller
                     'amount'  => $discountAmount,
                 ],
                 'payable_amount' => $payableAmount,
+                'isPromoNeeded'=>$isPromoNeeded
 
             ], 201);
         } catch (\Exception $e) {

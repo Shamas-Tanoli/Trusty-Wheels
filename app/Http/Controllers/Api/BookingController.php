@@ -266,7 +266,7 @@ class BookingController extends Controller
                 ]);
             }
 
-            // DB::commit();
+            
 
             $booking->load('passengers.plan');
             $totalAmount = $booking->passengers->sum('plan.price');
@@ -283,7 +283,7 @@ class BookingController extends Controller
             $totalPassengersForDiscount = $activeLifetimePassengers + $currentBookingPassengers;
 
 
-            dd($totalPassengersForDiscount);
+           
         
             $discountAmount = 0;
             $discountApplied = null;
@@ -312,11 +312,12 @@ class BookingController extends Controller
 
 
 
-            DB::rollBack();
+            DB::commit();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Booking created successfully',
+                'booking' => $booking,
 
                 'current_booking_passengers' => $currentBookingPassengers,
                 'active_lifetime_passengers' => $totalPassengersForDiscount,

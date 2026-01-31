@@ -309,9 +309,6 @@ class BookingController extends Controller
             }
 
             $payableAmount = $totalAmount - $discountAmount;
-
-
-
             DB::commit();
 
             return response()->json([

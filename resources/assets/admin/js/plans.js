@@ -220,25 +220,19 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     let plan_id;
 
-    // EDIT BUTTON CLICK
+    
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.edit-btn');
         if (!btn) return;
 
         plan_id = btn.dataset.id;
 
-        // Inputs
+       
         $('#edit_name').val(btn.dataset.name);
         $('#edit_price').val(btn.dataset.price);
         $('#edit_status').val(btn.dataset.status);
-        
-
-
-        // Clear previous select2 options
         $('#edit_area_from').empty();
         $('#edit_area_to').empty();
-
-        // Area From
         if (btn.dataset.servicetimeid) {
             let fromOption = new Option(
                 btn.dataset.servicetimename,
@@ -291,7 +285,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
       .then(async res => {
         const data = await res.json();
 
-        // ❌ Validation Errors (422)
         if (!res.ok && res.status === 422) {
           let errorsHtml = '';
           Object.values(data.errors).forEach(errArr => {
@@ -312,8 +305,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
           return;
         }
-
-        // ❌ Other Errors
         if (!res.ok || data.success === false) {
           Swal.fire({
             title: 'Error!',
@@ -327,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
           return;
         }
 
-        // ✅ Success
+       
         toastr.success(data.message);
         $('#editPlanModal').modal('hide');
         $('.datatables-permissions')

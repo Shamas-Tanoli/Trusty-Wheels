@@ -220,10 +220,7 @@ class BookingController extends Controller
             'service_id' => 'required|exists:services,id',
             'town_id' => 'required|exists:towns,id',
             'status' => 'required|string',
-
-
             'passengers' => 'required|array|min:1',
-
             'passengers.*.name' => 'required|string|max:255',
             'passengers.*.pickup_time' => 'required',
             'passengers.*.dropoff_time' => 'required',

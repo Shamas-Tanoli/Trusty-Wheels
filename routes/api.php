@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::post('/customer/booking/{id}/passenger/add', [BookingController::class, 'addChildren']);
 });
 
-// booking me child add krny hen 
+
 
 
 

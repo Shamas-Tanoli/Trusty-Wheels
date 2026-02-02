@@ -32,7 +32,6 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/area/service/time/plan', [BookingController::class, 'allThing']);
     Route::get('/area', [BookingController::class, 'area']);
     Route::post('/plan/by-criteria', [BookingController::class, 'areaToAreaFromServiceTimePlan']);
-
     Route::get('/services', [ServiceController::class, 'index']);
     Route::post('/customer/booking', [BookingController::class, 'store']);
     Route::get('/bookingtype', [BookingController::class, 'bookingtype']);

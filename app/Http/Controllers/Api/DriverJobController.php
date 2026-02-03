@@ -47,7 +47,11 @@ class DriverJobController extends Controller
             ], 404);
         }
 
-        
+        $vehicle = $job->vehicle;
+        if ($vehicle) {
+            $vehicle->image = $vehicle->image ? asset($vehicle->image) : null;
+        }
+
 
         $trip = $job->bookingPassengers->map(function ($passenger) {
             return [

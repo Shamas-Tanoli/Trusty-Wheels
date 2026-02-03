@@ -16,4 +16,13 @@ class ServiceVehicle extends Model
     {
         return $this->hasMany(ServiceJob::class, 'vehicle_id');
     }
+
+    protected $appends = ['full_image_url'];
+
+
+    public function getFullImageUrlAttribute()
+    {
+        return $this->image ? asset($this->image) : null;
+    }
+    
 }

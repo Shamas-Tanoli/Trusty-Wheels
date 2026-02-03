@@ -21,13 +21,11 @@ class BookingController extends Controller
 {
    public function applyPromo(Request $request)
 {
-    // Validate request
     $request->validate([
         'promo_code' => 'required|string',
         'price'      => 'required|numeric|min:0.01',
     ]);
 
-    // Check if user is authenticated
     $user = $request->user();
     if (!$user) {
         return response()->json([
@@ -36,7 +34,6 @@ class BookingController extends Controller
         ], 401);
     }
 
-    // Get the promo code
     $promoCode = PromoCode::where('code', $request->promo_code)
         ->where('is_active', true)
         ->whereDate('start_date', '<=', now())
@@ -49,16 +46,12 @@ class BookingController extends Controller
             'message' => 'Promo code not found or expired'
         ], 404);
     }
-
-    // Check usage limit
     if ($promoCode->usage_limit !== null && $promoCode->used_count >= $promoCode->usage_limit) {
         return response()->json([
             'success' => false,
             'message' => 'Promo code usage limit reached'
         ], 400);
     }
-
-    // Check if the user has already used the promo code
     $alreadyUsed = PromoCodeUser::where('user_id', $user->id)
         ->where('promo_code_id', $promoCode->id)
         ->exists();
@@ -70,7 +63,6 @@ class BookingController extends Controller
         ], 400);
     }
 
-    // Calculate discount
     $price = $request->price;
     if ($promoCode->type === 'percentage') {
         $discountAmount = ($price * $promoCode->value) / 100;
@@ -78,20 +70,16 @@ class BookingController extends Controller
         $discountAmount = $promoCode->value;
     }
 
-    // Ensure discount does not exceed price
     $discountAmount = max(min($discountAmount, $price), 0);
 
-    // Final payable amount
     $payableAmount = $price - $discountAmount;
 
-    // Create PromoCodeUser record inside transaction
     DB::transaction(function () use ($user, $promoCode) {
         PromoCodeUser::create([
             'user_id'       => $user->id,
             'promo_code_id' => $promoCode->id,
         ]);
 
-        // Increment usage count
         $promoCode->increment('used_count');
     });
 

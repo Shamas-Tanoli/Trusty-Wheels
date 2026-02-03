@@ -24,5 +24,5 @@ class ServiceVehicle extends Model
     {
         return $this->image ? asset($this->image) : null;
     }
-    
+
 }

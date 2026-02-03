@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::post('/passenger/status', [BookingController::class, 'passengerStatus']);
     Route::get('/customer/children', [ServiceJobPassangerController::class, 'getChildrenWithJobs']);
     Route::post('/customer/booking/{id}/passenger/add', [BookingController::class, 'addChildren']);
+    Route::post('/customer/booking/apply/promo', [BookingController::class, 'applyPromo']);
 });
 
 

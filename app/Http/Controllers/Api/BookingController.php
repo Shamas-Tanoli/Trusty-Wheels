@@ -19,18 +19,24 @@ use App\Http\Controllers\Controller;
 
 class BookingController extends Controller
 {
-    public function applyPromo(Request $request)
+   public function applyPromo(Request $request)
 {
+    // Validate request
     $request->validate([
         'promo_code' => 'required|string',
-        'price'      => 'required|numeric|min:0',
+        'price'      => 'required|numeric|min:0.01',
     ]);
-    $user = $request->user(); 
-    $price = $request->price;
 
-    dd($user);
+    // Check if user is authenticated
+    $user = $request->user();
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'User is not authenticated'
+        ], 401);
+    }
 
-    // 1️⃣ Promo code fetch
+    // Get the promo code
     $promoCode = PromoCode::where('code', $request->promo_code)
         ->where('is_active', true)
         ->whereDate('start_date', '<=', now())
@@ -40,21 +46,19 @@ class BookingController extends Controller
     if (!$promoCode) {
         return response()->json([
             'success' => false,
-            'message' => 'Invalid or expired promo code'
+            'message' => 'Promo code not found or expired'
         ], 404);
     }
 
-    // 2️⃣ Global usage limit check
-    if ($promoCode->usage_limit !== null &&
-        $promoCode->used_count >= $promoCode->usage_limit) {
-
+    // Check usage limit
+    if ($promoCode->usage_limit !== null && $promoCode->used_count >= $promoCode->usage_limit) {
         return response()->json([
             'success' => false,
             'message' => 'Promo code usage limit reached'
         ], 400);
     }
 
-    // 3️⃣ Check user already used promo
+    // Check if the user has already used the promo code
     $alreadyUsed = PromoCodeUser::where('user_id', $user->id)
         ->where('promo_code_id', $promoCode->id)
         ->exists();
@@ -66,28 +70,31 @@ class BookingController extends Controller
         ], 400);
     }
 
-    // 4️⃣ Discount calculation
+    // Calculate discount
+    $price = $request->price;
     if ($promoCode->type === 'percentage') {
         $discountAmount = ($price * $promoCode->value) / 100;
     } else {
         $discountAmount = $promoCode->value;
     }
 
-    // discount price se zyada na ho
-    $discountAmount = min($discountAmount, $price);
+    // Ensure discount does not exceed price
+    $discountAmount = max(min($discountAmount, $price), 0);
 
+    // Final payable amount
     $payableAmount = $price - $discountAmount;
 
-    // 5️⃣ Assign promo to user
-    PromoCodeUser::create([
-        'user_id'       => $user->id,
-        'promo_code_id' => $promoCode->id,
-    ]);
+    // Create PromoCodeUser record inside transaction
+    DB::transaction(function () use ($user, $promoCode) {
+        PromoCodeUser::create([
+            'user_id'       => $user->id,
+            'promo_code_id' => $promoCode->id,
+        ]);
 
-    // 6️⃣ Increase used_count
-    $promoCode->increment('used_count');
+        // Increment usage count
+        $promoCode->increment('used_count');
+    });
 
-    // 7️⃣ Response (tumhare required format me)
     return response()->json([
         'success' => true,
         'total_amount' => $price,
@@ -100,6 +107,7 @@ class BookingController extends Controller
         'payable_amount' => $payableAmount,
     ]);
 }
+
 
 
     public function addChildren(Request $request, $id)

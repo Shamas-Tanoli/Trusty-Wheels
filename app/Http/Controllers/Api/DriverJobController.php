@@ -30,8 +30,6 @@ class DriverJobController extends Controller
                 'message' => 'Driver profile not found'
             ], 404);
         }
-
-
         $job = \App\Models\ServiceJob::with([
             'vehicle',
             'jobTrack.passengerTracks.passenger.passengerTrack',
@@ -39,23 +37,17 @@ class DriverJobController extends Controller
             'passengers.passenger',
             'bookingPassengers.plan.servicetime.service'
         ])
-
-
-
             ->where('id', $jobId)
             ->where('driver_id', $driverModel->id)
             ->first();
-
-
-
-
-
         if (!$job) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Job not found for this driver'
             ], 404);
         }
+
+        
 
         $trip = $job->bookingPassengers->map(function ($passenger) {
             return [

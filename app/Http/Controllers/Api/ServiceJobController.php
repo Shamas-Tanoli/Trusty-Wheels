@@ -29,6 +29,7 @@ class ServiceJobController extends Controller
             'service_job_id' => 'required|exists:service_jobs,id',
             'status'         => 'required|in:completed,pending,ongoing',
         ]);
+        
 
 
 
@@ -71,8 +72,10 @@ class ServiceJobController extends Controller
                 $service = $serviceJob->servicetime->service;
 
                 if ($service->name === 'single trip') {
-                    $serviceJob->status = 'completed';
-                    $serviceJob->save();
+                    ServiceJobTrack::where('id', $serviceJobTrack->id)
+                        ->update(['status' => 'completed']);
+                    // $serviceJob->status = 'completed';
+                    // $serviceJob->save();
                 }
             }
         } catch (\Exception $e) {
@@ -140,8 +143,10 @@ class ServiceJobController extends Controller
                 $isMultiTrip = $service->name !== 'single trip';
                 
                     if ($isMultiTrip && $serviceJobTripTrack->trip_two_status === 'completed') {
-                        $serviceJob->status = 'completed';
-                        $serviceJob->save();
+                         ServiceJobTrack::where('id', $serviceJobTrack->id)
+                        ->update(['status' => 'completed']);
+                        // $serviceJob->status = 'completed';
+                        // $serviceJob->save();
                     }
             }
         } catch (\Exception $e) {

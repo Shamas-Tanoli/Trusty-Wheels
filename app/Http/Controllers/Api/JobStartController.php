@@ -19,12 +19,9 @@ class JobStartController extends Controller
             'service_job_id' => 'required|exists:service_jobs,id',
             'status' => 'required|in:ongoing,pending,completed',
         ]);
-
-
         $passengerTrack = ServiceJobTrack::where('service_job_id', $request->service_job_id)
             ->update(['status' => $request->status]);
-
-
+            
         return response()->json([
             'status' => false,
             'message' => 'status change',

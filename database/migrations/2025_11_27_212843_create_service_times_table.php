@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('service_id')->constrained()->cascadeOnDelete();
             $table->string('timing');
-
-            
             $table->timestamps();
         });
     }

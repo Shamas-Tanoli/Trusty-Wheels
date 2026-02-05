@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
-             $table->string('name');                        // Plan Name
-            $table->string('area_from');                   // Pickup Area
-            $table->string('area_to');                     // Drop Area
-            $table->decimal('price', 10, 2);               // Plan Price
+             $table->string('name');                       
+            $table->string('area_from');                 
+            $table->string('area_to');                    
+            $table->decimal('price', 10, 2);             
 
-            $table->enum('trip_type', ['single', 'round']);  // single trip OR round trip
+            $table->enum('trip_type', ['single', 'round']); 
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

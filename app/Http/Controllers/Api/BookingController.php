@@ -19,82 +19,82 @@ use App\Http\Controllers\Controller;
 
 class BookingController extends Controller
 {
-   public function applyPromo(Request $request)
-{
-    $request->validate([
-        'promo_code' => 'required|string',
-        'price'      => 'required|numeric|min:0.01',
-    ]);
-
-    $user = $request->user();
-    if (!$user) {
-        return response()->json([
-            'success' => false,
-            'message' => 'User is not authenticated'
-        ], 401);
-    }
-
-    $promoCode = PromoCode::where('code', $request->promo_code)
-        ->where('is_active', true)
-        ->whereDate('start_date', '<=', now())
-        ->whereDate('end_date', '>=', now())
-        ->first();
-
-    if (!$promoCode) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Promo code not found or expired'
-        ], 404);
-    }
-    if ($promoCode->usage_limit !== null && $promoCode->used_count >= $promoCode->usage_limit) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Promo code usage limit reached'
-        ], 400);
-    }
-    $alreadyUsed = PromoCodeUser::where('user_id', $user->id)
-        ->where('promo_code_id', $promoCode->id)
-        ->exists();
-
-    if ($alreadyUsed) {
-        return response()->json([
-            'success' => false,
-            'message' => 'You have already used this promo code'
-        ], 400);
-    }
-
-    $price = $request->price;
-    if ($promoCode->type === 'percentage') {
-        $discountAmount = ($price * $promoCode->value) / 100;
-    } else {
-        $discountAmount = $promoCode->value;
-    }
-
-    $discountAmount = max(min($discountAmount, $price), 0);
-
-    $payableAmount = $price - $discountAmount;
-
-    DB::transaction(function () use ($user, $promoCode) {
-        PromoCodeUser::create([
-            'user_id'       => $user->id,
-            'promo_code_id' => $promoCode->id,
+    public function applyPromo(Request $request)
+    {
+        $request->validate([
+            'promo_code' => 'required|string',
+            'price'      => 'required|numeric|min:0.01',
         ]);
 
-        $promoCode->increment('used_count');
-    });
+        $user = $request->user();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is not authenticated'
+            ], 401);
+        }
 
-    return response()->json([
-        'success' => true,
-        'total_amount' => $price,
-        'discount' => [
-            'applied' => $discountAmount > 0,
-            'type'    => $promoCode->type,
-            'value'   => $promoCode->value,
-            'amount'  => $discountAmount,
-        ],
-        'payable_amount' => $payableAmount,
-    ]);
-}
+        $promoCode = PromoCode::where('code', $request->promo_code)
+            ->where('is_active', true)
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->first();
+
+        if (!$promoCode) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Promo code not found or expired'
+            ], 404);
+        }
+        if ($promoCode->usage_limit !== null && $promoCode->used_count >= $promoCode->usage_limit) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Promo code usage limit reached'
+            ], 400);
+        }
+        $alreadyUsed = PromoCodeUser::where('user_id', $user->id)
+            ->where('promo_code_id', $promoCode->id)
+            ->exists();
+
+        if ($alreadyUsed) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already used this promo code'
+            ], 400);
+        }
+
+        $price = $request->price;
+        if ($promoCode->type === 'percentage') {
+            $discountAmount = ($price * $promoCode->value) / 100;
+        } else {
+            $discountAmount = $promoCode->value;
+        }
+
+        $discountAmount = max(min($discountAmount, $price), 0);
+
+        $payableAmount = $price - $discountAmount;
+
+        DB::transaction(function () use ($user, $promoCode) {
+            PromoCodeUser::create([
+                'user_id'       => $user->id,
+                'promo_code_id' => $promoCode->id,
+            ]);
+
+            $promoCode->increment('used_count');
+        });
+
+        return response()->json([
+            'success' => true,
+            'total_amount' => $price,
+            'discount' => [
+                'applied' => $discountAmount > 0,
+                'type'    => $promoCode->type,
+                'value'   => $promoCode->value,
+                'amount'  => $discountAmount,
+            ],
+            'payable_amount' => $payableAmount,
+        ]);
+    }
 
 
 
@@ -233,6 +233,7 @@ class BookingController extends Controller
             'area_to_id' => 'required|integer',
             'area_from_id' => 'required|integer',
             'service_time_id' => 'required|integer',
+            'service_id' => 'required|integer',
         ]);
 
         $areaToId = $request->area_to_id;
@@ -242,6 +243,9 @@ class BookingController extends Controller
         $plans = Plan::where('area_to_id', $areaToId)
             ->where('area_from_id', $areaFromId)
             ->where('service_time_id', $serviceTimeId)
+            ->whereHas('serviceTime', function ($q) use ($request) {
+                $q->where('service_id', $request->service_id);
+            })
             ->with(['areaFrom', 'areaTo', 'serviceTime'])
             ->get();
 
@@ -343,25 +347,25 @@ class BookingController extends Controller
                 ]);
             }
 
-            
+
 
             $booking->load('passengers.plan');
             $totalAmount = $booking->passengers->sum('plan.price');
             $currentBookingPassengers = $booking->passengers->count();
 
-         
+
             $activeLifetimePassengers = BookingPassenger::where('customer_id', $validatedData['customer_id'])
                 ->whereHas('booking', function ($q) {
                     $q->where('status', 'active');
                 })
                 ->count();
 
-           
+
             $totalPassengersForDiscount = $activeLifetimePassengers + $currentBookingPassengers;
 
 
-           
-            $isPromoNeeded = $totalPassengersForDiscount ? false :true;
+
+            $isPromoNeeded = $totalPassengersForDiscount ? false : true;
             $discountAmount = 0;
             $discountApplied = null;
 
@@ -380,7 +384,7 @@ class BookingController extends Controller
                         $discountAmount = $discount->value;
                     }
 
-                    
+
                     $discountAmount = min($discountAmount, $totalAmount);
                     $discountApplied = $discount;
                 }
@@ -405,7 +409,7 @@ class BookingController extends Controller
                     'amount'  => $discountAmount,
                 ],
                 'payable_amount' => $payableAmount,
-                'isPromoNeeded'=>$isPromoNeeded
+                'isPromoNeeded' => $isPromoNeeded
 
             ], 201);
         } catch (\Exception $e) {

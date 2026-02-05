@@ -29,7 +29,7 @@ class ServiceJobPassangerController extends Controller
         'type'           => 'required|in:pickup,dropoff',
         'status'         => 'required|in:pickup,dropoff',
     ]);
-    
+
     try {
         $serviceJobPassenger = ServiceJobPassenger::where('service_job_id', $request->service_job_id)
             ->where('passenger_id', $request->passenger_id)
@@ -64,14 +64,14 @@ class ServiceJobPassangerController extends Controller
         $column = "{$request->type}_trip_{$request->trip}";
 
         // Status validation based on type
-        if ($request->type === 'pickup' && !in_array($request->status, ['picked', 'pending'])) {
+        if ($request->type === 'pickup' && !in_array($request->status, ['pickup', 'pending'])) {
             return response()->json([
                 'status' => false,
                 'message' => 'Invalid pickup status.'
             ], 422);
         }
 
-        if ($request->type === 'dropoff' && !in_array($request->status, ['droped', 'pending'])) {
+        if ($request->type === 'dropoff' && !in_array($request->status, ['dropoff', 'pending'])) {
             return response()->json([
                 'status' => false,
                 'message' => 'Invalid dropoff status.'

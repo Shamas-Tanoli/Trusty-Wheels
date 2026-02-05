@@ -50,7 +50,7 @@ class ServiceJobController extends Controller
 
 
         $allPickedAndDropped = $jobPassengers->every(function ($passenger) {
-            return $passenger->pickup_trip_one === 'picked' && $passenger->dropoff_trip_one === 'droped';
+            return $passenger->pickup_trip_one === 'pickup' && $passenger->dropoff_trip_one === 'dropoff';
         });
 
 
@@ -124,7 +124,7 @@ class ServiceJobController extends Controller
 
 
         $allPickedAndDropped = $jobPassengers->every(function ($passenger) {
-            return $passenger->pickup_trip_two === 'picked' && $passenger->dropoff_trip_two === 'droped';
+            return $passenger->pickup_trip_two === 'pickup' && $passenger->dropoff_trip_two === 'dropoff';
         });
 
 

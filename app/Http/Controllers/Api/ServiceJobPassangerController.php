@@ -29,14 +29,12 @@ class ServiceJobPassangerController extends Controller
         'type'           => 'required|in:pickup,dropoff',
         'status'         => 'required|in:pickup,dropoff',
     ]);
-
     
-
     try {
         $serviceJobPassenger = ServiceJobPassenger::where('service_job_id', $request->service_job_id)
             ->where('passenger_id', $request->passenger_id)
             ->first();
-            
+
         if (!$serviceJobPassenger) {
             return response()->json([
                 'status' => false,

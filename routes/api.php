@@ -62,12 +62,19 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
 
 
     Route::post('driver/service-job/passenger-tracks', [ServiceJobPassangerController::class, 'getServiceJobPassengerTracks']);
-    Route::post('driver/passenger/trip/one/pickup/status', [ServiceJobPassangerController::class, 'updatePickupTripOne']);
-    Route::post('driver/passenger/trip/one/dropoff/status', [ServiceJobPassangerController::class, 'updateDropoffTripOne']);
-    
-    Route::post('driver/passenger/trip/two/pickup/status', [ServiceJobPassangerController::class, 'updatePickupTripTwo']);
-    Route::post('driver/passenger/trip/two/dropoff/status', [ServiceJobPassangerController::class, 'updateDropoffTripTwo']);
 
+    // Route::post('driver/passenger/trip/one/pickup/status', [ServiceJobPassangerController::class, 'updatePickupTripOne']);
+    // Route::post('driver/passenger/trip/one/dropoff/status', [ServiceJobPassangerController::class, 'updateDropoffTripOne']);
+    // Route::post('driver/passenger/trip/two/pickup/status', [ServiceJobPassangerController::class, 'updatePickupTripTwo']);
+    // Route::post('driver/passenger/trip/two/dropoff/status', [ServiceJobPassangerController::class, 'updateDropoffTripTwo']);
+
+    Route::post(
+        'driver/passenger/trip/status/update',
+        [
+            ServiceJobPassangerController::class,
+            'updatePassengerTripStatus'
+        ]
+    );
 
     Route::post('driver/job/trip/one/status', [ServiceJobController::class, 'tripOne']);
     Route::post('driver/job/trip/two/status', [ServiceJobController::class, 'tripTwo']);

@@ -20,6 +20,94 @@ class ServiceJobPassangerController extends Controller
         $this->firebase = $firebase;
     }
 
+    public function updatePassengerTripStatus(Request $request)
+{
+    $request->validate([
+        'service_job_id' => 'required|exists:service_jobs,id',
+        'passenger_id'   => 'required|exists:booking_passengers,id',
+        'trip'           => 'required|in:one,two',
+        'type'           => 'required|in:pickup,dropoff',
+        'status'         => 'required|in:pickup,dropoff',
+    ]);
+
+    try {
+
+        // Passenger assignment check
+        $serviceJobPassenger = ServiceJobPassenger::where('service_job_id', $request->service_job_id)
+            ->where('passenger_id', $request->passenger_id)
+            ->first();
+
+        if (!$serviceJobPassenger) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passenger is not assigned to this service job.'
+            ], 404);
+        }
+
+        // Passenger track
+        $passengerTrack = ServiceJobPassengerTrack::where(
+            'service_job_passengers_id',
+            $serviceJobPassenger->id
+        )->first();
+
+        if (!$passengerTrack) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passenger track not found.'
+            ], 404);
+        }
+
+        /**
+         * Dynamic column name
+         * pickup_trip_one
+         * dropoff_trip_one
+         * pickup_trip_two
+         * dropoff_trip_two
+         */
+        $column = "{$request->type}_trip_{$request->trip}";
+
+        // Status validation based on type
+        if ($request->type === 'pickup' && !in_array($request->status, ['picked', 'pending'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid pickup status.'
+            ], 422);
+        }
+
+        if ($request->type === 'dropoff' && !in_array($request->status, ['droped', 'pending'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid dropoff status.'
+            ], 422);
+        }
+
+        // Update dynamically
+        $passengerTrack->$column = $request->status;
+        $passengerTrack->save();
+
+        return response()->json([
+            'status'  => true,
+            'message' => ucfirst($request->type) . " trip {$request->trip} updated successfully.",
+            'data'    => [
+                'service_job_id' => $request->service_job_id,
+                'passenger_id'   => $request->passenger_id,
+                'trip'           => $request->trip,
+                'type'           => $request->type,
+                'status'         => $request->status,
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
     public function getChildrenWithJobs(Request $request)
     {
         $customer = $request->user();

@@ -30,13 +30,13 @@ class ServiceJobPassangerController extends Controller
         'status'         => 'required|in:pickup,dropoff',
     ]);
 
-    try {
+    
 
-        // Passenger assignment check
+    try {
         $serviceJobPassenger = ServiceJobPassenger::where('service_job_id', $request->service_job_id)
             ->where('passenger_id', $request->passenger_id)
             ->first();
-
+            
         if (!$serviceJobPassenger) {
             return response()->json([
                 'status' => false,
@@ -44,7 +44,6 @@ class ServiceJobPassangerController extends Controller
             ], 404);
         }
 
-        // Passenger track
         $passengerTrack = ServiceJobPassengerTrack::where(
             'service_job_passengers_id',
             $serviceJobPassenger->id

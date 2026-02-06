@@ -8,7 +8,7 @@ $(function () {
   $('.datatables-permissions').DataTable({ 
     processing: true,
     serverSide: true,
-    ajax: '/dashboard/cities/create',
+    ajax: '/dashboard/make/list',
     searchDelay: 1000,
     columns: [
       // { data: 'id', name: 'id' },
@@ -31,7 +31,7 @@ $(function () {
     language: {
       sLengthMenu: 'Show _MENU_',
       search: '',
-      searchPlaceholder: 'Search city',
+      searchPlaceholder: 'Search Make',
       paginate: {
         next: '<i class="ti ti-chevron-right ti-sm"></i>',
         previous: '<i class="ti ti-chevron-left ti-sm"></i>'
@@ -39,7 +39,7 @@ $(function () {
     },
     buttons: [
       {
-        text: '<i class="ti ti-plus ti-xs me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add city</span>',
+        text: '<i class="ti ti-plus ti-xs me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add Make</span>',
         className: 'add-new btn btn-primary mb-6 mb-md-0 waves-effect waves-light',
         attr: {
           'data-bs-toggle': 'modal',

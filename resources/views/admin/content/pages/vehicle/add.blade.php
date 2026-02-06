@@ -74,7 +74,7 @@
                         <div class="input mb-6">
                             <label class="form-label" for="ecommerce-product-name">Short Description</label>
                             <input type="text" class="form-control" id="ecommerce-product-name"
-                                placeholder="Short Description" name="short_Description" aria-label="Vehicle title">
+                                placeholder="Short Description" name="short_description" aria-label="Vehicle title">
                         </div>
 
 

@@ -16,7 +16,7 @@ class Vehicle extends Model
         'location_id',
         'title',
         'description',
-        'short_Description',
+        'short_description',
         'vin_nbr',
         'lic_plate_nbr',
         'transmission',
@@ -28,6 +28,14 @@ class Vehicle extends Model
         'rent',
         'status'
     ];
+
+     protected $appends = ['url'];
+
+    public function getUrlAttribute()
+    {
+        return asset('storage/vehicles/' . $this->image);
+    }
+    
 
     // Vehicle belongs to a Make
     public function make()

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('service_jobs', function (Blueprint $table) {
-            // $table->foreignId('service_time_id')->constrained('service_times')->after('vehicle_id');
+        Schema::table('vehicles', function (Blueprint $table) {
+            $table->text('short_description'); 
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('service_jobs', function (Blueprint $table) {
+        Schema::table('vehicles', function (Blueprint $table) {
             //
         });
     }

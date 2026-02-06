@@ -8,10 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\VehicleImage;
 use Illuminate\Http\Request;
 use Intervention\Image\Image;
-
 use App\Jobs\ProcessVehiclePic;
-
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -33,7 +30,7 @@ class VehicleController extends Controller
             'vin_nbr' => 'required|string|max:255',
             'lic_plate_nbr' => 'required|string|max:255',
             'description' => 'required|string',
-            'short_Description' => 'required|string',
+            'short_description' => 'required|string',
             'rent' => 'required|numeric',
             'make_id' => 'required|exists:makes,id',
             'vehicle_model_id' => 'required|exists:vehicle_models,id',
@@ -58,7 +55,7 @@ class VehicleController extends Controller
             'vin_nbr' => $validated['vin_nbr'],
             'lic_plate_nbr' => $validated['lic_plate_nbr'],
             'description' => $validated['description'],
-            'short_Description' => $validated['short_Description'],
+            'short_description' => $validated['short_description'],
             'rent' => $validated['rent'],
             'make_id' => $validated['make_id'],
             'vehicle_model_id' => $validated['vehicle_model_id'],
@@ -214,7 +211,7 @@ class VehicleController extends Controller
                 'vin_nbr' => 'required|string|max:255',
                 'lic_plate_nbr' => 'required|string|max:255',
                 'description' => 'required|string',
-                'short_Description' => 'required|string',
+                'short_description' => 'required|string',
 
                 'rent' => 'required|numeric',
                 'make_id' => 'required|exists:makes,id',
@@ -277,7 +274,7 @@ class VehicleController extends Controller
             'vin_nbr' => $validated['vin_nbr'],
             'lic_plate_nbr' => $validated['lic_plate_nbr'],
             'description' => $validated['description'],
-            'short_Description' => $validated['short_Description'],
+            'short_description' => $validated['short_description'],
 
             'rent' => $validated['rent'],
             'make_id' => $validated['make_id'],

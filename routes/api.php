@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\JobStartController;
 use App\Http\Controllers\Api\DriverJobController;
 use App\Http\Controllers\Api\DriverAuthController;
 use App\Http\Controllers\Api\ServiceJobController;
+use App\Http\Controllers\Api\VehicleListController;
 use App\Http\Controllers\Api\ServiceJobPassangerController;
 
 Route::get('/user', function (Request $request) {
@@ -40,6 +41,11 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/customer/children', [ServiceJobPassangerController::class, 'getChildrenWithJobs']);
     Route::post('/customer/booking/{id}/passenger/add', [BookingController::class, 'addChildren']);
     Route::post('/customer/booking/apply/promo', [BookingController::class, 'applyPromo']);
+
+
+
+
+
 });
 
 
@@ -93,4 +99,7 @@ Route::post('start/job', [JobStartController::class, 'store']);
 // Customer + Driver APIs
 Route::middleware(['auth:sanctum', 'role:customer,driver'])->group(function () {
     Route::post('/customer/logout', [AuthController::class, 'logout']);
+
+
+    Route::get('/listing/vehicles', [VehicleListController::class, 'index']);
 });

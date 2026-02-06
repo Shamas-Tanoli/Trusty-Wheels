@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
       }
     }).on('core.form.valid', function (e) {
       const formData = new FormData(document.getElementById('addPermissionForm'));
-      fetch('/dashboard/towns/store', {
+      fetch('/dashboard/model/create', {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': window.csrfToken,
@@ -91,13 +91,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
     $('.datatables-permissions').DataTable({
       processing: true,
       serverSide: true,
-      ajax: '/dashboard/towns/list',
+      ajax: '/dashboard/model/list',
       searchDelay: 1000,
       columns: [
         // { data: 'id', name: 'id' },
         { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
         { data: 'name', name: 'name', orderable: false, searchable: true },
-        { data: 'city_name', name: 'make_name', orderable: false, searchable: true },
+        { data: 'make_name', name: 'make_name', orderable: false, searchable: true },
         { data: 'created_at', name: 'created_at', orderable: false, searchable: false },
         { data: 'actions', name: 'actions', orderable: false, searchable: false }
       ],
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
       language: {
         sLengthMenu: 'Show _MENU_',
         search: '',
-        searchPlaceholder: 'Search Town',
+        searchPlaceholder: 'Search Model',
         paginate: {
           next: '<i class="ti ti-chevron-right ti-sm"></i>',
           previous: '<i class="ti ti-chevron-left ti-sm"></i>'
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
       },
       buttons: [
         {
-          text: '<i class="ti ti-plus ti-xs me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add Town</span>',
+          text: '<i class="ti ti-plus ti-xs me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add Model</span>',
           className: 'add-new btn btn-primary mb-6 mb-md-0 waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         buttonsStyling: false
       }).then(function (result) {
         if (result.value) {
-          fetch(`/dashboard/towns/delete/${model_id}`, {
+          fetch(`/dashboard/model/delete/${model_id}`, {
             method: 'DELETE',
             headers: {
               'X-CSRF-TOKEN': window.csrfToken,
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
       }
     }).on('core.form.valid', function (e) {
       const formData = new FormData(document.getElementById('editPermissionForm'));
-      fetch(`/dashboard/towns/${model_id}/update`, {
+      fetch(`/dashboard/model/${model_id}/edit`, {
         method: 'post',
         headers: {
           'X-CSRF-TOKEN': window.csrfToken,

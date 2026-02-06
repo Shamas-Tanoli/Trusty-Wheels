@@ -250,6 +250,7 @@ class BookingController extends Controller
             ->get();
 
 
+         
             
         if ($plans->isEmpty()) {
             return response()->json([

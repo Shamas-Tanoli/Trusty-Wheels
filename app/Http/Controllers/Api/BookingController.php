@@ -248,9 +248,6 @@ class BookingController extends Controller
             })
             ->with(['areaFrom', 'areaTo', 'serviceTime'])
             ->get();
-
-
-         
             
         if ($plans->isEmpty()) {
             return response()->json([

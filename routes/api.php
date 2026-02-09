@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\InquiryController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\JobStartController;
 use App\Http\Controllers\Api\DriverJobController;
 use App\Http\Controllers\Api\DriverAuthController;
@@ -41,6 +43,12 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/customer/children', [ServiceJobPassangerController::class, 'getChildrenWithJobs']);
     Route::post('/customer/booking/{id}/passenger/add', [BookingController::class, 'addChildren']);
     Route::post('/customer/booking/apply/promo', [BookingController::class, 'applyPromo']);
+
+    
+    Route::post('/customer/feedback', [FeedbackController::class, 'store']);
+    Route::get('/customer/feedback/', [FeedbackController::class, 'approvedFeedback']);
+
+
 
 
 
@@ -102,4 +110,5 @@ Route::middleware(['auth:sanctum', 'role:customer,driver'])->group(function () {
 
 
     Route::get('/listing/vehicles', [VehicleListController::class, 'index']);
+    Route::post('/listing/vehicles/inquiries', [InquiryController::class, 'store']);
 });

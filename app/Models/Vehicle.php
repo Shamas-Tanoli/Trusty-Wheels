@@ -79,8 +79,8 @@ class Vehicle extends Model
         return $this->hasMany(Booking::class);
     }
 
-     public function enquiries()
+    public function inquiries()
     {
-        return $this->hasMany(Enquiry::class);
+        return $this->hasMany(Inquiry::class);
     }
 }

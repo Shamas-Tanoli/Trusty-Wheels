@@ -17,7 +17,6 @@ class ProcessVehiclePic implements ShouldQueue
 
     protected $vehicleId, $files;
 
-    
     public function __construct($vehicleId, $files)
     {
         $this->vehicleId = $vehicleId;

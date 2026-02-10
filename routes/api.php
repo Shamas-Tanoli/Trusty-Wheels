@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\UserController;
@@ -107,4 +108,8 @@ Route::middleware(['auth:sanctum', 'role:customer,driver'])->group(function () {
      Route::delete('/users/delete', [UserController::class, 'destroy']);
     Route::get('/listing/vehicles', [VehicleListController::class, 'index']);
     Route::post('/listing/vehicles/inquiries', [InquiryController::class, 'store']);
+
+
+    Route::get('driver/profile', [ProfileController::class, 'driverProfile']);
+    Route::get('/customer/profile', [ProfileController::class, 'customerProfile']);
 });

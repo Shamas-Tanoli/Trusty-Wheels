@@ -33,12 +33,12 @@ class ProfileController extends Controller
         ]);
     }
 
-    // ✅ Customer Profile API
+    
     public function customerProfile(Request $request)
     {
         $user = $request->user();
 
-        // Check if user is a customer
+        
         if ($user->role !== 'customer') {
             return response()->json([
                 'success' => false,

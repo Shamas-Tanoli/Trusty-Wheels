@@ -16,33 +16,32 @@ class DriverDocument extends Model
     ];
 
     protected $casts = [
-    'cnic_images'    => 'array',
-    'license_images' => 'array',
-    'other_document' => 'array',
-];
+        'cnic_images'    => 'array',
+        'license_images' => 'array',
+        'other_document' => 'array',
+    ];
 
 
-    // ✅ Each document belongs to one Driver
     public function driver()
     {
         return $this->belongsTo(Driver::class, 'driver_id');
     }
-public function getCnicImagesUrlsAttribute()
-{
-    $images = json_decode($this->cnic_images, true) ?: [];
-    return collect($images)->map(fn($img) => asset($img))->toArray();
-}
 
-public function getLicenseImagesUrlsAttribute()
-{
-    $images = json_decode($this->license_images, true) ?: [];
-    return collect($images)->map(fn($img) => asset($img))->toArray();
-}
+    public function getCnicImagesUrlsAttribute()
+    {
+        $images = json_decode($this->cnic_images, true) ?: [];
+        return collect($images)->map(fn($img) => asset($img))->toArray();
+    }
 
-public function getOtherDocumentUrlsAttribute()
-{
-    $images = json_decode($this->other_document, true) ?: [];
-    return collect($images)->map(fn($img) => asset($img))->toArray();
-}
+    public function getLicenseImagesUrlsAttribute()
+    {
+        $images = json_decode($this->license_images, true) ?: [];
+        return collect($images)->map(fn($img) => asset($img))->toArray();
+    }
 
+    public function getOtherDocumentUrlsAttribute()
+    {
+        $images = json_decode($this->other_document, true) ?: [];
+        return collect($images)->map(fn($img) => asset($img))->toArray();
+    }
 }

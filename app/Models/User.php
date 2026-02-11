@@ -55,7 +55,7 @@ class User extends Authenticatable
 
   public function driverDetail()
   {
-    return $this->hasOne(DriverDetail::class, 'user_id');
+    return $this->hasOne(Driver::class, 'user_id');
   }
   public function customer()
   {

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -22,14 +23,13 @@ class ProfileController extends Controller
 
         // Fetch driver details
         $driver = $user->driverDetail()->first();
-        $driverInfo = $user->driverJobs()->with('booking')->get();
-        $documents = $user->driverDetail->driver->documents ?? null;
+       
+        
 
         return response()->json([
             'success' => true,
-            'user' => $user,
-            'driver_detail' => $driver,
-            'documents' => $documents,
+            'driver' => $user,
+            'driver_detail' => $driver
         ]);
     }
 
@@ -47,7 +47,7 @@ class ProfileController extends Controller
         }
 
         $customer = $user->customer()->first();
-        
+
 
         return response()->json([
             'success' => true,

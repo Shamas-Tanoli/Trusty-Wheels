@@ -187,7 +187,6 @@ class DriverController extends Controller
             return DataTables::of($drivers)
                 ->addIndexColumn()
 
-                // 🔹 Name + Profile Image (Vehicle style)
                 ->addColumn('name', function ($driver) {
 
                     $image = $driver->documents?->profile_image

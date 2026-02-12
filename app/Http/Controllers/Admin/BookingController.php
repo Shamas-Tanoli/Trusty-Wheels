@@ -43,7 +43,7 @@ class BookingController extends Controller
     openssl_sign($signatureInput, $signature, $serviceAccount['private_key'], 'SHA256');
     $jwt = "$signatureInput." . $this->base64UrlEncode($signature);
 
-    // Exchange JWT for access token
+   
     $ch = curl_init();
     curl_setopt_array($ch, [
         CURLOPT_URL => 'https://oauth2.googleapis.com/token',
@@ -109,7 +109,7 @@ class BookingController extends Controller
 
     public function list(Request $request)
     {
-        // Get all bookings with passengers and customer
+      
         $bookings = Booking::with(['passengers', 'user', 'plan', 'service', 'serviceTime', 'town']);
 
         return DataTables::of($bookings)

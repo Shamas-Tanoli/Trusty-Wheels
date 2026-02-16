@@ -20,93 +20,112 @@ class JobController extends Controller
     }
 
 
-   public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'driver_id'     => 'required|exists:users,id',
-        'vehicle_id'    => 'required|exists:service_vehicles,id',
-        'date'          => 'required|date',
-        'passenger_ids' => 'required|array',
-        'passenger_ids.*' => 'exists:booking_passengers,id|distinct',
-    ]);
-
-    DB::transaction(function () use ($validatedData) {
-
-        
-        $job = ServiceJob::create([
-            'driver_id'  => $validatedData['driver_id'],
-            'vehicle_id' => $validatedData['vehicle_id'],
-            'status'     => 'active',
-            'job_date'   => $validatedData['date'],
-            'service_time_id' => 1
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'driver_id'     => 'required|exists:users,id',
+            'vehicle_id'    => 'required|exists:service_vehicles,id',
+            'date'          => 'required|date',
+            'passenger_ids' => 'required|array',
+            'passenger_ids.*' => 'exists:booking_passengers,id|distinct',
         ]);
 
-      
-        foreach ($validatedData['passenger_ids'] as $pid) {
-            ServiceJobPassenger::create([
-                'service_job_id' => $job->id,
-                'passenger_id'   => $pid,
-                'status'         => 'active',
+        DB::transaction(function () use ($validatedData) {
+
+
+            $job = ServiceJob::create([
+                'driver_id'  => $validatedData['driver_id'],
+                'vehicle_id' => $validatedData['vehicle_id'],
+                'status'     => 'active',
+                'job_date'   => $validatedData['date'],
+                'service_time_id' => 1
             ]);
-        }
 
-      
-        $job->load([
-            'driver',
-            'vehicle',
-            'passengers.passenger.user'
-        ]);
 
-     
-        $driverUser = $job->driver;
-        $driverToken = $driverUser?->fcm_token;
-
-        if ($driverToken) {
-            $this->firebase->sendToToken(
-                $driverToken,
-                'New Job Assigned',
-                'A new service job has been assigned to you',
-                [
-                    'job_id'  => $job->id,
-                    'date'    => $job->job_date,
-                    'vehicle' => $job->vehicle->registration_no ?? null,
-                ]
-            );
-        }
-
-      
-        foreach ($job->passengers as $jobPassenger) {
-
-            $user  = $jobPassenger->passenger->user ?? null;
-            $token = $user?->fcm_token;
-
-            if (!$token) {
-                continue;
+            foreach ($validatedData['passenger_ids'] as $pid) {
+                ServiceJobPassenger::create([
+                    'service_job_id' => $job->id,
+                    'passenger_id'   => $pid,
+                    'status'         => 'active',
+                ]);
             }
 
-            $this->firebase->sendToToken(
-                $token,
-                'New Job Assigned',
-                'your booking has done',
-                [
-                    'job_id'    => $job->id,
-                    'date'      => $job->job_date,
-                    'driver'    => $job->driver->name ?? null,
-                    'vehicle'   => $job->vehicle->registration_no ?? null,
-                    'passenger' => json_encode([
-                        'id'   => $jobPassenger->passenger->id,
-                        'name' => $jobPassenger->passenger->name,
-                    ])
-                ]
-            );
-        }
-    });
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Job created & notifications sent to driver and passengers successfully!',
-    ]);
-}
+            $job->load([
+                'driver',
+                'vehicle',
+                'passengers.passenger.user'
+            ]);
+
+            $job->load([
+                'driver',
+                'vehicle',
+                'passengers.passenger.user',
+                'servicetime',
+               
+            ]);
+
+            
+
+            dd(response()->json([
+                'message' => 'New Job Assigned',
+                'description' => 'assa job has been assigned to you',
+                'job' => $job,
+                'type' => 'JOB_ASSIGNED'
+             ]));
+
+            $driverUser = $job->driver;
+            $driverToken = $driverUser?->fcm_token;
+
+            if ($driverToken) {
+                $this->firebase->sendToToken(
+                    $driverToken,
+                    'New Job Assigned',
+                    'A new service job has been assigned to you',
+                    [
+                         'job' => json_encode($job),
+                        'type' => 'JOB_ASSIGNED'
+                      
+                    ]
+                );
+            }
+
+           
+      
+
+
+            foreach ($job->passengers as $jobPassenger) {
+
+                $user  = $jobPassenger->passenger->user ?? null;
+                $token = $user?->fcm_token;
+
+                if (!$token) {
+                    continue;
+                }
+
+                $this->firebase->sendToToken(
+                    $token,
+                    'New Job Assigned',
+                    'your booking has done',
+                    [
+                        'job_id'    => $job->id,
+                        'date'      => $job->job_date,
+                        'driver'    => $job->driver->name ?? null,
+                        'vehicle'   => $job->vehicle->registration_no ?? null,
+                        'passenger' => json_encode([
+                            'id'   => $jobPassenger->passenger->id,
+                            'name' => $jobPassenger->passenger->name,
+                        ])
+                    ]
+                );
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Job created & notifications sent to driver and passengers successfully!',
+        ]);
+    }
 
 
 

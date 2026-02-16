@@ -22,10 +22,16 @@ class FirebaseService
 
     public function sendToToken($token, $title = 'Hello 👋', $body = 'Notification body', $data = [])
     {
-       $message = CloudMessage::new()
-        ->withNotification(['title' => $title, 'body' => $body])
-        ->withData($data)
-        ->toToken($token); // correct
+        // $jsonData = [];
+        // foreach ($data as $key => $value) {
+        //     $jsonData[$key] = json_encode($value);
+        // }
+
+        $message = CloudMessage::new()
+            ->withNotification(['title' => $title, 'body' => $body])
+
+            ->withData($data)
+            ->toToken($token); 
 
         return $this->messaging->send($message);
     }

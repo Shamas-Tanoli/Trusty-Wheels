@@ -189,8 +189,7 @@ class DriverController extends Controller
 
                 ->addColumn('name', function ($driver) {
 
-                    $image = $driver->documents?->profile_image
-                        ? asset($driver->documents->profile_image)
+                    $image = $driver->documents?->profile_image ? asset($driver->documents->profile_image)
                         : asset('assets/img/default-avatar.png');
 
                     $name  = ucfirst($driver->user->name ?? 'N/A');

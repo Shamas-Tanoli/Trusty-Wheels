@@ -62,17 +62,12 @@ class JobController extends Controller
                 'vehicle',
                 'passengers.passenger.user',
                 'servicetime',
-               
+
             ]);
 
-            
 
-            dd(response()->json([
-                'message' => 'New Job Assigned',
-                'description' => 'assa job has been assigned to you',
-                'job' => $job,
-                'type' => 'JOB_ASSIGNED'
-             ]));
+
+            
 
             $driverUser = $job->driver;
             $driverToken = $driverUser?->fcm_token;
@@ -83,15 +78,24 @@ class JobController extends Controller
                     'New Job Assigned',
                     'A new service job has been assigned to you',
                     [
-                         'job' => json_encode($job),
+                        'job' => json_encode($job),
                         'type' => 'JOB_ASSIGNED'
-                      
+
                     ]
                 );
+
+                DB::table('notifications')->insert([
+                    'user_id' => $job->driver_id,
+                    'title'   => 'New Job Assigned',
+                    'body'    => 'A new service job has been assigned to you',
+                    'data'    => json_encode(['job' => $job]),
+                    'type'    => 'JOB_ASSIGNED',
+                    'user_type' => 'driver',
+                ]);
             }
 
-           
-      
+
+
 
 
             foreach ($job->passengers as $jobPassenger) {

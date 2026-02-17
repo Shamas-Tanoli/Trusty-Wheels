@@ -84,16 +84,17 @@ class JobController extends Controller
                     ]
                 );
 
-                DB::table('notifications')->insert([
-                    'user_id' => $job->driver_id,
+                
+            }
+            
+            DB::table('notifications')->insert([
+                    'user_id' => $job->driver->id,
                     'title'   => 'New Job Assigned',
                     'body'    => 'A new service job has been assigned to you',
                     'data'    => json_encode(['job' => $job]),
                     'type'    => 'JOB_ASSIGNED',
                     'user_type' => 'driver',
                 ]);
-            }
-
 
 
 

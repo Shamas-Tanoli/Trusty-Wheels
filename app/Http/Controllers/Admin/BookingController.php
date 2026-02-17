@@ -113,7 +113,7 @@ class BookingController extends Controller
         $bookings = Booking::with(['passengers', 'user', 'plan', 'service', 'serviceTime', 'town']);
 
         return DataTables::of($bookings)
-            ->addIndexColumn() // Serial Number
+            ->addIndexColumn() 
             ->addColumn('customer_name', function ($row) {
                 return $row->user->customer->name ?? 'N/A';
             })

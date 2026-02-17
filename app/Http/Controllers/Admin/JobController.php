@@ -67,7 +67,7 @@ class JobController extends Controller
 
 
 
-            
+
 
             $driverUser = $job->driver;
             $driverToken = $driverUser?->fcm_token;
@@ -83,18 +83,18 @@ class JobController extends Controller
 
                     ]
                 );
-
-                
             }
-            
+
+            dd($job->driver->id);
+
             DB::table('notifications')->insert([
-                    'user_id' => $job->driver->id,
-                    'title'   => 'New Job Assigned',
-                    'body'    => 'A new service job has been assigned to you',
-                    'data'    => json_encode(['job' => $job]),
-                    'type'    => 'JOB_ASSIGNED',
-                    'user_type' => 'driver',
-                ]);
+                'user_id' => $job->driver->id,
+                'title'   => 'New Job Assigned',
+                'body'    => 'A new service job has been assigned to you',
+                'data'    => json_encode(['job' => $job]),
+                'type'    => 'JOB_ASSIGNED',
+                'user_type' => 'driver',
+            ]);
 
 
 

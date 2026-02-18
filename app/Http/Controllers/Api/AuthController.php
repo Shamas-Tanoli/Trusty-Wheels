@@ -87,13 +87,13 @@ class AuthController extends Controller
         ], 401);
     }
 
-    // FCM token save karna
+    
     if ($request->has('fcm_token')) {
         $user->fcm_token = $request->fcm_token;
         $user->save();
     }
 
-    // role ke hisaab se token name
+    
     $tokenName = $user->role . '_token';
 
     $token = $user->createToken($tokenName)->plainTextToken;

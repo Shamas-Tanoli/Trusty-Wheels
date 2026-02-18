@@ -87,7 +87,7 @@ class AuthController extends Controller
         ], 401);
     }
 
-    
+    // FCM token save karna
     if ($request->has('fcm_token')) {
         $user->fcm_token = $request->fcm_token;
         $user->save();

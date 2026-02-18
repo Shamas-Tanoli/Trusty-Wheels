@@ -44,7 +44,6 @@ class AuthController extends Controller
             
         ]);
 
-        // 3️⃣ Token
         $token = $user->createToken('customer_token')->plainTextToken;
 
         DB::commit();

@@ -26,7 +26,7 @@ class AuthController extends Controller
     DB::beginTransaction();
 
     try {
-        // 1️⃣ User create
+       
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,

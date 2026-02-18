@@ -35,7 +35,7 @@ class AuthController extends Controller
            
         ]);
 
-        // 2️⃣ Customer create
+        
         $customer = Customer::create([
             'user_id' => $user->id,
             'name'    => $request->name,

@@ -12,7 +12,7 @@ class UserController extends Controller
    public function destroy(Request $request)
 {
    
-    $user = $request->user(); // or auth()->user()
+    $user = $request->user(); 
 
     
     if (!$user) {

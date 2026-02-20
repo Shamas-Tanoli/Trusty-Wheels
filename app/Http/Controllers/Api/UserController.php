@@ -8,9 +8,7 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    /**
-     * Delete a user by ID
-     */
+   
    public function destroy(Request $request)
 {
     // Get the currently authenticated user

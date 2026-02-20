@@ -11,7 +11,7 @@ class UserController extends Controller
    
    public function destroy(Request $request)
 {
-    // Get the currently authenticated user
+   
     $user = $request->user(); // or auth()->user()
 
     

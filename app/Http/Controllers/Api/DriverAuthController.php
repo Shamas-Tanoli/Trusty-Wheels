@@ -135,7 +135,7 @@ public function login(Request $request)
         return response()->json(['message' => 'OTP expired'], 401);
     }
 
-    // OTP clear karo
+    
     $user->otp = null;
     $user->otp_expires_at = null;
     $user->save();

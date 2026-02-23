@@ -140,7 +140,7 @@ public function login(Request $request)
     $user->otp_expires_at = null;
     $user->save();
 
-    // Token generate karo
+    
     $tokenName = $user->role . '_token';
     $token = $user->createToken($tokenName)->plainTextToken;
 

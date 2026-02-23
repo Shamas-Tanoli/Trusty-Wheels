@@ -58,7 +58,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
 
 
 Route::post('/driver/login', [DriverAuthController::class, 'login']);
-
+Route::post('/driver/verify-otp', [DriverAuthController::class, 'verifyOtp']);
 
 
 // Driver Only APIs

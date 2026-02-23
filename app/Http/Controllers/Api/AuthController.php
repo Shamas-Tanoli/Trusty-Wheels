@@ -19,7 +19,6 @@ class AuthController extends Controller
         'name'     => 'required|string|max:255',
         'email'    => 'required|email|unique:users,email',
         'contact'  => 'required|string',
-       
         'password' => 'required|min:6'
     ]);
 
@@ -56,7 +55,8 @@ class AuthController extends Controller
                 'customer' => $customer,
                 'token'    => $token
             ]
-        ], 201);
+        ], 
+        201);
 
     } catch (\Exception $e) {
         DB::rollBack();

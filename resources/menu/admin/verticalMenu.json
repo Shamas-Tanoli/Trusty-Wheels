@@ -144,6 +144,20 @@
       "name": "Discount",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "discount.show"
+    },
+    {
+      "name": "Mobile App",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "mobileApp",
+     
+      "submenu": [
+        {
+          "url": "dashboard/vehicle",
+              "name": "Slider",
+              "slug": "Listings.vehicle.list"
+          
+        }
+      ]
     }
 
 

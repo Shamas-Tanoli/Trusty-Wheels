@@ -73,8 +73,7 @@ Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
 
     Route::post('driver/service-job/passenger-tracks', [ServiceJobPassangerController::class, 'getServiceJobPassengerTracks']);
 
-   // Route::post('driver/passenger/trip/two/dropoff/status', [ServiceJobPassangerController::class, 'updateDropoffTripTwo']);
-
+   
     Route::post(
         'driver/passenger/trip/status/update',
         [

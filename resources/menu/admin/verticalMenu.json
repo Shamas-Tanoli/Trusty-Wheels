@@ -148,13 +148,13 @@
     {
       "name": "Mobile App",
       "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "mobileApp",
+      "slug": "frontend",
      
       "submenu": [
         {
-          "url": "dashboard/vehicle",
+          "url": "/dashboard/frontend/slider",
               "name": "Slider",
-              "slug": "Listings.vehicle.list"
+              "slug": "frontend.slider.index"
           
         }
       ]

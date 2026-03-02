@@ -101,11 +101,11 @@ Route::middleware(['auth:sanctum', 'role:customer,driver'])->group(function () {
     Route::post('/customer/logout', [AuthController::class, 'logout']);
 
 
-     Route::get('driver/profile', [ProfileController::class, 'driverProfile']);
+    Route::get('driver/profile', [ProfileController::class, 'driverProfile']);
     Route::get('/customer/profile', [ProfileController::class, 'customerProfile']);
 
    
-     Route::delete('/users/delete', [UserController::class, 'destroy']);
+    Route::delete('/users/delete', [UserController::class, 'destroy']);
     Route::get('/listing/vehicles', [VehicleListController::class, 'index']);
     Route::post('/listing/vehicles/inquiries', [InquiryController::class, 'store']);
 

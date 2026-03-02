@@ -1,39 +1,39 @@
 <?php
 
-use App\Models\Make;
-use App\Models\Vehicle;
-use App\Models\Location;
-use App\Models\VehicleModel;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\pages\MiscError;
-
-use App\Http\Controllers\pages\WebsitePage;
-use App\Http\Controllers\Admin\JobController;
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\MakeController;
-use App\Http\Controllers\Admin\PlanController;
-use App\Http\Controllers\Admin\TownController;
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\ModelController;
-use App\Http\Controllers\Admin\DriverController;
-use App\Http\Controllers\Admin\TicketController;
-use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\VehicleController;
-use App\Http\Controllers\Admin\DiscountController;
-use App\Http\Controllers\Admin\LocationController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\PromoCodeController;
-use App\Http\Controllers\Admin\BookingTypeController;
-use App\Http\Controllers\Admin\ServiceTimeController;
-use App\Http\Controllers\Admin\VehicleTypeController;
-use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\Admin\VehicleCheckController;
-use App\Http\Controllers\Admin\ServiceVehicleController;
 use App\Http\Controllers\Admin\BookingPassengerController;
+use App\Http\Controllers\Admin\BookingTypeController;
+use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DiscountController;
+use App\Http\Controllers\Admin\DriverController;
+use App\Http\Controllers\Admin\JobController;
+use App\Http\Controllers\Admin\LocationController;
+use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\MakeController;
+use App\Http\Controllers\Admin\mobileAppController;
+use App\Http\Controllers\Admin\ModelController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PlanController;
+use App\Http\Controllers\Admin\PromoCodeController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\ServiceTimeController;
+use App\Http\Controllers\Admin\ServiceVehicleController;
+use App\Http\Controllers\Admin\TicketController;
+use App\Http\Controllers\Admin\TownController;
+use App\Http\Controllers\Admin\VehicleCheckController;
+use App\Http\Controllers\Admin\VehicleController;
+use App\Http\Controllers\Admin\VehicleTypeController;
+use App\Http\Controllers\pages\MiscError;
+use App\Http\Controllers\pages\WebsitePage;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Models\Location;
+use App\Models\Make;
+use App\Models\Vehicle;
+use App\Models\VehicleModel;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
 
 
 Route::get('/run-migrations', function () {
@@ -261,6 +261,11 @@ Route::prefix('dashboard')->group(function () {
         Route::delete('/{id}', 'destroy')->name('discount.destroy');
         Route::get('/{id}/edit', 'edit')->name('discount.edit');
         Route::post('/update', 'update')->name('discount.update');
+    });
+
+     Route::controller(mobileAppController::class)->prefix('frontend')->group(function () {
+        Route::get('/slider', 'sliderIndex')->name('frontend.slider.index');
+       
     });
 });
 

@@ -24,7 +24,6 @@
 'resources/assets/admin/vendor/libs/@form-validation/popular.js',
 'resources/assets/admin/vendor/libs/@form-validation/bootstrap5.js',
 'resources/assets/admin/vendor/libs/@form-validation/auto-focus.js',
-
 ])
 @endsection
 

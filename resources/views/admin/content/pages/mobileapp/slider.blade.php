@@ -1,6 +1,6 @@
 @extends('admin/layouts/layoutMaster')
 
-@section('title', 'Mobile App Slider')
+@section('title', 'Mobile APP Slider')
 
 @section('vendor-style')
 @vite([

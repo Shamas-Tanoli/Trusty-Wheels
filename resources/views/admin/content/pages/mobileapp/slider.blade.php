@@ -34,7 +34,7 @@
 'resources/assets/admin/js/slideradd.js'
 ])
 @endsection
-
+s
 @section('content')
 <form id="jobaddform">
   <div class="app-ecommerce">

@@ -34,11 +34,10 @@
 ])
 @endsection
 @section('content')
-<form id="jobaddform">
+<form id="jobaddform" method="POST" enctype="multipart/form-data">
+  @csrf
   <div class="app-ecommerce">
-
-    <div
-      class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 row-gap-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 row-gap-4">
       <div class="d-flex flex-column justify-content-center">
         <h4 class="mb-0">Mobile App Slider</h4>
       </div>
@@ -49,82 +48,118 @@
     </div>
 
     <div id="slidersContainer">
-      <!-- Slider cards will be appended here -->
+      @foreach($sliders as $index => $slider)
+      <input type="hidden" name="slider_id[]" value="{{ $slider->id }}">
+        <div class="card mb-6 slider-card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Slider {{ $index + 1 }}</h5>
+            <button type="button" class="btn btn-danger btn-sm remove-slider-btn">Remove</button>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 col-md-4 mb-3">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-control" name="title[]" value="{{ $slider->title }}">
+              </div>
+              <div class="col-12 col-md-4 mb-3">
+                <label class="form-label">Sub Title</label>
+                <input type="text" class="form-control" name="subtitle[]" value="{{ $slider->subtitle }}">
+              </div>
+              <div class="col-12 col-md-4 mb-3">
+                <label class="form-label">Image</label>
+                <input type="file" class="form-control slider-image" name="image[]" accept="image/*">
+                @if($slider->image)
+                <input type="hidden" name="existing_image[]" value="{{ $slider->image }}">
+                  <img class="img-preview mt-2" src="{{ asset($slider->image) }}" alt="" style="width:100px; height:auto;">
+                @else
+                  <img class="img-preview mt-2" src="" alt="" style="display:none; width:100px; height:auto;">
+                @endif
+              </div>
+              <div class="col-12 col-md-4 mb-3">
+                <label class="form-label">Order</label>
+                <input type="number" class="form-control" name="order[]" value="{{ $slider->order }}">
+              </div>
+              <div class="col-12 col-md-4 d-flex align-items-center gap-2">
+                <input class="form-check-input" name="is_active[]" type="checkbox" {{ $slider->is_active ? 'checked' : '' }}>
+                <label class="form-check-label">Active</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      @endforeach
     </div>
-
   </div>
 </form>
 
 <script>
-  let sliderCount = 0;
+  let sliderCount = {{ $sliders->count() }};
 
   function createSliderCard() {
-  sliderCount++;
-  
-  const card = document.createElement('div');
-  card.classList.add('card', 'mb-6');
-  card.innerHTML = `
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h5 class="card-title mb-0">Slider ${sliderCount}</h5>
-      <button type="button" class="btn btn-danger btn-sm remove-slider-btn">Remove</button>
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-12 col-md-4 mb-3">
-          <label class="form-label">Title</label>
-          <input type="text" class="form-control" name="title[]">
-        </div>
-        <div class="col-12 col-md-4 mb-3">
-          <label class="form-label">Sub Title</label>
-          <input type="text" class="form-control" name="subtitle[]">
-        </div>
-        <div class="col-12 col-md-4 mb-3">
-          <label class="form-label">Image</label>
-          <input type="file" class="form-control slider-image" name="image[]" accept="image/*">
-          <img class="img-preview mt-2" src="" alt="" style="display:none; width:100px; height:auto;">
-        </div>
-        <div class=" col-12 col-md-4 mb-3">
-          <label class="form-label">Order</label>
-          <input type="number" class="form-control" name="order[]">
-        </div>
-        <div class="col-12 col-md-4 d-flex align-items-center gap-2">
-          <input class="form-check-input" name="is_active[]" type="checkbox">
-          <label class="form-check-label">Active</label>
+    sliderCount++;
+    const card = document.createElement('div');
+    card.classList.add('card', 'mb-6', 'slider-card');
+    card.innerHTML = `
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Slider ${sliderCount}</h5>
+        <button type="button" class="btn btn-danger btn-sm remove-slider-btn">Remove</button>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 col-md-4 mb-3">
+            <label class="form-label">Title</label>
+            <input type="hidden" name="slider_id[]" value="">
+            <input type="text" class="form-control" name="title[]">
+          </div>
+          <div class="col-12 col-md-4 mb-3">
+            <label class="form-label">Sub Title</label>
+            <input type="text" class="form-control" name="subtitle[]">
+          </div>
+          <div class="col-12 col-md-4 mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" class="form-control slider-image" name="image[]" accept="image/*">
+            <img class="img-preview mt-2" src="" alt="" style="display:none; width:100px; height:auto;">
+          </div>
+          <div class="col-12 col-md-4 mb-3">
+            <label class="form-label">Order</label>
+            <input type="number" class="form-control" name="order[]">
+          </div>
+          <div class="col-12 col-md-4 d-flex align-items-center gap-2">
+            <input class="form-check-input" name="is_active[]" type="checkbox">
+            <label class="form-check-label">Active</label>
+          </div>
         </div>
       </div>
-    </div>
-  `;
+    `;
 
-  // Append card to container
-  const container = document.getElementById('slidersContainer');
-  container.appendChild(card);
-
-  // Remove button functionality
-  const removeBtn = card.querySelector('.remove-slider-btn');
-  removeBtn.addEventListener('click', function() {
-    container.removeChild(card);
-  });
-
-  // Add image preview functionality
-  const fileInput = card.querySelector('.slider-image');
-  const imgPreview = card.querySelector('.img-preview');
-  fileInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        imgPreview.src = e.target.result;
-        imgPreview.style.display = 'block';
-      }
-      reader.readAsDataURL(file);
-    }
-  });
+    document.getElementById('slidersContainer').appendChild(card);
   }
 
-    // Initialize first slider on page load
-    // createSliderCard();
+  // Add Slider Button
+  document.getElementById('addSliderBtn').addEventListener('click', createSliderCard);
 
-    // Add more slider button
-    document.getElementById('addSliderBtn').addEventListener('click', createSliderCard);
+  // ✅ REMOVE BUTTON EVENT DELEGATION (IMPORTANT FIX)
+  document.getElementById('slidersContainer').addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-slider-btn')) {
+      e.target.closest('.slider-card').remove();
+    }
+  });
+
+  // ✅ IMAGE PREVIEW EVENT DELEGATION
+  document.getElementById('slidersContainer').addEventListener('change', function(e) {
+    if (e.target.classList.contains('slider-image')) {
+      const file = e.target.files[0];
+      const imgPreview = e.target.closest('.col-md-4').querySelector('.img-preview');
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          imgPreview.src = event.target.result;
+          imgPreview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+  });
+
 </script>
 @endsection

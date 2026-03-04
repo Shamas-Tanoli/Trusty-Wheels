@@ -265,6 +265,7 @@ Route::prefix('dashboard')->group(function () {
 
      Route::controller(mobileAppController::class)->prefix('frontend')->group(function () {
         Route::get('/slider', 'sliderIndex')->name('frontend.slider.index');
+        Route::post('/slider/store', 'sliderstore')->name('frontend.slider.store');
        
     });
 });

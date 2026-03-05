@@ -81,7 +81,7 @@
               </div>
               <div class="col-12 col-md-4 d-flex align-items-center gap-2">
                 <input class="form-check-input" name="is_active[]" type="checkbox" {{ $slider->is_active ? 'checked' : '' }}>
-                <label class="form-check-label">Active</label>
+                <label class="form-check-label a">Active</label>
               </div>
             </div>
           </div>

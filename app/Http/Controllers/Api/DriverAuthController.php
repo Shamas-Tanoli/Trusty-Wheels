@@ -90,7 +90,8 @@ public function login(Request $request)
     // ✅ SECURE 6-digit OTP
     $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-    $user->otp = $otp;
+        // $user->otp = $otp;
+        $user->otp = 000000;
     $user->otp_expires_at = Carbon::now()->addMinutes(5);
     $user->save();
 

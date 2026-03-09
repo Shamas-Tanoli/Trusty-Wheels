@@ -156,7 +156,21 @@
               "name": "Slider",
               "slug": "frontend.slider.index"
           
+        },
+         {
+          "url": "/dashboard/frontend/serve",
+              "name": "Serve Section ",
+              "slug": "frontend.serve.index"
+          
         }
+        ,
+         {
+          "url": "/dashboard/frontend/reviews",
+              "name": "Reviews ",
+              "slug": "frontend.reviews.index"
+          
+        }
+
       ]
     }
 

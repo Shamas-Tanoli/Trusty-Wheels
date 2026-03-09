@@ -1,22 +1,23 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\PlanController;
-use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\DriverAuthController;
+use App\Http\Controllers\Api\DriverJobController;
+use App\Http\Controllers\Api\FeedbackController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\InquiryController;
+use App\Http\Controllers\Api\JobStartController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ServiceController;
-use App\Http\Controllers\Api\FeedbackController;
-use App\Http\Controllers\Api\JobStartController;
-use App\Http\Controllers\Api\DriverJobController;
-use App\Http\Controllers\Api\DriverAuthController;
 use App\Http\Controllers\Api\ServiceJobController;
-use App\Http\Controllers\Api\VehicleListController;
-use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ServiceJobPassangerController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\VehicleListController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -111,6 +112,6 @@ Route::middleware(['auth:sanctum', 'role:customer,driver'])->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'getUserNotifications']);
 
-
+Route::get('/home-data', [HomeController::class, 'getHomeData']);
    
 });

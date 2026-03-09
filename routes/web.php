@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\ModelController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\PromoCodeController;
+use App\Http\Controllers\Admin\ReviewsController;
+use App\Http\Controllers\Admin\ServeController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceTimeController;
 use App\Http\Controllers\Admin\ServiceVehicleController;
@@ -266,6 +268,17 @@ Route::prefix('dashboard')->group(function () {
      Route::controller(mobileAppController::class)->prefix('frontend')->group(function () {
         Route::get('/slider', 'sliderIndex')->name('frontend.slider.index');
         Route::post('/slider/store', 'sliderstore')->name('frontend.slider.store');
+       
+    });
+     Route::controller(ServeController::class)->prefix('frontend')->group(function () {
+        Route::get('/serve', 'serveIndex')->name('frontend.serve.index');
+        Route::post('/serve/store', 'serveStore')->name('frontend.serve.store');
+       
+    });
+
+     Route::controller(ReviewsController::class)->prefix('frontend')->group(function () {
+        Route::get('/reviews', 'reviewsIndex')->name('frontend.reviews.index');
+        Route::post('/reviews/store', 'reviewsStore')->name('frontend.reviews.store');
        
     });
 });

@@ -91,7 +91,7 @@ public function login(Request $request)
     $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         // $user->otp = $otp;
-        $user->otp = 000000;
+    $user->otp = "000000";
     $user->otp_expires_at = Carbon::now()->addMinutes(5);
     $user->save();
 
@@ -128,7 +128,7 @@ public function login(Request $request)
         return response()->json(['message' => 'User not found'], 404);
     }
 
-    if ($user->otp !== $request->otp) {
+    if ( (int)$user->otp !==  (int)$request->otp) {
         return response()->json(['message' => 'Invalid OTP'], 401);
     }
 
@@ -137,8 +137,8 @@ public function login(Request $request)
     }
 
     
-    $user->otp = null;
-    $user->otp_expires_at = null;
+    // $user->otp = null;
+    // $user->otp_expires_at = null;
     $user->save();
 
     

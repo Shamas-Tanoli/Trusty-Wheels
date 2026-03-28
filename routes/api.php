@@ -112,6 +112,7 @@ Route::middleware(['auth:sanctum', 'role:customer,driver'])->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'getUserNotifications']);
 
-Route::get('/home-data', [HomeController::class, 'getHomeData']);
    
 });
+
+Route::get('/home-data', [HomeController::class, 'getHomeData']);

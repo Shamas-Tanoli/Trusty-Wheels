@@ -22,7 +22,7 @@ $configData = Helper::appClasses();
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/admin/js/make-table.js',
+@vite(['resources/assets/admin/js/citytable.js',
 'resources/assets/admin/js/cityadd.js',
 'resources/assets/admin/js/cityedit.js'])
 

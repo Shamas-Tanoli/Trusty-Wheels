@@ -65,6 +65,7 @@ public function login(Request $request)
     $request->validate([
         'email'    => 'required|email',
         'password' => 'required',
+       
     ]);
 
     $user = User::where('email', $request->email)
@@ -117,8 +118,11 @@ public function login(Request $request)
 {
     $request->validate([
         'email' => 'required|email',
-        'otp'   => 'required'
+        'otp'   => 'required',
+         'fcm_token' => 'nullable|string'
     ]);
+
+    
 
     $user = User::where('email', $request->email)
                 ->where('role', 'driver')
@@ -134,6 +138,11 @@ public function login(Request $request)
 
     if (now()->gt($user->otp_expires_at)) {
         return response()->json(['message' => 'OTP expired'], 401);
+    }
+
+    if ($request->has('fcm_token')) {
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
     }
 
     

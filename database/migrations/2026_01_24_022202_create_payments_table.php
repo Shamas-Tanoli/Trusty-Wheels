@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); 
             $table->foreignId('invoice_id')->constrained('customer_invoices')->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained('users')->cascadeOnDelete();
-             $table->date('invoice_for_date');
+            $table->date('invoice_for_date');
             $table->decimal('total_amount', 10, 2);
             $table->decimal('paid_amount', 10, 2);
             $table->decimal('remaining_amount', 10, 2);

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\ServiceJob;
-use Illuminate\Http\Request;
-use App\Services\FirebaseService;
-use Illuminate\Support\Facades\DB;
-use App\Models\ServiceJobPassenger;
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
+use App\Models\ServiceJob;
+use App\Models\ServiceJobPassenger;
+use App\Services\FirebaseService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class JobController extends Controller
 {
@@ -69,8 +70,9 @@ class JobController extends Controller
 
 
 
-            $driverUser = $job->driver;
-            $driverToken = $driverUser?->fcm_token;
+            $driverUser = Driver::find($validatedData['driver_id']);
+          
+            $driverToken = $driverUser->user?->fcm_token;
 
             if ($driverToken) {
                 $this->firebase->sendToToken(
@@ -85,10 +87,10 @@ class JobController extends Controller
                 );
             }
 
-            dd($job->driver->id);
+
 
             DB::table('notifications')->insert([
-                'user_id' => $job->driver->id,
+                'user_id' => $driverToken = $driverUser->user->id,
                 'title'   => 'New Job Assigned',
                 'body'    => 'A new service job has been assigned to you',
                 'data'    => json_encode(['job' => $job]),
@@ -110,7 +112,7 @@ class JobController extends Controller
 
                 $this->firebase->sendToToken(
                     $token,
-                    'New Job Assigned',
+                    'Booking Confirmed',
                     'your booking has done',
                     [
                         'job_id'    => $job->id,
@@ -123,6 +125,16 @@ class JobController extends Controller
                         ])
                     ]
                 );
+
+
+                DB::table('notifications')->insert([
+                    'user_id' => $user?->id,
+                    'title'   => 'Booking Confirmed',
+                    'body'    => 'your booking has done',
+                    'data'    => json_encode(['job' => $job]),
+                    'type'    => 'JOB_ASSIGNED',
+                    'user_type' => 'customer',
+                ]);
             }
         });
 

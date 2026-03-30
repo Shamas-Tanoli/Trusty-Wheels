@@ -77,6 +77,7 @@ class AuthController extends Controller
         'email'     => 'required|email',
         'password'  => 'required',
         'fcm_token' => 'nullable|string',
+        'login_from' => 'nullable|string',
     ]);
 
     $user = User::where('email', $request->email) ->where('role', 'customer')->first();
@@ -88,6 +89,10 @@ class AuthController extends Controller
     }
 
     
+    if ($request->has('login_from')) {
+        $user->login_from = $request->login_from;
+        $user->save();
+    }
     if ($request->has('fcm_token')) {
         $user->fcm_token = $request->fcm_token;
         $user->save();

@@ -65,7 +65,7 @@
 
                 <div class="row">
                     <!-- Driver -->
-                    <div class="input mb-6 col-4 ecommerce-select2-dropdown">
+                     <div class="input mb-6 col-4 ecommerce-select2-dropdown">
                         <label class="form-label mb-1" for="driver_id">Driver</label>
                         <select name="driver_id" id="driver_id" data-depend="make_id"
                                 data-url="{{ route('select.driver') }}"

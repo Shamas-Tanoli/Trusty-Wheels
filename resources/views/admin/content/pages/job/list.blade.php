@@ -12,7 +12,7 @@ $configData = Helper::appClasses();
 'resources/assets/admin/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss',
 'resources/assets/admin/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss',
 'resources/assets/admin/vendor/libs/@form-validation/form-validation.scss'])
-@endsection
+@endsection 
 
 @section('vendor-script')
 @vite(['resources/assets/admin/vendor/libs/select2/select2.js',

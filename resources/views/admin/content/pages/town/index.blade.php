@@ -26,7 +26,7 @@ $configData = Helper::appClasses();
 @section('page-script')
 @vite([
 'resources/assets/admin/js/forms-selects.js',
-'resources/assets/admin/js/model.js',
+'resources/assets/admin/js/town.js',
 ])
 
 @endsection

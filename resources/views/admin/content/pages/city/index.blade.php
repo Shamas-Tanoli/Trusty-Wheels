@@ -20,12 +20,11 @@ $configData = Helper::appClasses();
 'resources/assets/admin/vendor/libs/@form-validation/bootstrap5.js',
 'resources/assets/admin/vendor/libs/@form-validation/auto-focus.js'])
 @endsection
-
+ 
 @section('page-script')
 @vite(['resources/assets/admin/js/citytable.js',
 'resources/assets/admin/js/cityadd.js',
 'resources/assets/admin/js/cityedit.js'])
-
 @endsection
 
 

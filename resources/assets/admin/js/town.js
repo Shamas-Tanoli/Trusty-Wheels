@@ -91,13 +91,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
     $('.datatables-permissions').DataTable({
       processing: true,
       serverSide: true,
-      ajax: '/dashboard/model/list',
+      ajax: '/dashboard/towns/list',
       searchDelay: 1000,
       columns: [
         // { data: 'id', name: 'id' },
         { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
         { data: 'name', name: 'name', orderable: false, searchable: true },
-        { data: 'make_name', name: 'make_name', orderable: false, searchable: true },
+        { data: 'city_name', name: 'city_name', orderable: false, searchable: true },
         { data: 'created_at', name: 'created_at', orderable: false, searchable: false },
         { data: 'actions', name: 'actions', orderable: false, searchable: false }
       ],
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         buttonsStyling: false
       }).then(function (result) {
         if (result.value) {
-          fetch(`/dashboard/model/delete/${model_id}`, {
+          fetch(`/dashboard/towns/delete/${model_id}`, {
             method: 'DELETE',
             headers: {
               'X-CSRF-TOKEN': window.csrfToken,
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
       }
     }).on('core.form.valid', function (e) {
       const formData = new FormData(document.getElementById('editPermissionForm'));
-      fetch(`/dashboard/model/${model_id}/edit`, {
+      fetch(`/dashboard/towns/${model_id}/update`, {
         method: 'post',
         headers: {
           'X-CSRF-TOKEN': window.csrfToken,

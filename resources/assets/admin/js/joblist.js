@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         language: {
             sLengthMenu: 'Show _MENU_',
             search: '',
-            searchPlaceholder: 'Search Vehicle',
+            searchPlaceholder: 'Job Vehicle',
             paginate: {
                 next: '<i class="ti ti-chevron-right ti-sm"></i>',
                 previous: '<i class="ti ti-chevron-left ti-sm"></i>'
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
         buttons: [
             {
-                text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class=" d-sm-inline-block">Add Vehicle</span>',
+                text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class=" d-sm-inline-block">Create Job</span>',
                 className: 'add-new btn btn-primary ms-2 ms-sm-0 waves-effect waves-light mb-3 mb-md-0',
                 action: function () {
                     window.location.href = tableBtnUrl;

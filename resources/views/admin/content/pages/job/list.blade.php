@@ -44,9 +44,9 @@ $configData = Helper::appClasses();
             <thead>
                 <tr>
                     <th>Serial</th>
-                    <th>name</th>
-                    <th>location</th>
-                    <th>Price</th>
+                    <th>Vehicle</th>
+                    <th>Driver</th>
+                    <th>Service Time</th>
                     <th>status</th>
                     <th>Actions</th>
                 </tr>

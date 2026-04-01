@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     { data: 'email', name: 'user.email' },
 
     { data: 'contact', name: 'drivers.contact' },
+    { data: 'otp',name: 'otp', orderable: false, searchable: false },
     { data: 'status', orderable: false, searchable: false },
     { data: 'action', orderable: false, searchable: false }
 ],

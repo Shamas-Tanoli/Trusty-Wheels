@@ -137,23 +137,23 @@ class BookingController extends Controller
             })
             ->addColumn('action', function ($row) {
                 return '
-        <button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="ti ti-dots-vertical"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-end m-0">
-    
-            <a href="javascript:void(0)"
-        data-bs-target="#passengerModal" data-bs-toggle="modal" data-bs-dismiss="modal"
-            class="dropdown-item view-passengers" data-id="' . $row->id . '">View Passengers</a>
-
-
-            <a href="javascript:void(0)"
-        data-bs-target="#addPermissionModal" data-bs-toggle="modal" data-bs-dismiss="modal"
-            class="dropdown-item viewstatus edit-btn editbtnnnn" id="editbtnnnn" data-status="' . $row->status . '" data-id="' . $row->id . '">Change Status</a>
+                <button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="ti ti-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
             
-        </div>';
+                    <a href="javascript:void(0)"
+                data-bs-target="#passengerModal" data-bs-toggle="modal" data-bs-dismiss="modal"
+                    class="dropdown-item view-passengers" data-id="' . $row->id . '">View Passengers</a>
+
+
+                        <a href="javascript:void(0)"
+                    data-bs-target="#addPermissionModal" data-bs-toggle="modal" data-bs-dismiss="modal"
+                        class="dropdown-item viewstatus edit-btn editbtnnnn" id="editbtnnnn" data-status="' . $row->status . '" data-id="' . $row->id . '">Change Status</a>
+                        
+                    </div>';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action']) 
             ->make(true);
     }
 

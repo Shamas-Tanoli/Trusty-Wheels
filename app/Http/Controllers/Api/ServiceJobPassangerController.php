@@ -379,6 +379,7 @@ public function updatePickupTripTwo(Request $request)
         ], 500);
     }
 }
+
 public function updateDropoffTripTwo(Request $request)
 {
     
@@ -415,7 +416,7 @@ public function updateDropoffTripTwo(Request $request)
         }
 
        
-       $passengerTrack->dropoff_trip_two = $request->status;
+        $passengerTrack->dropoff_trip_two = $request->status;
         $passengerTrack->save();
 
         
@@ -429,7 +430,8 @@ public function updateDropoffTripTwo(Request $request)
             ]
         ]);
 
-    } catch (\Exception $e) {
+    } 
+    catch (\Exception $e) {
      
         return response()->json([
             'status' => false,

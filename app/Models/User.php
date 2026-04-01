@@ -26,7 +26,8 @@ class User extends Authenticatable
     'email',
     'password',
     'role',
-    'fcm_token'
+    'fcm_token',
+    'otp'
   ];
   /**
   
@@ -49,7 +50,7 @@ class User extends Authenticatable
   {
     return [
       'email_verified_at' => 'datetime',
-      'password' => 'hashed',
+      'password' => 'hashed'
     ];
   }
 
@@ -61,10 +62,7 @@ class User extends Authenticatable
   {
     return $this->hasOne(Customer::class);
   }
-  public function user()
-  {
-    return $this->hasOne(User::class);
-  }
+ 
 
   public function driverJobs()
   {

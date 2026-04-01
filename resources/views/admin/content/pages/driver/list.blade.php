@@ -47,6 +47,7 @@ $configData = Helper::appClasses();
                     <th>name</th>
                     <th>Email</th>
                     <th>Contact</th>
+                    <th>Otp</th>
                     <th>status</th>
                     <th>Actions</th>
                 </tr>

@@ -180,10 +180,14 @@ class DriverController extends Controller
     {
         if ($request->ajax()) {
 
-            $drivers = Driver::with(['user:id,name,email', 'city', 'documents'])
+            $drivers = Driver::with(['user:id,name,email,otp', 'city', 'documents'])
                 ->select('drivers.*')
-                ->orderByDesc('created_at');
+                ->orderByDesc('created_at')->get();
 
+              
+
+                
+               
             return DataTables::of($drivers)
                 ->addIndexColumn()
 
@@ -213,6 +217,9 @@ class DriverController extends Controller
                     return $driver->user->email ?? 'N/A';
                 })
 
+                ->addColumn('otp', function ($driver) {
+                    return $driver->user->otp ?? "no";
+                })
                 ->addColumn('contact', function ($driver) {
                     return $driver->contact;
                 })
@@ -256,6 +263,8 @@ class DriverController extends Controller
 
                 ->rawColumns(['name', 'status', 'action'])
                 ->make(true);
+
+               
         }
     }
 

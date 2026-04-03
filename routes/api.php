@@ -51,6 +51,11 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
 
     Route::post('/customer/feedback', [FeedbackController::class, 'store']);
     Route::get('/customer/feedback/', [FeedbackController::class, 'approvedFeedback']);
+
+
+
+    Route::post('/customer/booking/{id}/summary/final', [BookingController::class, 'summaryFinal']);
+
 });
 
 

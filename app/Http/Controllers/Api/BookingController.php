@@ -2,23 +2,87 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Plan;
-use App\Models\Town;
-use App\Models\Booking;
-use App\Models\Service;
-use App\Models\Discount;
-use App\Models\PromoCode;
-use App\Models\ServiceTime;
-use Illuminate\Http\Request;
-use App\Models\PromoCodeUser;
-use App\Models\BookingPassenger;
-use Illuminate\Support\Facades\DB;
-use App\Models\ServiceJobPassenger;
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\BookingPassenger;
+use App\Models\CustomerInvoice;
+use App\Models\Discount;
+use App\Models\Plan;
+use App\Models\PromoCode;
+use App\Models\PromoCodeUser;
+use App\Models\Service;
+use App\Models\ServiceJobPassenger;
+use App\Models\ServiceTime;
+use App\Models\Town;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 class BookingController extends Controller
 {
+
+
+   public function summaryFinal(Request $request, $id)
+{
+    // ✅ Validation (proper rules)
+    $validated = $request->validate([
+        'total_amount'      => 'required|numeric|min:0',
+        'discounted_total'  => 'required|numeric|min:0',
+        'after_discount'    => 'required|numeric|min:0',
+        'discount_type'     => 'required|in:promocode,offer',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // ✅ Booking fetch with fail-safe
+        $booking = Booking::findOrFail($id);
+
+        // ✅ Prevent duplicate invoice (unique constraint handling)
+        $existingInvoice = CustomerInvoice::where('customer_id', $booking->customer_id)
+            ->whereDate('invoice_for_date', now()->toDateString())
+            ->first();
+
+        if ($existingInvoice) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invoice already exists for this customer today.'
+            ], 422);
+        }
+
+        // ✅ Create invoice
+        $invoice = CustomerInvoice::create([
+            'customer_id'        => $booking->customer_id,
+            'invoice_for_date'   => now()->toDateString(),
+            'total_amount'       => $validated['total_amount'],
+            'discounted_total'   => $validated['discounted_total'],
+            'after_discount'     => $validated['after_discount'],
+            'discount_type'      => $validated['discount_type'],
+            'status'             => 'pending',
+            'due_date'           => now()->addDays(10),
+        ]);
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice created successfully',
+            'data'    => $invoice
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Something went wrong',
+            'error'   => $e->getMessage() // production me hide kar dena
+        ], 500);
+    }
+}
+
+
+
     public function applyPromo(Request $request)
     {
         $request->validate([
@@ -248,7 +312,7 @@ class BookingController extends Controller
             })
             ->with(['areaFrom', 'areaTo', 'serviceTime'])
             ->get();
-            
+
         if ($plans->isEmpty()) {
             return response()->json([
                 'success' => false,

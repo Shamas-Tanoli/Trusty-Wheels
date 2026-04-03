@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\BookingPassengerController;
 use App\Http\Controllers\Admin\BookingTypeController;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\CustomerInvoice;
+use App\Http\Controllers\Admin\CustomerInvoiceController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\DriverController;
@@ -200,6 +202,7 @@ Route::prefix('dashboard')->group(function () {
         Route::post('{plan}/update', 'update')->name('plan.update');
         Route::delete('/delete/{id}', 'destroy')->name('plan.destroy');
     });
+
     Route::controller(BookingController::class)->prefix('booking')->group(function () {
         Route::get('/', 'index')->name('booking.show');
         Route::get('/list', 'list')->name('booking.list');
@@ -281,6 +284,14 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/reviews/store', 'reviewsStore')->name('frontend.reviews.store');
        
     });
+
+
+     Route::controller(CustomerInvoiceController::class)->prefix('invoice')->group(function () {
+        Route::get('/listview', 'index')->name('invoice.listview');
+        Route::get('/list', 'list')->name('invoice.show');
+       
+    });
+
 });
 
 

@@ -172,7 +172,14 @@
         }
 
       ]
+    },
+    {
+      "url": "/dashboard/invoice/listview",
+      "name": "Invoice",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "Invoice.listview"
     }
+
 
 
    

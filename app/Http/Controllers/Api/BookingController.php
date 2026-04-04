@@ -29,7 +29,7 @@ class BookingController extends Controller
         'total_amount'      => 'required|numeric|min:0',
         'discounted_total'  => 'required|numeric|min:0',
         'after_discount'    => 'required|numeric|min:0',
-        'discount_type'     => 'required|in:promocode,offer',
+        'discount_type'     => 'required|in:promocode,discount.none',
     ]);
 
     DB::beginTransaction();

@@ -19,13 +19,12 @@ return new class extends Migration
             $table->decimal('discounted_total', 10, 2);
             $table->decimal('after_discount', 10, 2);
 
-            $table->enum('discount_type',['promocode','offer']);
+            $table->enum('discount_type',['promocode','discount','none']);
             $table->enum('status', ['pending','paid','partial','overdue'])->default('pending');
             $table->date('due_date');
             $table->timestamp('paid_at')->nullable();
             $table->timestamps(); 
-            $table->unique(['customer_id', 'invoice_for_date'], 'unique_invoice_per_customer_date');
-        });
+              });
     }
 
     /**

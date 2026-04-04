@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\CustomerInquiryController;
 use App\Http\Controllers\Api\DriverAuthController;
 use App\Http\Controllers\Api\DriverJobController;
 use App\Http\Controllers\Api\FeedbackController;
@@ -27,7 +28,7 @@ Route::get('/user', function (Request $request) {
 Route::post('/customer/register', [AuthController::class, 'register']);
 Route::post('/customer/login', [AuthController::class, 'login']);
 
-
+Route::post('/customer/google-login', [AuthController::class, 'googleLogin']);
 
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
@@ -56,7 +57,10 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
 
     Route::post('/customer/booking/{id}/summary/final', [BookingController::class, 'summaryFinal']);
 
-});
+
+   });
+
+    Route::post('/customer-inquiry', [CustomerInquiryController::class, 'store']);
 
 
 

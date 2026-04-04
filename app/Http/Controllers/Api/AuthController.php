@@ -2,15 +2,84 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
+use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+
+public function googleLogin(Request $request)
+{
+    $request->validate([
+        'id_token' => 'required|string',
+    ]);
+
+    try {
+
+        // Google se user verify karo
+        $response = Http::get('https://oauth2.googleapis.com/tokeninfo', [
+            'id_token' => $request->id_token
+        ]);
+
+        if ($response->failed()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid Google token'
+            ], 401);
+        }
+
+        $googleUser = $response->json();
+
+        $email = $googleUser['email'];
+        $name  = $googleUser['name'] ?? 'Google User';
+
+        // Check user exist
+        $user = User::where('email', $email)->first();
+
+        if (! $user) {
+
+            $user = User::create([
+                'name'     => $name,
+                'email'    => $email,
+                'password' => bcrypt(Str::random(16)),
+                'role'     => 'customer',
+                'login_from'     => 'google',
+            ]);
+
+            Customer::create([
+                'user_id' => $user->id,
+                'name'    => $name,
+                'contact' => '',
+                'address' => ''
+            ]);
+        }
+
+        // Token generate
+        $token = $user->createToken('customer_token')->plainTextToken;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Google login successful',
+            'user' => $user,
+            'token' => $token
+        ]);
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Google login failed',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
 
    public function register(Request $request)
 { 

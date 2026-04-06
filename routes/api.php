@@ -29,7 +29,7 @@ Route::post('/customer/register', [AuthController::class, 'register']);
 Route::post('/customer/login', [AuthController::class, 'login']);
 
 Route::post('/customer/google-login', [AuthController::class, 'googleLogin']);
-
+Route::post('/customer/google-login', [AuthController::class, 'googleLogin']);
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/plans', [PlanController::class, 'index']);

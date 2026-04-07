@@ -29,7 +29,6 @@ Route::post('/customer/register', [AuthController::class, 'register']);
 Route::post('/customer/login', [AuthController::class, 'login']);
 
 Route::post('/customer/google-login', [AuthController::class, 'googleLogin']);
-Route::post('/customer/google-login', [AuthController::class, 'googleLogin']);
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/plans', [PlanController::class, 'index']);
@@ -63,7 +62,7 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::post('/customer-inquiry', [CustomerInquiryController::class, 'store']);
 
 
-
+   
 
 
 
@@ -71,7 +70,7 @@ Route::post('/driver/login', [DriverAuthController::class, 'login']);
 Route::post('/driver/verify-otp', [DriverAuthController::class, 'verifyOtp']);
 
 
-// Driver Only APIs
+// Driver Only API
 Route::middleware(['auth:sanctum', 'role:driver'])->group(function () {
     Route::post('/driver/logout', [DriverAuthController::class, 'logout']);
     Route::get('driver/{driver}/jobs/{timeid?}', [DriverJobController::class, 'getDriverJobs']);

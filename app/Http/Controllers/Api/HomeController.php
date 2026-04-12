@@ -34,6 +34,15 @@ class HomeController extends Controller
         ];
     });
 
+     $services = Serve::all()->map(function ($item) {
+        return [
+            'id'       => $item->id,
+            'title'    => $item->title,
+            'subtitle' => $item->sub_title,
+            'image'    => url($item->image_path),
+        ];
+    });
+
     $reviews = Review::all()->map(function ($item) {
         return [
             'id'       => $item->id,
@@ -49,6 +58,7 @@ class HomeController extends Controller
             'sliders' => $sliders,
             'serves'  => $serves,
             'reviews' => $reviews,
+            'services' => $services,
         ]
     ]);
 }

@@ -12,8 +12,7 @@ class InquiryController extends Controller
     
     public function store(Request $request)
     {
-        
-        $validator = Validator::make($request->all(), [
+       $validator = Validator::make($request->all(), [
             'vehicle_id' => 'required|exists:vehicles,id',
             'name'       => 'required|string|max:255',
             'email'      => 'nullable|email',

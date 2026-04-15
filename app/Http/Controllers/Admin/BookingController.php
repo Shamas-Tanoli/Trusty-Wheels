@@ -110,7 +110,8 @@ class BookingController extends Controller
     public function list(Request $request)
     {
 
-        $bookings = Booking::with(['passengers', 'user', 'plan', 'service', 'serviceTime', 'town']);
+        $bookings = Booking::with(['passengers.plan', 'user', 'service', 'serviceTime', 'town']);
+
 
         return DataTables::of($bookings)
             ->addIndexColumn()
@@ -118,7 +119,11 @@ class BookingController extends Controller
                 return $row->user->customer->name ?? 'N/A';
             })
             ->addColumn('plan_name', function ($row) {
-                return $row->plan->name ?? 'N/A';
+                return $row->passengers
+                    ->map(fn($p) => optional($p->plan)->name)
+                    ->filter()
+                    ->unique()
+                    ->implode(', ') ?: 'N/A';
             })
             ->addColumn('service_name', function ($row) {
                 return $row->service->name ?? 'N/A';
@@ -153,7 +158,7 @@ class BookingController extends Controller
                         
                     </div>';
             })
-            ->rawColumns(['action']) 
+            ->rawColumns(['action'])
             ->make(true);
     }
 

@@ -133,4 +133,7 @@ class ReviewsController extends Controller
             'message' => 'REview saved successfully!'
         ]);
     }
+    public function ReviewsController(){
+        
+    }
 }

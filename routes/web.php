@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\BookingPassengerController;
 use App\Http\Controllers\Admin\BookingTypeController;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\CustomerInquiry;
 use App\Http\Controllers\Admin\CustomerInvoice;
 use App\Http\Controllers\Admin\CustomerInvoiceController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -269,7 +270,7 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/update', 'update')->name('discount.update');
     });
 
-     Route::controller(mobileAppController::class)->prefix('frontend')->group(function () {
+    Route::controller(mobileAppController::class)->prefix('frontend')->group(function () {
         Route::get('/slider', 'sliderIndex')->name('frontend.slider.index');
         Route::post('/slider/store', 'sliderstore')->name('frontend.slider.store');
        
@@ -289,6 +290,7 @@ Route::prefix('dashboard')->group(function () {
      Route::controller(ReviewsController::class)->prefix('frontend')->group(function () {
         Route::get('/reviews', 'reviewsIndex')->name('frontend.reviews.index');
         Route::post('/reviews/store', 'reviewsStore')->name('frontend.reviews.store');
+        Route::get('/reviews/list', 'reviewsList')->name('frontend.reviews.list');
        
     });
 
@@ -297,6 +299,10 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/listview', 'index')->name('invoice.listview');
         Route::get('/list', 'list')->name('invoice.show');
        
+    });
+
+    Route::controller(CustomerInquiry::class)->prefix('customer')->group(function () {
+        Route::get('/inquiry', 'view')->name('customer.inquiry');
     });
 
 });

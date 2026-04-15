@@ -52,7 +52,7 @@ class Plan extends Model
 
      public function passengers()
     {
-        return $this->hasMany(BookingPassenger::class);
+        return $this->hasOne(BookingPassenger::class);
     }
     
 }

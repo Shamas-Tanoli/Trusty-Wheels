@@ -29,7 +29,7 @@ class BookingController extends Controller
         'total_amount'      => 'required|numeric|min:0',
         'discounted_total'  => 'required|numeric|min:0',
         'after_discount'    => 'required|numeric|min:0',
-        'discount_type'     => 'required|in:promocode,discount.none',
+        'discount_type'     => 'required|in:promocode,discount,none',
     ]);
 
     DB::beginTransaction();
@@ -50,7 +50,7 @@ class BookingController extends Controller
             ], 422);
         }
 
-        // ✅ Create invoice
+       
         $invoice = CustomerInvoice::create([
             'customer_id'        => $booking->customer_id,
             'invoice_for_date'   => now()->toDateString(),
@@ -76,7 +76,7 @@ class BookingController extends Controller
         return response()->json([
             'success' => false,
             'message' => 'Something went wrong',
-            'error'   => $e->getMessage() // production me hide kar dena
+            'error'   => $e->getMessage() 
         ], 500);
     }
 }

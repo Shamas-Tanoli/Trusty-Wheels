@@ -23,10 +23,7 @@ class Booking extends Model
         return $this->hasMany(BookingPassenger::class, 'booking_id');
     }
 
-    public function plan()
-    {
-        return $this->belongsTo(Plan::class);
-    }
+   
     public function user()
     {
         return $this->belongsTo(User::class, 'customer_id');

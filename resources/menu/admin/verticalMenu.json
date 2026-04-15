@@ -186,6 +186,13 @@
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "Invoice.listview"
     }
+    ,
+    {
+      "url": "/dashboard/customer/inquiry",
+      "name": "Invoice",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "Invoice.listview"
+    }
 
 
 

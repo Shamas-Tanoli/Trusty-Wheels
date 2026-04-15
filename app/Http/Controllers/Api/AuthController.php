@@ -18,6 +18,7 @@ public function googleLogin(Request $request)
 {
     $request->validate([
         'id_token' => 'required|string',
+         'fcm_token' => 'nullable|string',
     ]);
 
     try {
@@ -50,6 +51,7 @@ public function googleLogin(Request $request)
                 'password' => bcrypt(Str::random(16)),
                 'role'     => 'customer',
                 'login_from'     => 'google',
+                'fcm_token'     => $request->fcm_token,
             ]);
 
             Customer::create([

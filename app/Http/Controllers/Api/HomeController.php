@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
 use App\Models\Serve;
+use App\Models\ServiceSection;
 use App\Models\Slider;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,7 @@ class HomeController extends Controller
         ];
     });
 
-     $services = Serve::all()->map(function ($item) {
+    $services = ServiceSection::all()->map(function ($item) {
         return [
             'id'       => $item->id,
             'title'    => $item->title,

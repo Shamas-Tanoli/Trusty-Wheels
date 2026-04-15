@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\PromoCodeController;
 use App\Http\Controllers\Admin\ReviewsController;
 use App\Http\Controllers\Admin\ServeController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\ServiceSectionController;
 use App\Http\Controllers\Admin\ServiceTimeController;
 use App\Http\Controllers\Admin\ServiceVehicleController;
 use App\Http\Controllers\Admin\TicketController;
@@ -276,6 +277,12 @@ Route::prefix('dashboard')->group(function () {
      Route::controller(ServeController::class)->prefix('frontend')->group(function () {
         Route::get('/serve', 'serveIndex')->name('frontend.serve.index');
         Route::post('/serve/store', 'serveStore')->name('frontend.serve.store');
+       
+    });
+
+     Route::controller(ServiceSectionController::class)->prefix('frontend')->group(function () {
+        Route::get('/servicesection', 'serveIndex')->name('frontend.service.index');
+        Route::post('/servicesection/store', 'serveStore')->name('frontend.service.store');
        
     });
 

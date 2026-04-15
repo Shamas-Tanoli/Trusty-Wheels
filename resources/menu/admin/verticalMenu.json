@@ -165,6 +165,13 @@
         }
         ,
          {
+          "url": "/dashboard/frontend/servicesection",
+              "name": "Service Section ",
+              "slug": "frontend.service.index"
+          
+        }
+        ,
+         {
           "url": "/dashboard/frontend/reviews",
               "name": "Reviews ",
               "slug": "frontend.reviews.index"

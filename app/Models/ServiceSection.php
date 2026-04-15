@@ -2,14 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Serve extends Model
+class ServiceSection extends Model
 {
-    use HasFactory;
-
-     protected $table = 'serve';
+     protected $table = 'service_section';
 
     protected $fillable = [
         'image_path',

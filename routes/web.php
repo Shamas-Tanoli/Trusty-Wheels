@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BookingPassengerController;
 use App\Http\Controllers\Admin\BookingTypeController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CustomerInquiry;
+use App\Http\Controllers\Admin\CustomerInquiryController;
 use App\Http\Controllers\Admin\CustomerInvoice;
 use App\Http\Controllers\Admin\CustomerInvoiceController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -301,8 +302,10 @@ Route::prefix('dashboard')->group(function () {
        
     });
 
-    Route::controller(CustomerInquiry::class)->prefix('customer')->group(function () {
+    Route::controller(CustomerInquiryController::class)->prefix('customer')->group(function () {
         Route::get('/inquiry', 'view')->name('customer.inquiry');
+        Route::get('/inquiry/list', 'list')->name('customer.list');
+        Route::get('/inquiry/list/msg/{id}', 'msg');
     });
 
 });

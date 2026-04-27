@@ -37,7 +37,7 @@ $configData = Helper::appClasses();
 
 
 @section('content')
-<h4>Booking</h4>
+<h4>Invoice</h4>
 {{-- content --}}
 
 <div class="card">
@@ -108,7 +108,33 @@ $configData = Helper::appClasses();
 <!--/ Add Permission Modal -->
 
 
+<div class="modal fade" id="statusModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title">Change Invoice Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
 
+      <div class="modal-body">
+        <input type="hidden" id="invoice_id">
+
+        <label>Status</label>
+        <select id="invoice_status" class="form-control form-select">
+            <option value="pending">Pending</option>
+            <option value="paid">Paid</option>
+            <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveStatus">Save</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 
 <!-- Edit Permission Modal -->

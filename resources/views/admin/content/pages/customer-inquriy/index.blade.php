@@ -37,7 +37,7 @@ $configData = Helper::appClasses();
 
 
 @section('content')
-<h4>Booking</h4>
+<h4>Web Inquiries</h4>
 {{-- content --}}
 
 <div class="card">

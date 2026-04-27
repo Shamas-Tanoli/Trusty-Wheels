@@ -19,6 +19,7 @@ class FeedbackController extends Controller
         $feedback->customer_id = $request->user()->id;
         $feedback->message = $validatedData['message'] ?? null;
         $feedback->rating = $validatedData['rating'];
+        $feedback->is_approved = 0;
         $feedback->save();
 
          return response()->json([

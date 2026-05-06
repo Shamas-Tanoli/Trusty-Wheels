@@ -193,6 +193,13 @@
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "customer.inquiry.show"
     }
+    ,
+    {
+      "url": "/dashboard/feedback/list",
+      "name": "FeedBack",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "feedback.list"
+    }
 
 
 

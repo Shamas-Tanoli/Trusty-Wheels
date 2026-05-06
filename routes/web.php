@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CustomerInvoiceController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\DriverController;
+use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\LoginController;
@@ -307,6 +308,13 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/inquiry', 'view')->name('customer.inquiry');
         Route::get('/inquiry/list', 'list')->name('customer.list');
         Route::get('/inquiry/list/msg/{id}', 'msg');
+    });
+    Route::controller(FeedbackController::class)->prefix('feedback')->group(function () {
+        Route::get('/list', 'view')->name('feedback.list');
+        Route::get('/list/json', 'list')->name('feedback.list.json');
+        Route::post('/approve/{id}', 'approve')->name('feedback.approve');
+        Route::post('delete/{id}', 'destroy')->name('feedback.delete');
+       
     });
 
 });

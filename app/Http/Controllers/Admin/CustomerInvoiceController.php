@@ -12,7 +12,7 @@ class CustomerInvoiceController extends Controller
     public function list(Request $request)
     {
 
-        $invoices = CustomerInvoice::with(['customer']);
+        $invoices = CustomerInvoice::with(['customer']) ->select('customer_invoices.*');
         return DataTables::of($invoices)
 
             ->addColumn('customer_name', function ($row) {
@@ -48,7 +48,7 @@ class CustomerInvoiceController extends Controller
                         <a href="javascript:void(0)" 
                         class="dropdown-item change-status" 
                         data-id="' . $row->id . '"
-                        data-ida="' . $row->id . '" 
+                       
                         data-status="' . $row->status . '">
                         Change Status
                         </a>

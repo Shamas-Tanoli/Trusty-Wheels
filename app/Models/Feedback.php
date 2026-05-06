@@ -10,6 +10,7 @@ class Feedback extends Model
         'customer_id',
         'message',
         'rating',
+        'is_approved'
     ];
 
     public function customer()

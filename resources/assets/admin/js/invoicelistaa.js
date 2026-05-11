@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
             { data: 'total_amount', name: 'total_amount' },
             { data: 'discounted_total', name: 'discounted_total' },
             { data: 'after_discount', name: 'after_discount' },
+            { data: 'paid_amount', name: 'paid_amount' },
+{ data: 'remaining_amount', name: 'remaining_amount' },
             { data: 'discount_type', name: 'discount_type' },
             { data: 'due_date', name: 'due_date' },
             { data: 'status', name: 'status' },
@@ -39,13 +41,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             }
         },
         buttons: [
-            {
-                text: '<i class="ti ti-plus ti-xs me-2"></i><span>Add Invoice</span>',
-                className: 'btn btn-primary add-new',
-                action: function () {
-                    $('#addInvoiceModal').modal('show');
-                }
-            }
+           
         ]
     });
 
@@ -66,6 +62,63 @@ $(document).on('click', '.change-status', function () {
     $('#statusModal').modal('show');
 });
 
-//   
-  
+$(document).on('click', '.change-status', function () {
+
+    $('#invoice_id').val($(this).data('id'));
+
+    $('#invoice_status').val($(this).data('status'));
+
+    $('#statusModal').modal('show');
+});
+
+$('#saveStatus').on('click', function () {
+
+    $.ajax({
+        url: 'change-status',
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            invoice_id: $('#invoice_id').val(),
+            status: $('#invoice_status').val(),
+            paid_amount: $('#paid_amount').val()
+        },
+
+        success: function (response) {
+
+            $('#statusModal').modal('hide');
+
+            $('.datatables-invoice').DataTable().ajax.reload();
+
+            // Success Alert
+            alert(response.message);
+        },
+
+        error: function (xhr) {
+
+            let errorMessage = 'Something went wrong';
+
+            // Laravel validation errors
+            if (xhr.responseJSON) {
+
+                if (xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+
+                // Validation errors
+                if (xhr.responseJSON.errors) {
+
+                    errorMessage = '';
+
+                    $.each(xhr.responseJSON.errors, function (key, value) {
+                        errorMessage += value[0] + '\n';
+                    });
+                }
+            }
+
+            // Error Alert
+            alert(errorMessage);
+        }
+    });
+
+});
 });

@@ -32,6 +32,7 @@ Route::post('/customer/google-login', [AuthController::class, 'googleLogin']);
 
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     Route::get('/plans', [PlanController::class, 'index']);
+    Route::get('/customer/get-subscription', [BookingController::class, 'subcription']);
 
     Route::get('/service/{id}/service-time', [ServiceController::class, 'serviceTimeByService']);
     Route::get('/service-time/{id}/plans', [ServiceController::class, 'plansByServiceTime']);

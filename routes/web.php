@@ -300,7 +300,8 @@ Route::prefix('dashboard')->group(function () {
     Route::controller(CustomerInvoiceController::class)->prefix('invoice')->group(function () {
         Route::get('/listview', 'index')->name('invoice.listview');
         Route::get('/list', 'list')->name('invoice.show');
-        Route::get('/update-status', 'updateStatus')->name('invoice.updateStatus');
+        // Route::get('/update-status', 'updateStatus')->name('invoice.updateStatus');
+        Route::post('change-status', 'changeStatus')->name('invoice.updateStatuss');
        
     });
 

@@ -18,6 +18,8 @@ class CustomerInvoice extends Model
         'discounted_total',
         'after_discount',
         'discount_type',
+        'paid_amount',
+        'remaining_amount',
         'status',
         'due_date',
         'paid_at',

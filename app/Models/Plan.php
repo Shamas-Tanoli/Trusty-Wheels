@@ -12,11 +12,17 @@ class Plan extends Model
     // Mass assignment
     protected $fillable = [
         'name',
+        'plan_type',
         'price',
         'area_from_id',
         'area_to_id',
         'status',
         'service_time_id'
+    ];
+
+    const PLAN_TYPES = [
+        'oneTime' => 'One Time',
+        'monthly' => 'Monthly',
     ];
 
     /**

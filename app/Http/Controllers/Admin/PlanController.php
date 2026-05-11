@@ -19,10 +19,10 @@ class PlanController extends Controller
             'price'           => 'required|numeric',
             'area_from_id'    => 'required|exists:towns,id',
             'area_to_id'      => 'required|exists:towns,id',
-            'servicetime_id' => 'required|exists:service_times,id',
+            'servicetime_id'  => 'required|exists:service_times,id',
             'status'          => 'required',
+            'plan_type'       => 'required',
         ]);
-
 
         if ($validator->fails()) {
             return response()->json([
@@ -32,12 +32,13 @@ class PlanController extends Controller
         }
 
         $plan->update([
-            'name'            => $request->name,
-            'price'           => $request->price,
-            'area_from_id'    => $request->area_from_id,
-            'area_to_id'      => $request->area_to_id,
-            'status'          => $request->status,
-            'service_time_id' => $request->servicetime_id,
+            'name'             => $request->name,
+            'price'            => $request->price,
+            'area_from_id'     => $request->area_from_id,
+            'area_to_id'       => $request->area_to_id,
+            'status'           => $request->status,
+            'plan_type'        => $request->plan_type,
+            'service_time_id'  => $request->servicetime_id,
         ]);
 
         return response()->json([
@@ -48,23 +49,24 @@ class PlanController extends Controller
 
     public function index()
     {
-
-        return view('admin.content.pages.plan.index');
+        $planTypes = Plan::PLAN_TYPES;
+        return view('admin.content.pages.plan.index', compact('planTypes'));
     }
 
     public function store(Request $request)
     {
-        
+
         $request->validate([
             'name'         => 'required|string|max:255',
             'price'        => 'required|numeric',
             'area_from_id' => 'required|exists:towns,id',
             'area_to_id'   => 'required|exists:towns,id',
             'servicetime_id'   => 'required|exists:service_times,id',
+            'plan_type'       => 'required|in:' . implode(',', array_keys(Plan::PLAN_TYPES)),
 
         ]);
 
-        
+
         Plan::create([
             'name'         => $request->name,
             'price'        => $request->price,
@@ -72,6 +74,7 @@ class PlanController extends Controller
             'area_to_id'   => $request->area_to_id,
             'status'       => 'active',
             'service_time_id'       => $request->servicetime_id,
+            'plan_type'        => $request->plan_type,
         ]);
 
         return response()->json([
@@ -101,6 +104,9 @@ class PlanController extends Controller
                 ->editColumn('status', function ($row) {
                     return ucfirst($row->status);
                 })
+                ->editColumn('plan_type', function ($row) {
+                    return ucfirst($row->plan_type);
+                })
 
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('d-m-Y h:i A');
@@ -108,7 +114,7 @@ class PlanController extends Controller
 
                 ->addColumn('actions', function ($row) {
                     return '
-    <button class="edit-btn btn btn-icon btn-text-secondary rounded-pill"
+        <button class="edit-btn btn btn-icon btn-text-secondary rounded-pill"
         data-id="' . $row->id . '"
         data-name="' . $row->name . '"
         data-servicetimeid="' . $row->service_time_id . '"
@@ -119,6 +125,7 @@ class PlanController extends Controller
         data-area-to-id="' . $row->area_to_id . '"
         data-area-to="' . optional($row->areaTo)->name . '"
         data-status="' . $row->status . '"
+         data-plan-type="' . $row->plan_type . '"
         data-bs-toggle="modal"
         data-bs-target="#editPlanModal">
         <i class="ti ti-edit ti-md"></i>

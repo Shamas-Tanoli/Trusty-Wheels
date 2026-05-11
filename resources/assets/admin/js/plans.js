@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     columns: [
       { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
       { data: 'name', name: 'plans.name' },
+      { data: 'plan_type', name: 'plans.plan_type' },
       { data: 'price', name: 'plans.price' },
       { data: 'area_from', name: 'areaFrom.name' },
       { data: 'area_to', name: 'areaTo.name' },
@@ -231,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         $('#edit_name').val(btn.dataset.name);
         $('#edit_price').val(btn.dataset.price);
         $('#edit_status').val(btn.dataset.status);
+        $('#edit_plan_type').val(btn.dataset.planType);
         $('#edit_area_from').empty();
         $('#edit_area_to').empty();
         if (btn.dataset.servicetimeid) {

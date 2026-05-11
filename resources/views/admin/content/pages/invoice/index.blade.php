@@ -53,6 +53,8 @@ $configData = Helper::appClasses();
                     <th>Total Amount  </th>
                     <th>Discount Total</th>
                     <th>After Dis</th>
+                    <th>paid </th>
+                    <th>Remaining</th>
                     <th>Dis Type</th>
                     <th>due</th>
                     
@@ -124,9 +126,20 @@ $configData = Helper::appClasses();
         <select id="invoice_status" class="form-control form-select">
             <option value="pending">Pending</option>
             <option value="paid">Paid</option>
+            <option value="partial">Partial</option>
             <option value="cancelled">Cancelled</option>
         </select>
+        <div class="col-12 ">
+                        <label class="form-label" for="">Paid Amount </label>
+                       <input type="number"
+           id="paid_amount"
+           class="form-control"
+           placeholder="1000">
+                    </div>
       </div>
+
+      
+                    
 
       <div class="modal-footer">
         <button class="btn btn-primary" id="saveStatus">Save</button>

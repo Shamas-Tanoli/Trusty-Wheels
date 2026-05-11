@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\BookingPassenger;
 use App\Models\CustomerInvoice;
+use App\Models\CustomerSubscription;
 use App\Models\Discount;
 use App\Models\Plan;
 use App\Models\PromoCode;
@@ -15,11 +16,37 @@ use App\Models\ServiceJobPassenger;
 use App\Models\ServiceTime;
 use App\Models\Town;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
 class BookingController extends Controller
 {
+ public function subcription(Request $request)
+{
+   $user = Auth::user();
+
+    $subscriptions = CustomerSubscription::with([
+
+        'booking',
+        'passenger',
+        'plan'
+
+    ])
+    ->where('customer_id', $user->id)
+    
+    ->get();
+
+    return response()->json([
+
+        'success' => true,
+
+        'message' => 'Active subscriptions fetched successfully',
+
+        'data' => $subscriptions
+
+    ]);
+}
 
 
    public function summaryFinal(Request $request, $id)
@@ -53,6 +80,7 @@ class BookingController extends Controller
        
         $invoice = CustomerInvoice::create([
             'customer_id'        => $booking->customer_id,
+            'booking_id'        => $booking->id,
             'invoice_for_date'   => now()->toDateString(),
             'total_amount'       => $validated['total_amount'],
             'discounted_total'   => $validated['discounted_total'],
